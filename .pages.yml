@@ -1,0 +1,100 @@
+# Editing dashboard config for Pages CMS (https://app.pagescms.org)
+# Sign in there with GitHub, pick this repository, and you get forms for everything below.
+
+media:
+  input: src/images
+  output: /images
+  extensions: [jpg, jpeg, png, webp, gif]
+
+content:
+  - name: projects
+    label: Projects
+    type: collection
+    path: src/projects
+    format: json
+    filename: "{primary}.json"
+    view:
+      primary: title
+      fields: [title, year, order]
+      sort: [order, year, title]
+      default:
+        sort: order
+        order: asc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: year
+        label: Year
+        type: number
+        required: true
+      - name: order
+        label: Position on the homepage
+        description: Lower numbers show first. Existing projects use 10, 20, 30… so you can slot a new one in between (e.g. 15). Leave at 0 to put it first.
+        type: number
+        default: 0
+      - name: featured
+        label: Show in the homepage slideshow
+        type: boolean
+        default: false
+      - name: hidden
+        label: Hide this project
+        description: Keeps it saved but takes it off the site.
+        type: boolean
+        default: false
+      - name: category
+        label: Discipline
+        description: For example Product, Furniture, Lighting, Graphic Design
+        type: string
+      - name: tools
+        label: Tools
+        description: For example Rhino, Grasshopper, Blender
+        type: string
+      - name: cover
+        label: Cover image
+        description: Used on the homepage grid and at the top of the project page. Landscape works best. Export as JPG, about 2000px wide.
+        type: image
+        required: true
+      - name: description
+        label: Description
+        description: Leave a blank line between paragraphs. The first paragraph is shown larger.
+        type: text
+      - name: images
+        label: Project images
+        description: Shown in this order. Drag to reorder. Export as JPG, about 2400px on the long side, so pages load fast.
+        type: image
+        list: true
+
+  - name: site
+    label: Site text and contact
+    type: file
+    path: src/site.json
+    format: json
+    fields:
+      - name: name
+        label: Your name
+        type: string
+      - name: role
+        label: Title
+        type: string
+      - name: tagline
+        label: Tagline
+        type: string
+      - name: email
+        label: Contact email
+        type: string
+      - name: instagram
+        label: Instagram link
+        type: string
+      - name: linkedin
+        label: LinkedIn link
+        type: string
+      - name: about
+        label: About text
+        description: Leave a blank line between paragraphs.
+        type: text
+      - name: capabilities
+        label: Capabilities
+        description: One per line.
+        type: text

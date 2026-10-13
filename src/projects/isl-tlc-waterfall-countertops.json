@@ -1,0 +1,32 @@
+{
+  "title": "ISL & TLC Waterfall Countertops",
+  "year": 2022,
+  "order": 30,
+  "category": "Furniture / Product",
+  "tools": "Solidworks, Blender",
+  "featured": true,
+  "cover": "/images/projects/isl-tlc-waterfall-countertops/05.jpg",
+  "description": "Omitted due to NDA: technical drawings, ideation on internal features, weight-reducing features, market research and packaging design.\n\nThrough market research and surveys from Motech customers, this was the most requested product: a waterfall countertop for both kitchen islands and bathroom vanities. Further research quickly made us realize this was unrealistic for most companies due to the cost of manufacturing and shipping. Thanks to my fabrication and generative CAD background, and a seemingly endless amount of prototyping and ideation, an internal weight-reducing structure for our resin molds was procedurally generated to make this challenge a reality.",
+  "images": [
+    "/images/projects/isl-tlc-waterfall-countertops/01.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/02.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/03.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/04.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/05.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/06.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/07.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/08.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/09.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/10.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/11.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/12.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/13.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/14.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/15.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/16.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/17.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/18.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/19.jpg",
+    "/images/projects/isl-tlc-waterfall-countertops/20.jpg"
+  ]
+}

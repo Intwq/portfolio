@@ -1,0 +1,18 @@
+{
+  "title": "Sputnik Speaker",
+  "year": 2021,
+  "order": 50,
+  "category": "Product",
+  "tools": "Rhino, Grasshopper, Blender",
+  "featured": true,
+  "cover": "/images/projects/sputnik-speaker/05.jpg",
+  "description": "Speaker developed as a RenderWeekly challenge, out of curiosities about additive manufacturing through Grasshopper in Rhino, and Blender for organic forms.",
+  "images": [
+    "/images/projects/sputnik-speaker/01.jpg",
+    "/images/projects/sputnik-speaker/02.jpg",
+    "/images/projects/sputnik-speaker/03.jpg",
+    "/images/projects/sputnik-speaker/04.jpg",
+    "/images/projects/sputnik-speaker/05.jpg",
+    "/images/projects/sputnik-speaker/06.jpg"
+  ]
+}

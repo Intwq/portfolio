@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.sizes/
+.DS_Store
+__pycache__/

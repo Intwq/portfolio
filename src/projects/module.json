@@ -1,0 +1,18 @@
+{
+  "title": "MODULE",
+  "year": 2020,
+  "order": 150,
+  "category": "Lighting",
+  "tools": "",
+  "featured": true,
+  "cover": "/images/projects/module/04.jpg",
+  "description": "This RenderWeekly project was to design an open platform for a modular lighting system, where the primary module can be used as a floor-standing lamp, a wall-mounted lamp, and a spotlight, among many other things, through reflection.",
+  "images": [
+    "/images/projects/module/01.jpg",
+    "/images/projects/module/02.jpg",
+    "/images/projects/module/03.jpg",
+    "/images/projects/module/04.jpg",
+    "/images/projects/module/05.jpg",
+    "/images/projects/module/06.jpg"
+  ]
+}

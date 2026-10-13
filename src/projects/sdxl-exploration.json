@@ -1,0 +1,32 @@
+{
+  "title": "SDXL Exploration",
+  "year": 2023,
+  "order": 10,
+  "category": "AI / Concept",
+  "tools": "Stable Diffusion XL, Blender",
+  "featured": true,
+  "cover": "/images/projects/sdxl-exploration/12.jpg",
+  "description": "Architectural massing studies sketched as simple volumes, then developed into finished scenes with Stable Diffusion XL.",
+  "images": [
+    "/images/projects/sdxl-exploration/01.jpg",
+    "/images/projects/sdxl-exploration/02.jpg",
+    "/images/projects/sdxl-exploration/03.jpg",
+    "/images/projects/sdxl-exploration/04.jpg",
+    "/images/projects/sdxl-exploration/05.jpg",
+    "/images/projects/sdxl-exploration/06.jpg",
+    "/images/projects/sdxl-exploration/07.jpg",
+    "/images/projects/sdxl-exploration/08.jpg",
+    "/images/projects/sdxl-exploration/09.jpg",
+    "/images/projects/sdxl-exploration/10.jpg",
+    "/images/projects/sdxl-exploration/11.jpg",
+    "/images/projects/sdxl-exploration/12.jpg",
+    "/images/projects/sdxl-exploration/13.jpg",
+    "/images/projects/sdxl-exploration/14.jpg",
+    "/images/projects/sdxl-exploration/15.jpg",
+    "/images/projects/sdxl-exploration/16.jpg",
+    "/images/projects/sdxl-exploration/17.jpg",
+    "/images/projects/sdxl-exploration/18.jpg",
+    "/images/projects/sdxl-exploration/19.jpg",
+    "/images/projects/sdxl-exploration/20.jpg"
+  ]
+}

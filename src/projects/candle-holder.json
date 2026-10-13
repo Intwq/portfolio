@@ -1,0 +1,15 @@
+{
+  "title": "Candle Holder",
+  "year": 2020,
+  "order": 130,
+  "category": "Product",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/candle-holder/02.jpg",
+  "description": "This product was designed around how visceral products from the likes of Claustrum feel to me: the denotations and connotations of the material presented, from the feeling of handling its slick finish to the sounds it makes when colliding with itself.",
+  "images": [
+    "/images/projects/candle-holder/01.jpg",
+    "/images/projects/candle-holder/02.jpg",
+    "/images/projects/candle-holder/03.jpg"
+  ]
+}

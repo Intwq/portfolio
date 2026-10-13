@@ -1,0 +1,31 @@
+{
+  "title": "SD v2.1 Explorations",
+  "year": 2023,
+  "order": 20,
+  "category": "AI / Concept",
+  "tools": "Stable Diffusion 2.1, Blender",
+  "featured": false,
+  "cover": "/images/projects/sd-v21-explorations/04.jpg",
+  "description": "Surface-level exploration of Stable Diffusion v2.1 through Blender, as an entry into the tools available for SD while testing hardware limitations.\n\nCuriosities about living through those worlds we imagined as children watching cartoons like Laputa, Evangelion, Akira, etc.",
+  "images": [
+    "/images/projects/sd-v21-explorations/01.jpg",
+    "/images/projects/sd-v21-explorations/02.jpg",
+    "/images/projects/sd-v21-explorations/03.jpg",
+    "/images/projects/sd-v21-explorations/04.jpg",
+    "/images/projects/sd-v21-explorations/05.jpg",
+    "/images/projects/sd-v21-explorations/06.jpg",
+    "/images/projects/sd-v21-explorations/07.jpg",
+    "/images/projects/sd-v21-explorations/08.jpg",
+    "/images/projects/sd-v21-explorations/09.jpg",
+    "/images/projects/sd-v21-explorations/10.jpg",
+    "/images/projects/sd-v21-explorations/11.jpg",
+    "/images/projects/sd-v21-explorations/12.jpg",
+    "/images/projects/sd-v21-explorations/13.jpg",
+    "/images/projects/sd-v21-explorations/14.jpg",
+    "/images/projects/sd-v21-explorations/15.jpg",
+    "/images/projects/sd-v21-explorations/16.jpg",
+    "/images/projects/sd-v21-explorations/17.jpg",
+    "/images/projects/sd-v21-explorations/18.jpg",
+    "/images/projects/sd-v21-explorations/19.jpg"
+  ]
+}

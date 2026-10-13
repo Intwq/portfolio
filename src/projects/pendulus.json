@@ -1,0 +1,17 @@
+{
+  "title": "PENDULUS",
+  "year": 2020,
+  "order": 180,
+  "category": "Product",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/pendulus/03.jpg",
+  "description": "“Pendulus” is an attempt at merging the compartmentalization foundation of Dieter Rams with the visual form of a pendulum's swing.",
+  "images": [
+    "/images/projects/pendulus/01.jpg",
+    "/images/projects/pendulus/02.jpg",
+    "/images/projects/pendulus/03.jpg",
+    "/images/projects/pendulus/04.jpg",
+    "/images/projects/pendulus/05.jpg"
+  ]
+}

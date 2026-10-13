@@ -1,0 +1,20 @@
+{
+  "title": "Workshop Stool",
+  "year": 2020,
+  "order": 110,
+  "category": "Furniture",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/workshop-stool/08.jpg",
+  "description": "A stool designed through the ID program at the University of Tennessee, led by Herman Miller designers.\n\nThe idea behind this stool was to create something rugged that could be thrown around a workshop. With every flip and turn, you find a new way to position yourself to take on any task. The primary drivers for the form are use and experience, from watching people on the streets of Hong Kong and Singapore using their stools in a plethora of different ways. The stool is made to be easily packed, assembled, and sustainable thanks to recycled materials.",
+  "images": [
+    "/images/projects/workshop-stool/01.jpg",
+    "/images/projects/workshop-stool/02.jpg",
+    "/images/projects/workshop-stool/03.jpg",
+    "/images/projects/workshop-stool/04.jpg",
+    "/images/projects/workshop-stool/05.jpg",
+    "/images/projects/workshop-stool/06.jpg",
+    "/images/projects/workshop-stool/07.jpg",
+    "/images/projects/workshop-stool/08.jpg"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Roll Dispenser",
+  "year": 2019,
+  "order": 60,
+  "category": "Product",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/roll-dispenser/05.jpg",
+  "description": "",
+  "images": [
+    "/images/projects/roll-dispenser/01.jpg",
+    "/images/projects/roll-dispenser/02.jpg",
+    "/images/projects/roll-dispenser/03.jpg",
+    "/images/projects/roll-dispenser/04.jpg",
+    "/images/projects/roll-dispenser/05.jpg"
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Shop Thermostat",
+  "year": 2019,
+  "order": 170,
+  "category": "Product",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/shop-thermostat/01.jpg",
+  "description": "The purpose of this RenderWeekly project was to find a rugged thermostat form that could be used in a shop environment as an assistant, and could be easily read and adjusted from across the room.",
+  "images": [
+    "/images/projects/shop-thermostat/01.jpg",
+    "/images/projects/shop-thermostat/02.jpg",
+    "/images/projects/shop-thermostat/03.jpg",
+    "/images/projects/shop-thermostat/04.jpg"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "title": "Silverware",
+  "year": 2020,
+  "order": 140,
+  "category": "Product",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/silverware/02.jpg",
+  "description": "A project based on curiosities of form and material, attempting elegant silverware through simple and cost-effective manufacturing.",
+  "images": [
+    "/images/projects/silverware/01.jpg",
+    "/images/projects/silverware/02.jpg",
+    "/images/projects/silverware/03.jpg",
+    "/images/projects/silverware/04.jpg",
+    "/images/projects/silverware/05.jpg"
+  ]
+}

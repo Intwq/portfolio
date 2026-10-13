@@ -1,0 +1,20 @@
+{
+  "title": "Dispenser",
+  "year": 2019,
+  "order": 80,
+  "category": "Product",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/dispenser/08.jpg",
+  "description": "",
+  "images": [
+    "/images/projects/dispenser/01.jpg",
+    "/images/projects/dispenser/02.jpg",
+    "/images/projects/dispenser/03.jpg",
+    "/images/projects/dispenser/04.jpg",
+    "/images/projects/dispenser/05.jpg",
+    "/images/projects/dispenser/06.jpg",
+    "/images/projects/dispenser/07.jpg",
+    "/images/projects/dispenser/08.jpg"
+  ]
+}

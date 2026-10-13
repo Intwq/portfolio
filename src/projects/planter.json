@@ -1,0 +1,14 @@
+{
+  "title": "Planter",
+  "year": 2020,
+  "order": 160,
+  "category": "Product / Photography",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/planter/02.jpg",
+  "description": "An exercise created to test my ability to combine what I've learned through photography, design, and sculpture. Using color, I attempted to move the audience's eye around the page in the path of an X, keeping the viewer engaged through chaos.",
+  "images": [
+    "/images/projects/planter/01.jpg",
+    "/images/projects/planter/02.jpg"
+  ]
+}

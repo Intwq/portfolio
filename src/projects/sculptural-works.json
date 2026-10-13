@@ -1,0 +1,29 @@
+{
+  "title": "Sculptural Works",
+  "year": 2020,
+  "order": 220,
+  "category": "Sculpture",
+  "tools": "",
+  "featured": false,
+  "cover": "/images/projects/sculptural-works/08.jpg",
+  "description": "",
+  "images": [
+    "/images/projects/sculptural-works/01.jpg",
+    "/images/projects/sculptural-works/02.jpg",
+    "/images/projects/sculptural-works/03.jpg",
+    "/images/projects/sculptural-works/04.jpg",
+    "/images/projects/sculptural-works/05.jpg",
+    "/images/projects/sculptural-works/06.jpg",
+    "/images/projects/sculptural-works/07.jpg",
+    "/images/projects/sculptural-works/08.jpg",
+    "/images/projects/sculptural-works/09.jpg",
+    "/images/projects/sculptural-works/10.jpg",
+    "/images/projects/sculptural-works/11.jpg",
+    "/images/projects/sculptural-works/12.jpg",
+    "/images/projects/sculptural-works/13.jpg",
+    "/images/projects/sculptural-works/14.jpg",
+    "/images/projects/sculptural-works/15.jpg",
+    "/images/projects/sculptural-works/16.jpg",
+    "/images/projects/sculptural-works/17.jpg"
+  ]
+}

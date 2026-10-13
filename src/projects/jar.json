@@ -1,0 +1,14 @@
+{
+  "title": "JAR",
+  "year": 2022,
+  "order": 90,
+  "category": "Product",
+  "tools": "Blender",
+  "featured": false,
+  "cover": "/images/projects/jar/01.jpg",
+  "description": "A personal project for rendering practice, and for seeing the application of my face scrubber's ergonomics in different forms. With the tapered edge, it is meant to fit any hand shape.",
+  "images": [
+    "/images/projects/jar/01.jpg",
+    "/images/projects/jar/02.jpg"
+  ]
+}
