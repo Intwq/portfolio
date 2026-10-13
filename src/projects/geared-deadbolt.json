@@ -1,0 +1,101 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Geared Deadbolt",
+  "year": 2025,
+  "order": 11,
+  "category": "Door hardware",
+  "status": "Concept, Gate 0",
+  "cover": "/images/projects/geared-deadbolt/01.svg",
+  "description": "A replacement for CRL's declining deadbolt line. The existing design had three problems: the T-turn's orientation let thieves reach it through the door gap, the force needed to lock and unlock grew too high on tall ladder pulls, and it supported only two-point locking.\n\nThe concept uses a geared mechanism, building on what CRL learned from a recent three-point locking project, to cut operating force, remove the vulnerable T-turn orientation and support entrances with three or more locking points. It cleared Gate 0 in early 2025.",
+  "metrics": [
+    {
+      "value": ">$1.5B",
+      "label": "Glass door lock market"
+    },
+    {
+      "value": "3+",
+      "label": "Locking points, up from 2"
+    },
+    {
+      "value": "Gate 0",
+      "label": "Concept approved"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "The T-turn could be reached through the door gap; operating force was too high on long ladder pulls; only two-point locking was supported."
+    },
+    {
+      "label": "Solution",
+      "text": "A geared deadbolt that replaces the current mechanism, reduces operating force and expands CRL's multi-point locking category."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects and Division 8 construction: hotels, government buildings, retail, hospitals, offices, banks, schools and libraries."
+    },
+    {
+      "label": "Value",
+      "text": "A ladder-pull locking option that is more theft resistant yet still easy to operate at longer pull lengths."
+    },
+    {
+      "label": "Competition",
+      "text": "FHC, Assa Abloy, PRL."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Mar 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G2",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G3",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G4",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "table",
+      "title": "Current deadbolt vs geared concept",
+      "caption": "The three customer problems the concept is designed to solve.",
+      "columns": "Attribute | Current deadbolt | Geared concept",
+      "highlight": "Geared concept",
+      "rows": "Locking points | Up to 2 | 3 or more\nThumb-turn | T-turn reachable through the door gap | Re-oriented to remove that path\nOperating force on long pulls | High | Reduced by gearing\nMarket position | Declining sales | Re-establish and grow share",
+      "wide": true
+    }
+  ],
+  "images": [],
+  "featured": false,
+  "hidden": false
+}

@@ -1,0 +1,157 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Entice HP+",
+  "year": 2024,
+  "order": 3,
+  "category": "Entrance systems",
+  "status": "Launched; post-launch review",
+  "description": "Entice is CRL's all-glass entrance system, launched in 2015. Customer feedback on the original pointed to air, water and wind-load performance: the center-hung pivot door left a 3/16\" gap at the top and bottom of the frame.\n\nEntice HP+ re-engineers the door around a continuous geared hinge and an automatic drop-bottom seal. That closes the gaps, raises structural performance and allows larger doors. I joined the program during development and carried it through launch, the first production order and the post-launch review.",
+  "metrics": [
+    {
+      "value": "30+ psf",
+      "label": "Full-scale structural rating, up from 20 psf"
+    },
+    {
+      "value": "+25%",
+      "label": "Entice line growth, 2022 over 2021"
+    },
+    {
+      "value": ">$100M",
+      "label": "Segment size"
+    },
+    {
+      "value": "Title 24",
+      "label": "Viable under California's energy code"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "The original center-hung Entice door had 3/16\" gaps top and bottom, letting air and water through."
+    },
+    {
+      "label": "Solution",
+      "text": "A continuous geared hinge in place of the pivot, plus an automatic drop-bottom seal. Together they improve sealing and wind-load resistance and allow larger doors."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects and Division 8 contractors, for commercial offices, government buildings, retail and hospitality."
+    },
+    {
+      "label": "Value",
+      "text": "For architects: Title 24 viable, high thermal performance, and freedom in scale and aesthetics."
+    },
+    {
+      "label": "Competition",
+      "text": "U.S. Aluminum Mojave 250T, FHC Aspire, Assa Abloy ThermaGuard."
+    },
+    {
+      "label": "Launch",
+      "text": "The first order shipped in 27 business days against a 20-day standard. We used it to tighten the production flow for the orders behind it."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Feb 2023",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Jul 2023",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Sep 2023",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G5",
+      "date": "2025",
+      "label": "",
+      "done": true
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Entice line sales, indexed",
+      "caption": "Four years of the original Entice (2021 = 100). HP+ was built to extend this trend with a higher-performance option.",
+      "labels": "2021\n2022\n2023\n2024",
+      "series": [
+        {
+          "name": "Entice",
+          "values": "100, 125, 103, 119",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "note": "Indexed from internal sales data; actual figures withheld."
+    },
+    {
+      "type": "hbar",
+      "title": "How open HP+ projects are specified",
+      "caption": "33 open or won HP+ opportunities at the time of the transom and sidelite program. Most name HP+ as the basis of design.",
+      "labels": "Basis of design\nSpecified\nTo be decided",
+      "series": [
+        {
+          "name": "Projects",
+          "values": "25, 5, 3",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Basis of design",
+      "suffix": " projects"
+    },
+    {
+      "type": "hbar",
+      "title": "Where HP+ leads come from",
+      "caption": "Same 33 opportunities, by lead source. Architect outreach and continuing-education presentations feed the pipeline alongside inbound email and web forms.",
+      "labels": "Email\nWebsite form\nProspecting\nArchitect requests\nDistributor\nContinuing-education talks",
+      "series": [
+        {
+          "name": "Leads",
+          "values": "15, 8, 3, 3, 2, 2",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Architect requests",
+      "wide": true
+    }
+  ],
+  "images": [
+    "/images/projects/entice-hp-plus/01.jpg",
+    "/images/projects/entice-hp-plus/02.jpg",
+    "/images/projects/entice-hp-plus/03.jpg",
+    "/images/projects/entice-hp-plus/04.jpg",
+    "/images/projects/entice-hp-plus/05.jpg",
+    "/images/projects/entice-hp-plus/06.jpg",
+    "/images/projects/entice-hp-plus/07.jpg",
+    "/images/projects/entice-hp-plus/08.jpg",
+    "/images/projects/entice-hp-plus/09.jpg"
+  ],
+  "cover": "/images/projects/entice-hp-plus/01.jpg",
+  "featured": false,
+  "hidden": false
+}

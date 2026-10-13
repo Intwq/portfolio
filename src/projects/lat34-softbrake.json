@@ -1,0 +1,153 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Lat34 Softbrake",
+  "year": 2025,
+  "order": 8,
+  "category": "Sliding systems",
+  "status": "Gate 1 complete, December 2025",
+  "description": "Latitude is CRL's premium barn-door-style sliding system for glass and other heavy panels, launched in August 2024. Stopping a heavy glass panel raises safety, noise and wear concerns, so we added soft-close.\n\nWe moved to the supplier's second-generation track, which is backward compatible and houses an integrated Soft-Brake. Three Soft-Brake units cover panels from 60 to 300 lb, sit entirely inside the track profile, can be positioned anywhere along it and can be added after installation. Testing meets or exceeds DIN and ANSI standards, including the ADA disengage force. The new track also cost less than the one it replaced, which helped offset the cost of the soft-close.",
+  "metrics": [
+    {
+      "value": "8.6×",
+      "label": "Quarterly sales growth in the first year after launch"
+    },
+    {
+      "value": "300 lb",
+      "label": "Max panel weight with Soft-Brake"
+    },
+    {
+      "value": "100,000",
+      "label": "Test cycles at 300 lb"
+    },
+    {
+      "value": ">$2B",
+      "label": "Luxury sliding door market, 4.2% CAGR"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Operating heavy glass panels on the existing sliders raised concerns about safety, noise and component wear."
+    },
+    {
+      "label": "Solution",
+      "text": "Second-generation tracks that accept a fully integrated, adjustable Soft-Brake, in brushed stainless and black."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects, temperers and glazing contractors working on luxury offices and residences."
+    },
+    {
+      "label": "Value",
+      "text": "A more premium, safer user experience, especially for heavy panels, on a system that was already growing quickly."
+    },
+    {
+      "label": "Sourcing",
+      "text": "Buy: from the system's original supplier, with existing inventory exchanged for the new track."
+    },
+    {
+      "label": "Competition",
+      "text": "Pemko W100, KN Crowder, Häfele Flatec II."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Dec 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Dec 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G3",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G4",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "bar",
+      "title": "Latitude quarterly sales since launch",
+      "caption": "Indexed to the launch quarter (Q3 2024 = 1×). Momentum came from trade shows and a growing installed base.",
+      "labels": "Q3 2024\nQ4 2024\nQ1 2025\nQ2 2025\nQ3 2025",
+      "series": [
+        {
+          "name": "Sales",
+          "values": "1.0, 1.6, 3.6, 4.0, 8.6",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Q3 2025",
+      "suffix": "×",
+      "decimals": 1,
+      "note": "Indexed from internal sales data; actual figures withheld."
+    },
+    {
+      "type": "table",
+      "title": "Soft-Brake units",
+      "caption": "Three units cover the full range of panel weights. Disengage force stays within ADA limits.",
+      "columns": "Unit | Panel weight | Disengage force",
+      "rows": "1 | 60–120 lb | 4.5–6 lbf\n2 | 121–200 lb | 9.5–11 lbf\n3 | 201–300 lb | 13–14.5 lbf"
+    },
+    {
+      "type": "table",
+      "title": "Durability and impact testing",
+      "caption": "Soft-Brake results against the DIN and ANSI reference standards.",
+      "columns": "Test | Soft-Brake | DIN reference | ANSI reference",
+      "highlight": "Soft-Brake",
+      "rows": "Cycles at 300 lb | 100,000 | 5,000 to 100,000 | 10,000 to 35,000\nImpact at 100 lb | 10 × 1.0 m/s | 10 × 0.67 m/s | No equivalent\nImpact at 200 lb | 10 × 0.87 m/s | 10 × 0.55 m/s | No equivalent\nImpact at 300 lb | 10 × 0.75 m/s | 10 × 0.44 m/s | No equivalent",
+      "wide": true
+    },
+    {
+      "type": "table",
+      "title": "Where Latitude sits in the barn-door range",
+      "caption": "Compared with CRL's existing barn-door slider, the system customers would otherwise choose.",
+      "columns": "System | Weight capacity | Material | Adjustability | Cycle testing",
+      "rows": "Laguna (existing) | 220 lb | 304 stainless | Height only | Legacy\nLatitude Hemisphere | 200 lb | 6005A-T61 / 6061-T6 aluminum | Vertical, height, stop, leveling | 1,000,000\nLatitude Meridian | 400 lb | 6005A-T61 / 6061-T6 aluminum | Vertical, height, stop, leveling | 1,000,000\nLatitude Solstice | 550 lb | 6005A-T61 / 6061-T6 aluminum | Vertical, height, stop, leveling | 1,000,000",
+      "wide": true
+    }
+  ],
+  "images": [
+    "/images/projects/lat34-softbrake/01.jpg",
+    "/images/projects/lat34-softbrake/02.jpg",
+    "/images/projects/lat34-softbrake/03.jpg",
+    "/images/projects/lat34-softbrake/04.jpg",
+    "/images/projects/lat34-softbrake/05.jpg",
+    "/images/projects/lat34-softbrake/06.jpg",
+    "/images/projects/lat34-softbrake/07.jpg",
+    "/images/projects/lat34-softbrake/08.jpg",
+    "/images/projects/lat34-softbrake/09.jpg",
+    "/images/projects/lat34-softbrake/10.jpg"
+  ],
+  "cover": "/images/projects/lat34-softbrake/01.jpg",
+  "featured": false,
+  "hidden": false
+}

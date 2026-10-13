@@ -1,0 +1,141 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "S100 4track-corner-pocket",
+  "year": 2025,
+  "order": 9,
+  "category": "Sliding systems",
+  "status": "Gate 2 complete, July 2025",
+  "description": "The Palisades S100 is CRL's thermally broken, high-performance sliding door system. It is Florida product approved and rated CW40, but it topped out at three tracks. Our architectural sales team was losing projects that needed more panels, a corner with no post, or panels that disappear into a wall, and many customers didn't know the system could be configured that way.\n\nThe program adds a 4-track configuration, a pocket option that stacks panels into a built-in wall, and a 90° corner with no fixed post, all within the S100's performance rating. The first application was a luxury showroom in Manhattan that needed all three at once.",
+  "metrics": [
+    {
+      "value": "+21%",
+      "label": "S100 sales, 2023 to 2024"
+    },
+    {
+      "value": "13 × 7 ft",
+      "label": "Max panel size, up to 700 lb"
+    },
+    {
+      "value": "56 ft",
+      "label": "Max opening with four panels"
+    },
+    {
+      "value": "CW40",
+      "label": "Performance grade"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Without 4-track, pocket and corner capability we lost projects, and neither customers nor our own sales team knew those configurations were possible."
+    },
+    {
+      "label": "Solution",
+      "text": "New 4-track, pocket and 90° corner members for the S100, keeping its CW40 rating and thermally broken frame."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects and Division 8 contractors; hotels, government buildings, retail and hospitality."
+    },
+    {
+      "label": "Value",
+      "text": "More configurations for architects on a high-performing, Florida-approved system."
+    },
+    {
+      "label": "Risk",
+      "text": "Track can't be crimped on site, which makes long assemblies unwieldy to build and transport."
+    },
+    {
+      "label": "Competition",
+      "text": "Western Window Systems 7600, Andersen MultiGlide, Mi Windows V2000, PRL Max."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Jul 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Jul 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Jul 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G4",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "table",
+      "title": "Competitive benchmark",
+      "caption": "Every comparable premium system already offered 4-track, pocket and corner configurations, which made them table stakes. Going beyond four tracks would need a modular redesign.",
+      "columns": "System | Max panel | Design pressure | Water | U-factor | STC | Stile | 4-track, pocket, corner",
+      "highlight": "CRL S100",
+      "rows": "CRL S100 | 7' × 13' | 40 psf | 6.06 psf | 0.38 | 33–37 | 1-5/16\" | In development\nMilgard AX650 | 5' × 10' | – | 12 psf | 0.31 | – | 2-15/16\" | Yes\nNanaWall Cero II | 7.5' × 13' | 35 psf | 12 psf | 0.30 | 44 | 2-1/16\" | Yes\nWestern Window Systems 7600 | 12' × 15' | 50 psf | 8 psf | 0.30 | – | 2-57/64\" | Yes\nPanda Slimline | 16' × 20' | 70 psf | 12 psf | 0.42 | – | 2-5/16\" | Yes\nReynaers Hi-Finity | 11.5' × 13' | 41 psf | 12 psf | 0.28 | 45 | 1-3/8\" | Yes\nLaCantina Multi-Slide | 8' × 12' | 40 psf | 7.5 psf | 0.53 | – | 2-3/4\" | Yes",
+      "wide": true
+    },
+    {
+      "type": "line",
+      "title": "S100 sales, indexed",
+      "caption": "2022 = 100. After a dip in 2023, sales recovered 21% in 2024 and kept climbing through July 2025.",
+      "labels": "2022\n2023\n2024",
+      "series": [
+        {
+          "name": "S100",
+          "values": "100, 65, 79",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "note": "Indexed from internal sales data; actual figures withheld."
+    },
+    {
+      "type": "table",
+      "title": "New configurations",
+      "caption": "X = sliding panel, O = fixed panel, P = pocket.",
+      "columns": "Option | Configurations | Notes",
+      "rows": "Pocket | XP, XXP, XXXP, PXXP, PXXXXP | Panels stack into a built-in wall; single, double or triple track; raised or recessed sill\n90° corner | XO, XP, XX, XOX, XXO, XXP, XXX, XXXP | No corner post; customer provides corner structure\n4-track | Up to four sliding panels | Openings up to 56 ft wide"
+    }
+  ],
+  "images": [
+    "/images/projects/s100-4track-corner-pocket/01.jpg",
+    "/images/projects/s100-4track-corner-pocket/02.jpg",
+    "/images/projects/s100-4track-corner-pocket/03.jpg",
+    "/images/projects/s100-4track-corner-pocket/04.jpg",
+    "/images/projects/s100-4track-corner-pocket/05.jpg",
+    "/images/projects/s100-4track-corner-pocket/06.jpg",
+    "/images/projects/s100-4track-corner-pocket/07.jpg",
+    "/images/projects/s100-4track-corner-pocket/08.jpg",
+    "/images/projects/s100-4track-corner-pocket/09.jpg"
+  ],
+  "cover": "/images/projects/s100-4track-corner-pocket/01.jpg",
+  "featured": false,
+  "hidden": false
+}

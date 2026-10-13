@@ -1,0 +1,127 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Top Latch Blumcraft",
+  "year": 2025,
+  "order": 12,
+  "category": "Door hardware",
+  "status": "Launched, February 2025",
+  "description": "Blumcraft is CRL's long-standing panic device brand, now facing new competition. Its top latch had a recurring field problem: a 3° angle on the strike let the roller pop out under enough pressure. The latch also wasn't as universal as it should be, and electric-strike compatibility was limited. A competitor's fix for the electric-strike issue added cost and narrowed door compatibility.\n\nThe new security latch adds a back plate that keeps the roller latch engaged under exterior pull force, fits more door configurations, and ships with every new Blumcraft panic device order for fast market penetration. It passed Gate 4 in February 2025.",
+  "metrics": [
+    {
+      "value": "$3.59B",
+      "label": "U.S. panic hardware market, 2022"
+    },
+    {
+      "value": "4.4%",
+      "label": "Market CAGR"
+    },
+    {
+      "value": "3°",
+      "label": "Strike angle behind the old latch's failures"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "The top latch could fail under enough pressure, and figuring out model compatibility was unclear and slow for customers."
+    },
+    {
+      "label": "Solution",
+      "text": "A security latch with a back plate that keeps the roller engaged, combining the best of our previous design and the competition's."
+    },
+    {
+      "label": "Customers",
+      "text": "Glaziers, architects, glass temperers and door repair shops."
+    },
+    {
+      "label": "Value",
+      "text": "A more secure and more universal latch at a lower cost than competing options, simplifying inventory for customers and for CRL."
+    },
+    {
+      "label": "Sourcing",
+      "text": "Buy: from an existing hardware vendor."
+    },
+    {
+      "label": "Competition",
+      "text": "FHC, Assa Abloy, IGT, InterGlass."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "Feb 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "U.S. panic hardware market, projected",
+      "caption": "$ billions, projected from the 2022 estimate at a 4.4% CAGR.",
+      "labels": "2022\n2023\n2024\n2025\n2026\n2027\n2028",
+      "series": [
+        {
+          "name": "Market",
+          "values": "3.59, 3.75, 3.91, 4.09, 4.27, 4.45, 4.65",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published market estimates.",
+      "wide": true
+    }
+  ],
+  "swot": {
+    "strengths": "Strong Blumcraft brand recognition\nIncluded with all new panic device orders for fast market penetration\nMuch less expensive than competing latches",
+    "weaknesses": "The latch itself is not patented",
+    "opportunities": "Keep and win back customers as new panic device competitors arrive",
+    "threats": "Can be copied by competitors"
+  },
+  "images": [
+    "/images/projects/top-latch-blumcraft/01.jpg",
+    "/images/projects/top-latch-blumcraft/02.jpg",
+    "/images/projects/top-latch-blumcraft/03.jpg",
+    "/images/projects/top-latch-blumcraft/04.jpg",
+    "/images/projects/top-latch-blumcraft/05.jpg"
+  ],
+  "cover": "/images/projects/top-latch-blumcraft/01.jpg",
+  "featured": false,
+  "hidden": false
+}

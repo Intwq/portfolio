@@ -1,0 +1,93 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "TDR Door Rail",
+  "year": 2025,
+  "order": 10,
+  "category": "Door hardware",
+  "status": "Launched",
+  "cover": "/images/projects/tdr-door-rail/01.svg",
+  "description": "A longer version of CRL's 4\" Wedge-Lock tapered door rail: 36-3/4\", one inch over the standard, with the pivot set at 3-5/8\" to match the newest competitor 36\" doors, for openings where the door needs extra clearance. Customers were already ordering this size as a custom rail at a steady rate, so we turned it into a stocked family of rails with matching 37\" headers.\n\nMost of the work was analysis and setup: sizing demand from custom-rail sales, choosing which finishes and lock options to stock, setting stocking levels at the service centers that sell the most, and writing the product listings.",
+  "metrics": [
+    {
+      "value": "868",
+      "label": "Custom 36-3/4\" rails sold before it became a stock item"
+    },
+    {
+      "value": "76%",
+      "label": "Of them in satin anodized"
+    },
+    {
+      "value": "22%",
+      "label": "Ordered with a lock"
+    },
+    {
+      "value": "15",
+      "label": "New SKUs: rails and matching headers"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Openings that need extra door clearance relied on custom-length rails, with custom lead times."
+    },
+    {
+      "label": "Solution",
+      "text": "A stocked 36-3/4\" rail with a 3-5/8\" pivot setback, in five finishes with and without locks, plus matching 37\" single-door headers."
+    },
+    {
+      "label": "Value",
+      "text": "The patented Wedge-Lock system, available off the shelf at this size: a door can be prepared for installation in under ten minutes."
+    },
+    {
+      "label": "Evidence",
+      "text": "Custom-rail sales history showed steady demand at this length, enough to justify stocking it."
+    }
+  ],
+  "charts": [
+    {
+      "type": "split",
+      "title": "Custom 36-3/4\" rail sales by finish",
+      "caption": "Unit mix of the custom rails that preceded the stock SKU. It set which finishes to stock in depth.",
+      "labels": "Satin anodized\nBrushed stainless\nPolished stainless",
+      "series": [
+        {
+          "name": "Units",
+          "values": "664, 180, 24",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Satin anodized"
+    },
+    {
+      "type": "split",
+      "title": "With or without a lock",
+      "caption": "Same 868 rails. Lock versions are stocked at lower levels.",
+      "labels": "Without lock\nWith lock",
+      "series": [
+        {
+          "name": "Units",
+          "values": "674, 194",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "With lock"
+    },
+    {
+      "type": "table",
+      "title": "Standard rail vs TDR",
+      "caption": "The TDR clones the standard 4\" tapered rail, one inch longer and with a different pivot point.",
+      "columns": "Attribute | Standard 4\" rail | TDR",
+      "highlight": "TDR",
+      "rows": "Length | 35-3/4\" | 36-3/4\" (933 mm)\nPivot setback | 2-3/4\" (American standard) | 3-5/8\" (92 mm)\nGlass | 1/2\" monolithic tempered | 1/2\" monolithic tempered\nGlazing system | Wedge-Lock | Wedge-Lock\nMatching header | Standard | 37\" single-door header",
+      "wide": true
+    }
+  ],
+  "images": [],
+  "featured": false,
+  "hidden": false
+}

@@ -1,0 +1,167 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "DRX Kits",
+  "year": 2025,
+  "order": 1,
+  "category": "Door hardware",
+  "status": "Launched, April 2025",
+  "featured": false,
+  "description": "DRX is CRL's patented modular door rail. Glass temperers and glaziers stock the components and cut rails to length in their own shop instead of waiting on a factory-built custom rail. But it was only sold in packs of ten, which made the first purchase hard to justify. DRX Kits put everything for one rail in a single box, so an installer can try the system on one door.\n\nWe repurposed existing DRX inventory into 16 kit SKUs (square and tapered profiles, four finishes, with and without locks), positioned pricing against the custom rails buyers already ordered, and took the kits through five gates in six months with engineering, marketing, sales, planning and production.",
+  "metrics": [
+    {
+      "value": "16",
+      "label": "Kit SKUs built from existing inventory"
+    },
+    {
+      "value": "10 → 1",
+      "label": "Minimum order, in door rails"
+    },
+    {
+      "value": "6 mo.",
+      "label": "Gate 0 to launch"
+    },
+    {
+      "value": "7–8%",
+      "label": "Glass office market CAGR through 2028"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "DRX had been on the market for two and a half years, but buyers had to purchase at least ten of every component to finish a single door."
+    },
+    {
+      "label": "Customers",
+      "text": "Glass temperers, large and small glazing contractors and door repair shops, working on commercial offices, government buildings, retail and hospitality."
+    },
+    {
+      "label": "Solution",
+      "text": "A complete single-rail kit: two rail bodies, a slide block, two 48\" side covers, gasket and end caps. The covers are cut from existing 110\" stock, so kits ship immediately with no manufacturing lead time."
+    },
+    {
+      "label": "Value",
+      "text": "Installers get a modular, adjustable system that installs faster. Temperers stop waiting on factory fabrication. Owners can change finishes after installation."
+    },
+    {
+      "label": "Market",
+      "text": "Glass office market of $500–600M (2021), forecast to grow 7–8% a year through 2028."
+    },
+    {
+      "label": "Competition",
+      "text": "FHC, Assa Abloy, dormakaba."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Oct 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Nov 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Dec 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "Feb 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "Apr 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "bar",
+      "title": "What a buyer had to purchase to build one rail",
+      "caption": "Before kits, DRX components were sold only in multi-packs. Gasket also dropped from a 100 ft roll to the 8 ft a single rail needs.",
+      "labels": "Rail bodies\nSlide blocks\nSide covers\nEnd caps",
+      "series": [
+        {
+          "name": "Before: pack minimums",
+          "values": "10, 10, 5, 10",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "DRX Kit",
+          "values": "2, 1, 2, 2",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "suffix": ""
+    },
+    {
+      "type": "split",
+      "title": "Who buys custom door rails",
+      "caption": "Share of custom door-rail revenue by account size, January to September 2022. Eighteen high-volume temperers drive half the category. The other half is spread across hundreds of smaller shops that could never justify stocking ten of everything.",
+      "labels": "18 largest accounts (200+ rails a year)\n20 mid-size accounts (100–200)\n439 smaller accounts (under 100)",
+      "series": [
+        {
+          "name": "Share",
+          "values": "48, 15, 37",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "439 smaller accounts (under 100)",
+      "note": "Source: CRL sales research. Percent of revenue; account counts rounded to the source data."
+    }
+  ],
+  "quotes": [
+    {
+      "quote": "I only need to build one door in a hurry. Can I buy the DRX and not have to buy bulk quantities?",
+      "source": "Glazier, Glass Expo 2025"
+    },
+    {
+      "quote": "I'd like to try the DRX system but can't invest in stock.",
+      "source": "Glass fabricator, national account"
+    },
+    {
+      "quote": "When are we going to have DRX kits available? Customers are calling in and asking.",
+      "source": "CRL product group sales"
+    }
+  ],
+  "swot": {
+    "strengths": "Everything for one door rail in one box, so ordering and installing is simpler\nInstallers' inventory gets easier to manage",
+    "weaknesses": "DRX costs more than the standard DRS rail\nInternal teams needed training and buy-in on a newer system",
+    "opportunities": "Reach buyers frustrated with custom-rail lead times\nGive glaziers and temperers control over their own schedules\nBuild loyalty with customers who adopt the system",
+    "threats": "Competitors could copy the kit approach\nFor some buyers the cost may outweigh the benefit"
+  },
+  "images": [
+    "/images/projects/drx-kits/01.jpg",
+    "/images/projects/drx-kits/02.jpg",
+    "/images/projects/drx-kits/03.jpg",
+    "/images/projects/drx-kits/04.jpg",
+    "/images/projects/drx-kits/05.jpg",
+    "/images/projects/drx-kits/06.jpg",
+    "/images/projects/drx-kits/07.jpg",
+    "/images/projects/drx-kits/08.jpg",
+    "/images/projects/drx-kits/09.jpg"
+  ],
+  "cover": "/images/projects/drx-kits/01.jpg",
+  "hidden": false
+}

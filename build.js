@@ -2,6 +2,7 @@
 // Projects live in src/projects/*.json, site text in src/site.json, images in src/images/.
 const fs = require("fs");
 const path = require("path");
+const { caseStudy } = require("./casestudy");
 
 const SRC = path.join(__dirname, "src");
 const OUT = path.join(__dirname, "dist");
@@ -178,18 +179,52 @@ function homePage() {
       <img${srcset(p.cover, u, "100vw")} alt=""${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
     </figure>`).join("");
 
-  const tiles = projects.map((p, i) => {
-    const span = SPANS[i % SPANS.length];
+  // Projects are grouped into sections (e.g. "Product launches", "Design work"), in order of first appearance.
+  const groups = [];
+  projects.forEach((p) => {
+    const name = p.section || "Design work";
+    let g = groups.find((x) => x.name === name);
+    if (!g) groups.push((g = { name, items: [] }));
+    g.items.push(p);
+  });
+  let n = 0;
+  // Lay tiles out in rows of the rhythm below; the last row of a section always fills the width.
+  const ROWS = [[7, 5], [4, 4, 4], [5, 7], [6, 6]];
+  const spansFor = (count) => {
+    const out = []; let r = 0;
+    while (out.length < count) {
+      const left = count - out.length;
+      let row = ROWS[r++ % ROWS.length];
+      if (left < row.length) row = left === 1 ? [12] : [6, 6];
+      out.push(...row.slice(0, left));
+    }
+    return out;
+  };
+  const tile = (p, i, arr) => {
+    const span = spansFor(arr.length)[i];
     return `
     <a class="tile s${span}" href="${u.work(p.slug)}" data-reveal data-cursor>
       <div class="tile-media"><img${srcset(p.cover, u, `(max-width: 900px) 100vw, ${Math.round((span / 12) * 100)}vw`)} alt="${esc(p.title)}" loading="lazy" decoding="async" style="view-transition-name:v-${p.slug}"></div>
       <div class="tile-meta">
-        <span class="tile-n">${pad(i + 1)}</span>
+        <span class="tile-n">${pad(++n)}</span>
         <span class="tile-title">${esc(p.title)}</span>
         <span class="tile-cat">${esc(p.category || "")}</span>
         <span class="tile-year">${esc(p.year || "")}</span>
       </div>
     </a>`;
+  };
+  const sections = groups.map((g, gi) => {
+    const ys = g.items.map((p) => p.year).filter(Boolean);
+    const sub = g.items.find((p) => p.company) ? g.items.find((p) => p.company).company + ", " : "";
+    return `
+  <div class="work-group">
+  <div class="work-head" data-reveal>
+    <h2 ${gi === 0 ? 'id="work-h" ' : ""}class="section-title">${esc(g.name)}</h2>
+    <p class="work-count">${g.items.length} projects, ${sub}${Math.min(...ys)}${Math.max(...ys) !== Math.min(...ys) ? ` to ${Math.max(...ys)}` : ""}</p>
+  </div>
+  <div class="grid">${g.items.map(tile).join("")}
+  </div>
+  </div>`;
   }).join("");
 
   const body = `
@@ -213,12 +248,7 @@ function homePage() {
 </section>
 
 <section class="work" id="work" aria-labelledby="work-h">
-  <div class="work-head" data-reveal>
-    <h2 id="work-h" class="section-title">Selected work</h2>
-    <p class="work-count">${projects.length} projects, ${Math.min(...years)} to ${Math.max(...years)}</p>
-  </div>
-  <div class="grid">${tiles}
-  </div>
+${sections}
 </section>`;
   return layout({ depth: 0, body, cls: "page-home", image: featured[0].cover });
 }
@@ -251,7 +281,7 @@ function projectPage(p, i) {
     }).join("")}
     </div>`).join("");
 
-  const spec = [["Year", p.year], ["Discipline", p.category], ["Tools", p.tools], ["Images", p.images.length || ""]]
+  const spec = [["Company", p.company], ["Role", p.role], ["Year", p.year], ["Discipline", p.category], ["Status", p.status], ["Tools", p.tools], ["Images", p.images.length || ""]]
     .filter(([, v]) => v !== undefined && v !== null && String(v).trim() !== "")
     .map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
 
@@ -270,8 +300,9 @@ function projectPage(p, i) {
     <dl class="spec">${spec}</dl>
     <div class="p-desc">${p.description ? paras(p.description) : ""}</div>
   </section>
-  <section class="p-gallery" aria-label="Images">${rows}
-  </section>
+  ${caseStudy(p)}
+  ${rows ? `<section class="p-gallery" aria-label="Images">${caseStudy(p) ? `<h2 class="cs-title gal-title">Gallery</h2>` : ""}${rows}
+  </section>` : ""}
   <a class="p-next" href="${u.work(next.slug)}" data-cursor>
     <span class="p-next-media"><img${srcset(next.cover, u, "100vw")} alt="" loading="lazy"></span>
     <span class="p-next-label">Next project</span>

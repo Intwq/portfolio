@@ -1,0 +1,198 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Floating Sliding Door",
+  "year": 2025,
+  "order": 6,
+  "category": "Sliding systems",
+  "status": "Gate 3 complete, December 2024",
+  "featured": true,
+  "description": "A sliding glass door with no visible track at the head or the floor, so the panel appears to float. It was developed with a European hardware partner for offices, homes and hospitality, at a lower price and with an easier installation than CRL's existing commercial sliders.\n\nI took over the program at Gate 3. Before committing to inventory we surveyed architects on the concept: 85% found it appealing and 77% said they were likely to specify it. Their comments shaped the launch messaging around minimal hardware and clean lines.",
+  "metrics": [
+    {
+      "value": "85%",
+      "label": "Architects who found the concept appealing"
+    },
+    {
+      "value": "77%",
+      "label": "Likely to specify it"
+    },
+    {
+      "value": "90%",
+      "label": "Saw it as different from what's available"
+    },
+    {
+      "value": "<$2.5B",
+      "label": "Sliding door market, 2023"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Customers want contemporary sliding doors that are affordable and simple to install."
+    },
+    {
+      "label": "Solution",
+      "text": "A concealed-track sliding system for residential and commercial use, as a lighter-duty alternative to CRL's 690/695 sliders."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects, for the aesthetics; contractors, for the cost and ease of installation. Offices, residential and hospitality."
+    },
+    {
+      "label": "Value",
+      "text": "No visible track or bottom guide, concealed hardware, and an accessible price."
+    },
+    {
+      "label": "Sourcing",
+      "text": "Buy: developed with an existing European hardware partner."
+    },
+    {
+      "label": "Competition",
+      "text": "Milcasa and Qiwin; Home Depot and Amazon barn doors in wood at the low end."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Apr 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "May 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Jun 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "Dec 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "stack",
+      "title": "Architect concept survey",
+      "caption": "Architects and designers who attended a glass entrances webinar rated the concept on four questions.",
+      "labels": "How appealing is this concept compared to other products?\nHow different is it from other products currently available?\nHow much do you like or dislike it?\nHow likely are you to recommend or specify it?",
+      "series": [
+        {
+          "name": "Strongly positive",
+          "values": "49, 28, 59, 28",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Positive",
+          "values": "36, 62, 28, 49",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Neutral or mild",
+          "values": "15, 10, 10, 15",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Negative",
+          "values": "0, 0, 3, 5",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Strongly negative",
+          "values": "0, 0, 0, 3",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "suffix": "%",
+      "wide": true
+    },
+    {
+      "type": "words",
+      "title": "What architects liked most",
+      "caption": "The words that came up most in open-ended answers, sized by frequency.",
+      "labels": "clean\ntrack\nvisible\naesthetic\nsimple\nminimalist\nbottom\nlook\nmodern\nhardware\nlines\ndoor\nframeless\ntrackless\nsimplicity\nrail\ntop\nguide\nease",
+      "series": [
+        {
+          "name": "Mentions",
+          "values": "10, 9, 8, 7, 6, 5, 5, 4, 4, 4, 3, 3, 2, 2, 2, 2, 3, 2, 2",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "clean\ntrack"
+    },
+    {
+      "type": "hbar",
+      "title": "List-price position against CRL sliders",
+      "caption": "Indexed to the CRL 695 (= 100). The floating slider opens a lower price point in the sliding portfolio.",
+      "labels": "CRL 695\nCRL 51\nCRL 285\nFloating Sliding Door",
+      "series": [
+        {
+          "name": "Index",
+          "values": "100, 96, 93, 54",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Floating Sliding Door"
+    }
+  ],
+  "quotes": [
+    {
+      "quote": "Love the clean and minimal appearance.",
+      "source": "Architect survey respondent"
+    },
+    {
+      "quote": "I like the fact that there's minimal visual hardware, e.g. no top rail.",
+      "source": "Architect survey respondent"
+    },
+    {
+      "quote": "Whether it's open or closed, there is no track or bottom guides.",
+      "source": "Architect survey respondent"
+    }
+  ],
+  "swot": {
+    "strengths": "Strengthens CRL's image as an innovator\nAnother offering for budget-conscious and DIY customers",
+    "weaknesses": "Unique design may slow adoption\nLower weight limits than the CRL 690/695\nNot patented, so it can be copied",
+    "opportunities": "A new, unique option for sliding glass doors\nWorks in offices, homes and hospitality\nAppeals to architects (aesthetics) and contractors (cost, installation)",
+    "threats": "Competitors reaching the market first\nMisuse beyond weight limits, addressed through testing"
+  },
+  "images": [
+    "/images/projects/floating-sliding-door/01.jpg",
+    "/images/projects/floating-sliding-door/02.jpg",
+    "/images/projects/floating-sliding-door/03.jpg",
+    "/images/projects/floating-sliding-door/04.jpg",
+    "/images/projects/floating-sliding-door/05.jpg",
+    "/images/projects/floating-sliding-door/06.jpg",
+    "/images/projects/floating-sliding-door/07.jpg"
+  ],
+  "cover": "/images/projects/floating-sliding-door/01.jpg",
+  "hidden": false
+}

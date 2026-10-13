@@ -4,7 +4,7 @@
 media:
   input: src/images
   output: /images
-  extensions: [jpg, jpeg, png, webp, gif]
+  extensions: [jpg, jpeg, png, webp, gif, svg]
 
 content:
   - name: projects
@@ -60,6 +60,172 @@ content:
         label: Description
         description: Leave a blank line between paragraphs. The first paragraph is shown larger.
         type: text
+      - name: section
+        label: Homepage section
+        description: Projects are grouped on the homepage by this name, e.g. "Product launches" or "Design work". Leave empty for Design work.
+        type: string
+      - name: company
+        label: Company
+        type: string
+      - name: role
+        label: Your role
+        type: string
+      - name: status
+        label: Status
+        description: For example "Launched, April 2025" or "Gate 3 complete".
+        type: string
+      - name: metrics
+        label: Key numbers
+        description: Large figures under the description. Four works best. Optional.
+        type: object
+        list: true
+        fields:
+          - name: value
+            label: Number
+            type: string
+          - name: label
+            label: What it means
+            type: string
+      - name: brief
+        label: Overview
+        description: Short labeled points such as Problem, Solution, Customers, Competition. Optional.
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+          - name: text
+            label: Text
+            type: text
+      - name: gates
+        label: Stage-gate progress
+        description: One entry per gate (G0 to G5). Tick "Complete" for gates passed. Optional.
+        type: object
+        list: true
+        fields:
+          - name: gate
+            label: Gate
+            type: select
+            options:
+              values: [G0, G1, G2, G3, G4, G5]
+          - name: date
+            label: Date
+            type: string
+          - name: label
+            label: Name (optional)
+            description: Defaults to Concept, Define, Develop, Validate, Launch, Post-launch.
+            type: string
+          - name: done
+            label: Complete
+            type: boolean
+      - name: research_intro
+        label: Research introduction
+        type: text
+      - name: charts
+        label: Research charts
+        description: Optional. Keep confidential figures out; percentages and indexes work well.
+        type: object
+        list: true
+        fields:
+          - name: type
+            label: Chart type
+            type: select
+            options:
+              values:
+                - { value: hbar, label: "Horizontal bars" }
+                - { value: bar, label: "Vertical bars" }
+                - { value: line, label: "Line" }
+                - { value: split, label: "Share of a whole (100% bar)" }
+                - { value: stack, label: "Survey rows (stacked 100% bars)" }
+                - { value: table, label: "Table" }
+                - { value: words, label: "Word cloud" }
+          - name: title
+            label: Title
+            type: string
+          - name: caption
+            label: Caption
+            type: text
+          - name: labels
+            label: Labels
+            description: One per line (categories, years, or survey questions).
+            type: text
+          - name: series
+            label: Data series
+            description: Values separated by commas, in the same order as the labels. Leave a value blank for a gap.
+            type: object
+            list: true
+            fields:
+              - name: name
+                label: Series name
+                type: string
+              - name: values
+                label: Values
+                type: string
+              - name: highlight
+                label: Highlight in orange
+                type: boolean
+              - name: dashed
+                label: Dashed line (line charts)
+                type: boolean
+          - name: highlight
+            label: Highlight labels
+            description: Labels to show in orange, one per line.
+            type: text
+          - name: prefix
+            label: Value prefix (e.g. $)
+            type: string
+          - name: suffix
+            label: Value suffix (e.g. %)
+            type: string
+          - name: decimals
+            label: Decimal places
+            type: number
+          - name: columns
+            label: Table columns
+            description: Tables only. Separate columns with |
+            type: string
+          - name: rows
+            label: Table rows
+            description: Tables only. One row per line, columns separated by |
+            type: text
+          - name: show_values
+            label: Show values on line points
+            type: boolean
+            default: true
+          - name: wide
+            label: Full width
+            type: boolean
+          - name: note
+            label: Footnote
+            type: string
+      - name: quotes
+        label: Customer quotes
+        type: object
+        list: true
+        fields:
+          - name: quote
+            label: Quote
+            type: text
+          - name: source
+            label: Who said it
+            type: string
+      - name: swot
+        label: SWOT analysis
+        type: object
+        fields:
+          - name: strengths
+            label: Strengths (one per line)
+            type: text
+          - name: weaknesses
+            label: Weaknesses (one per line)
+            type: text
+          - name: opportunities
+            label: Opportunities (one per line)
+            type: text
+          - name: threats
+            label: Threats (one per line)
+            type: text
       - name: images
         label: Project images
         description: Shown in this order. Drag to reorder. Export as JPG, about 2400px on the long side, so pages load fast.

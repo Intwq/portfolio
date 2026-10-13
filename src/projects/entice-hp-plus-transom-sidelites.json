@@ -1,0 +1,154 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Entice HP+ (Transom & Sidelites)",
+  "year": 2025,
+  "order": 4,
+  "category": "Entrance systems",
+  "status": "Gate 3 complete, May 2025",
+  "description": "Architects kept asking for Entice HP+ with sidelites and transoms, and without them we were losing specifications. On one large government campus, HP+ was the basis of design, and the job went to a competitor because we couldn't support a sidelite.\n\nWe developed transom and sidelite framing members that keep HP+'s weather and thermal performance, ran full assembly testing for air, water, structural and racking loads, wrote the installation manuals, and took the program from Gate 0 to Gate 3 in two months.",
+  "metrics": [
+    {
+      "value": "14.6%",
+      "label": "Projects that need a transom or sidelite"
+    },
+    {
+      "value": "2 mo.",
+      "label": "Gate 0 to Gate 3"
+    },
+    {
+      "value": "45 psf",
+      "label": "Structural load with negligible permanent set"
+    },
+    {
+      "value": "<$10B",
+      "label": "U.S. commercial door market, 2023"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Without sidelites and transoms, HP+ lost projects to competitors whenever an entrance needed them."
+    },
+    {
+      "label": "Solution",
+      "text": "Transom and sidelite framing members that broaden HP+'s architectural applications while keeping its weather and thermal performance."
+    },
+    {
+      "label": "Customers",
+      "text": "Primary: mid-size commercial architecture firms that want bold, code-compliant entries. Secondary: glaziers who want a complete entrance from one supplier."
+    },
+    {
+      "label": "Value",
+      "text": "The complete HP+ entrance: monumental doors with matching transoms and sidelites, without sacrificing performance."
+    },
+    {
+      "label": "Manufacturing",
+      "text": "Built in-house at CRL's Los Angeles plant and made to order, so no new inventory is held."
+    },
+    {
+      "label": "Competition",
+      "text": "FHC Aspire, Assa Abloy ThermaGuard, U.S. Aluminum Mojave 250T."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Mar 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Mar 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Apr 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "May 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "Jun 2025",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "split",
+      "title": "How original Entice projects were configured",
+      "caption": "Based on original Entice orders. We expected the same share of HP+ projects to need a transom or sidelite, a lift of about 14.6% on the open pipeline.",
+      "labels": "Door only\nWith sidelites\nWith transom",
+      "series": [
+        {
+          "name": "Share",
+          "values": "85.4, 9.8, 4.8",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "With sidelites\nWith transom",
+      "decimals": 1
+    },
+    {
+      "type": "split",
+      "title": "Open HP+ opportunities by construction type",
+      "caption": "33 open or won projects. More than half are renovations, where matching an existing opening with sidelites and transoms matters most.",
+      "labels": "Renovation\nNew construction\nAddition",
+      "series": [
+        {
+          "name": "Projects",
+          "values": "18, 14, 1",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Renovation"
+    },
+    {
+      "type": "table",
+      "title": "Assembly test results",
+      "caption": "Entice HP+ door with one sidelite, 98-3/16\" × 122-15/16\", tested on the air, water and structural test wall.",
+      "columns": "Test | Method | Result",
+      "rows": "Air infiltration at 1.57 psf | ASTM E283 | 0.22 cfm/ft²\nAir exfiltration at −1.57 psf | ASTM E283 | 0.15 cfm/ft²\nWater penetration, limited water | ASTM E331 | No water penetration\nDeflection at ±25.1 psf, center mullion | ASTM E330 | +0.561\" / −0.699\"\nDeflection at ±30.1 psf, center mullion | ASTM E330 | +0.679\" / −0.786\"\nPermanent set at ±45.1 psf | ASTM E330 | <0.01\" / −0.13\"\nVertical load (racking), 250 lbf | AAMA 925 | Pass: 0.068\" peak, 0.028\" permanent",
+      "wide": true
+    }
+  ],
+  "swot": {
+    "strengths": "Adds sidelites and transoms, closing HP+'s biggest gap\nKeeps its industry-leading thermal and weather ratings\nFull entrance systems strengthen spec appeal\nBuilt in-house for quality control",
+    "weaknesses": "Development and testing investment\nOnly one assembly tested (door plus one sidelite); broader validation may be needed\nMade to order, so availability depends on production capacity",
+    "opportunities": "Win back projects that went to competitors\nGive architects more freedom without sacrificing performance\nFew systems combine premium aesthetics and thermal performance in one package",
+    "threats": "Competitors may move quickly to match or undercut\nSpecifiers may wait for documentation and proof points"
+  },
+  "images": [
+    "/images/projects/entice-hp-plus-transom-sidelites/01.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/02.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/03.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/04.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/05.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/06.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/07.jpg",
+    "/images/projects/entice-hp-plus-transom-sidelites/08.jpg"
+  ],
+  "cover": "/images/projects/entice-hp-plus-transom-sidelites/01.jpg",
+  "featured": false,
+  "hidden": false
+}

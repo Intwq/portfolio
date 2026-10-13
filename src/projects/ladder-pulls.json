@@ -1,0 +1,186 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Ladder Pulls",
+  "year": 2025,
+  "order": 7,
+  "category": "Door hardware",
+  "status": "Gate 3 complete; launch planned 2026",
+  "description": "Ladder pulls are one of CRL's largest architectural hardware categories, but sales fell 13% from 2022 to 2023 as competitors sold similar-looking pulls for close to half the price. Customers didn't understand why ours cost more.\n\nInstead of racing to the bottom, we split the line in two. CRL X is a premium exterior pull in 3 mm, marine-grade 316 stainless for coastal and winter climates, priced against the market's premium brand. CRL I is a 1.5 mm, 304 stainless interior pull at a value price. Both come from a new supplier with a lower cost structure. We focused on the fast-moving sizes, planned a sell-down of the old stock, ran first-article inspections on every component, and took the program through Gate 3.",
+  "metrics": [
+    {
+      "value": "−13%",
+      "label": "Category sales, 2022 to 2023"
+    },
+    {
+      "value": "89%",
+      "label": "Revenue from the top 45 of 132 SKUs"
+    },
+    {
+      "value": "2",
+      "label": "New lines: exterior 316 SS, interior 304 SS"
+    },
+    {
+      "value": "21%",
+      "label": "2023 pull revenue from locking pulls"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Competitors offered lower-quality pulls at prices close to ours or far below, and customers weren't told why CRL's cost more."
+    },
+    {
+      "label": "Strategy",
+      "text": "Two lines for two applications: premium exterior and value interior, which limits cannibalization between them."
+    },
+    {
+      "label": "Solution",
+      "text": "CRL X (316 stainless, 3 mm) for exterior and harsh environments; CRL I (304 stainless, 1.5 mm) for interiors. Both replace the previous line."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects, temperers, glazing contractors and Division 10 contractors."
+    },
+    {
+      "label": "Market",
+      "text": "Glass office market over $20B, growing 3.8% a year."
+    },
+    {
+      "label": "Competition",
+      "text": "FHC, IGT, InterGlass, Assa Abloy."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "May 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Aug 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "Oct 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "Feb 2026",
+      "label": "",
+      "done": false
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "charts": [
+    {
+      "type": "hbar",
+      "title": "2023 sales by pull length",
+      "caption": "Share of ladder pull revenue (U.S. and Canada). The launch focused on the fast-moving lengths.",
+      "labels": "48\"\n60\"\n24\"\n72\"\n36\"\n84\"\n30\"",
+      "series": [
+        {
+          "name": "Share",
+          "values": "30.1, 15.8, 14.5, 14.1, 12.7, 7.7, 5.1",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "48\"",
+      "suffix": "%",
+      "decimals": 1
+    },
+    {
+      "type": "split",
+      "title": "2023 sales by finish",
+      "caption": "Share of revenue by finish, used to decide which finishes to launch first.",
+      "labels": "Brushed stainless\nMatte black\nPolished stainless\nOther",
+      "series": [
+        {
+          "name": "Share",
+          "values": "56, 37, 5, 2",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Brushed stainless"
+    },
+    {
+      "type": "hbar",
+      "title": "36\" pull list price, indexed",
+      "caption": "Previous CRL pull = 100. The tiered lines sit above and below the old price point, bracketing the competition.",
+      "labels": "FHC\nCRL X (exterior)\nBohle\nCRL, previous line\nCRL I (interior)\nIGT",
+      "series": [
+        {
+          "name": "Index",
+          "values": "124, 108, 102, 100, 70, 52",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "CRL X (exterior)\nCRL I (interior)"
+    },
+    {
+      "type": "line",
+      "title": "Category plan, indexed to 2024",
+      "caption": "Sell down the previous line with aggressive discounting, then clear the remainder in bulk, while CRL X and I ramp. Assumes 40% adoption from 2024 sales.",
+      "labels": "2024\n2025\n2026\n2027\n2028",
+      "series": [
+        {
+          "name": "Previous line only",
+          "values": "100, 90, 81, 77, 73",
+          "highlight": false,
+          "dashed": true
+        },
+        {
+          "name": "Previous line plus CRL X and I",
+          "values": "100, 99, 111, 126, 147",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "note": "Indexed from internal forecast; actual figures withheld."
+    },
+    {
+      "type": "table",
+      "title": "Line architecture",
+      "caption": "Same performance standards, two materials for two environments. 316 stainless resists corrosion far better than 304 thanks to its molybdenum content, which matters in coastal humidity and salted winter air.",
+      "columns": "Line | Material | Wall | Application",
+      "rows": "CRL X | 316 marine-grade stainless | 3 mm | Exterior, coastal and winter climates\nCRL I | 304 stainless | 1.5 mm | Interior",
+      "wide": true
+    }
+  ],
+  "quotes": [
+    {
+      "quote": "As an owner I am looking for ways to help maximize profit. I must buy ladder pulls from [a low-cost competitor] since they are a significant price difference. I'm not able to justify spending more when I can spend much less for similar results.",
+      "source": "Glass shop owner"
+    }
+  ],
+  "images": [
+    "/images/projects/ladder-pulls/01.jpg",
+    "/images/projects/ladder-pulls/02.jpg",
+    "/images/projects/ladder-pulls/03.jpg"
+  ],
+  "cover": "/images/projects/ladder-pulls/01.jpg",
+  "featured": false,
+  "hidden": false
+}

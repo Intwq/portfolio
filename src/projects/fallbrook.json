@@ -1,0 +1,195 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product management, co-lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "Fallbrook",
+  "year": 2025,
+  "order": 5,
+  "category": "Interior partitions",
+  "status": "Cut-to-length launched July 2025; wood door at Gate 0",
+  "description": "Fallbrook is CRL's demountable glass partition system for offices. I ran two programs to grow it.\n\nCut-to-length fabrication. Labor costs are rising and skilled installers are hard to find, so customers wanted partitions that arrive ready to install. We partnered with a fabrication specialist to cut and kit Fallbrook to each opening, and placed the new facility near our Southeast distribution center to serve the East Coast, where most Fallbrook sales are. It launched in July 2025. CRL's European business already sells nearly 80% of its systems this way.\n\nWood door option. In a partition, the door is usually the weakest point for sound. Two new frame extrusions and floating hinge and strike backup plates let Fallbrook accept standard 1-3/4\" U.S. wood doors with the hinges in any position. That suits privacy-critical rooms like law offices, libraries and conference rooms. It passed Gate 0 in March 2026.",
+  "metrics": [
+    {
+      "value": "58%",
+      "label": "2024 sales in the Eastern time zone"
+    },
+    {
+      "value": "+103%",
+      "label": "Fallbrook growth, 2021 to 2024"
+    },
+    {
+      "value": "~30%",
+      "label": "Added customer cost with partner fabrication, vs ~200% in-house"
+    },
+    {
+      "value": "10 days",
+      "label": "Target from order to distribution center"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Rising labor costs and fewer qualified installers meant customers wanted installations that take less time and skill."
+    },
+    {
+      "label": "Solution",
+      "text": "A cut-to-length fabrication program: Fallbrook components cut and kitted to each opening by a fabrication partner, shipped through our distribution center."
+    },
+    {
+      "label": "Value",
+      "text": "Installers save time and labor. Temperers get a one-stop shop: material and glass in a box, ready to install in uniquely sized openings."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects, temperers, glazing contractors and Division 10 contractors."
+    },
+    {
+      "label": "Wood door",
+      "text": "A kit of two frame extrusions and floating backup plates lets the system accept U.S. standard butt hinges and T, full-lip and ASA strikes anywhere along the jamb."
+    },
+    {
+      "label": "Competition",
+      "text": "DIRTT, KI, Steelcase, Muraflex."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Dec 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Dec 2024",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Mar 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "Apr 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "May 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G5",
+      "date": "",
+      "label": "",
+      "done": false
+    }
+  ],
+  "research_intro": "Location data drove the cut-to-length program: where Fallbrook already sells decided where the fabrication partner should build, and the growth trend set the business case.",
+  "charts": [
+    {
+      "type": "split",
+      "title": "2024 Fallbrook sales by U.S. time zone",
+      "caption": "Most of the business sits on the East Coast, which is why the fabrication facility went next to our Southeast distribution center.",
+      "labels": "Eastern\nPacific\nCentral\nMountain",
+      "series": [
+        {
+          "name": "Share",
+          "values": "58, 36, 4, 2",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Eastern"
+    },
+    {
+      "type": "hbar",
+      "title": "Top accounts by state",
+      "caption": "Share of 2024 revenue from the 15 largest Fallbrook accounts. Florida and New York account for half of it, and for 87 of those accounts' 112 orders.",
+      "labels": "Utah\nFlorida\nNew York\nTennessee\nCalifornia\nTexas\nOregon",
+      "series": [
+        {
+          "name": "Share",
+          "values": "29.9, 27.9, 23.0, 10.2, 3.2, 3.1, 2.7",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Florida\nNew York",
+      "suffix": "%",
+      "decimals": 1
+    },
+    {
+      "type": "line",
+      "title": "Fallbrook forecast, with and without cut-to-length",
+      "caption": "Indexed, 2021 = 100. Actual growth averaged about 21% a year from 2021 to 2024; we forecast cut-to-length adding roughly 10% of Fallbrook revenue once adoption settles.",
+      "labels": "2021\n2022\n2023\n2024\n2025\n2026\n2027\n2028\n2029\n2030",
+      "series": [
+        {
+          "name": "Actual",
+          "values": "100, 123, 147, 203, , , , , , ",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Forecast with cut-to-length",
+          "values": ", , , 203, 253, 329, 362, 398, 438, 482",
+          "highlight": true,
+          "dashed": false
+        },
+        {
+          "name": "Forecast without",
+          "values": ", , , 203, 223, 267, 294, 324, 356, 391",
+          "highlight": false,
+          "dashed": true
+        }
+      ],
+      "show_values": false,
+      "wide": true,
+      "note": "Indexed from internal sales data and forecast; actual figures withheld."
+    },
+    {
+      "type": "hbar",
+      "title": "Added cost of a custom-cut partition",
+      "caption": "Cost added to the customer's price for custom-sized components. Partner fabrication made the program viable where cutting in-house was not.",
+      "labels": "Cut in-house at CRL\nFabrication partner",
+      "series": [
+        {
+          "name": "Added cost",
+          "values": "200, 30",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Fabrication partner",
+      "suffix": "%",
+      "wide": true
+    },
+    {
+      "type": "table",
+      "title": "Sound transmission class (STC) for doors",
+      "caption": "Why a wood door matters: in a partition, the door sets the acoustic ceiling. A solid-core or acoustic wood door with proper seals delivers the biggest privacy gain for the cost.",
+      "columns": "STC | What can be heard | Glass doors | Wood doors",
+      "rows": "25 | Soft speech heard and understood | Single-pane glass | Hollow core\n30 | Normal speech heard and understood | Double-glazed glass | Standard lightweight\n35 | Loud speech heard and understood | Laminated glass | Solid core\n40 | Loud speech heard, not understood | – | Heavy solid core\n45 | Loud speech faintly heard | Acoustically insulated glass | –\n50 | Shouting faintly heard | – | Acoustic wood\n60+ | Soundproofing begins | Specialized glass | –",
+      "wide": true
+    }
+  ],
+  "images": [
+    "/images/projects/fallbrook/01.jpg",
+    "/images/projects/fallbrook/02.jpg",
+    "/images/projects/fallbrook/03.jpg",
+    "/images/projects/fallbrook/04.jpg",
+    "/images/projects/fallbrook/05.jpg",
+    "/images/projects/fallbrook/06.jpg",
+    "/images/projects/fallbrook/07.jpg"
+  ],
+  "cover": "/images/projects/fallbrook/01.jpg",
+  "featured": false,
+  "hidden": false
+}
