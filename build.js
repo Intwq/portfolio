@@ -194,8 +194,10 @@ function homePage() {
 
   const body = `
 <section class="hero" data-hero aria-label="Featured work">
-  <div class="slides" data-parallax>${slides}</div>
-  <div class="hero-shade"></div>
+  <div class="hero-stage">
+    <div class="slides" data-parallax>${slides}</div>
+    <div class="hero-shade"></div>
+  </div>
   <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="hero-text">
     <h1 class="hero-title" data-split>${esc(site.name)}</h1>
