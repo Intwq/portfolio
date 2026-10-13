@@ -147,11 +147,11 @@ ${body}
 </main>
 <footer class="foot">
   <div class="foot-big">
-    <p class="foot-line">Have a product that needs designing?</p>
+    <p class="foot-line">${esc(site.contact_line || "Have a product to bring to market?")}</p>
     ${site.email ? `<a class="foot-mail" href="mailto:${esc(site.email)}">${esc(site.email)}</a>` : ""}
   </div>
   <div class="foot-row">
-    <span>&copy; <span data-year>${new Date().getFullYear()}</span> ${esc(site.name)}</span>
+    <span>&copy; <span data-year>${new Date().getFullYear()}</span> ${esc(site.name)}${site.location ? ` / ${esc(site.location)}` : ""}</span>
     <span class="foot-links">
       ${site.instagram ? `<a href="${esc(site.instagram)}" rel="noopener">Instagram</a>` : ""}
       ${site.linkedin ? `<a href="${esc(site.linkedin)}" rel="noopener">LinkedIn</a>` : ""}
@@ -290,28 +290,73 @@ function projectPage(p, i) {
 
 function aboutPage() {
   const u = make(1);
-  const caps = lines(site.capabilities).map((c) => `<li>${esc(c)}</li>`).join("");
   const picks = projects.filter((p) => p.featured).slice(0, 3);
+  const list = (t) => lines(t).map((c) => `<li>${esc(c)}</li>`).join("");
+  const capGroups = Array.isArray(site.capabilities)
+    ? site.capabilities
+    : [{ title: "Capabilities", items: site.capabilities || "" }];
+
+  const stats = (site.stats || []).filter((s) => s && s.value).map((s) => `
+      <div class="stat"><dt>${esc(s.label || "")}</dt><dd>${esc(s.value)}</dd></div>`).join("");
+
+  const jobs = (site.experience || []).filter((j) => j && (j.company || j.role)).map((j) => `
+      <li class="job" data-reveal>
+        <span class="job-dates">${esc(j.dates || "")}</span>
+        <div class="job-head"><h3 class="job-co">${esc(j.company || "")}</h3><p class="job-role">${esc(j.role || "")}</p></div>
+        <p class="job-sum">${esc(j.summary || "")}</p>
+      </li>`).join("");
+
+  const collabs = lines(site.collaborations).map((c) => `<li>${esc(c)}</li>`).join("");
+
   const body = `
 <section class="about">
   <div class="about-head">
-    <p class="p-index">About</p>
+    <p class="p-index">About${site.location ? ` / ${esc(site.location)}` : ""}</p>
     <h1 class="about-title" data-split>${esc(site.role)}</h1>
     <p class="about-tag">${esc(site.tagline)}</p>
   </div>
+
+  ${stats ? `<dl class="stats" data-reveal>${stats}
+  </dl>` : ""}
+
   <div class="about-body" data-reveal>
     <div class="about-bio">${paras(site.about)}</div>
     <div class="about-side">
-      <h2 class="mini">Capabilities</h2>
-      <ul class="caps">${caps}</ul>
-      ${site.email ? `<h2 class="mini">Contact</h2><p><a class="link" href="mailto:${esc(site.email)}">${esc(site.email)}</a></p>` : ""}
+      ${capGroups.map((g) => `<h2 class="mini">${esc(g.title || "")}</h2><ul class="caps">${list(g.items)}</ul>`).join("\n      ")}
     </div>
   </div>
+
+  ${jobs ? `<div class="block">
+    <h2 class="section-title block-title" data-reveal>Experience</h2>
+    <ol class="jobs">${jobs}
+    </ol>
+  </div>` : ""}
+
+  <div class="block facts" data-reveal>
+    ${site.education ? `<div><h2 class="mini">Education</h2><p class="fact-main">${lines(site.education).map(esc).join("<br>")}</p></div>` : ""}
+    ${site.recognition ? `<div><h2 class="mini">Recognition and teaching</h2><ul class="caps">${list(site.recognition)}</ul></div>` : ""}
+    ${site.languages ? `<div><h2 class="mini">Languages</h2><ul class="caps">${list(site.languages)}</ul></div>` : ""}
+  </div>
+
+  ${collabs ? `<div class="block" data-reveal>
+    <h2 class="mini">Brands and collaborations</h2>
+    <ul class="collabs">${collabs}</ul>
+  </div>` : ""}
+
+  <div class="block contact" data-reveal>
+    <h2 class="mini">Contact</h2>
+    <dl class="contact-list">
+      ${site.email ? `<div><dt>Email</dt><dd><a class="link" href="mailto:${esc(site.email)}">${esc(site.email)}</a></dd></div>` : ""}
+      ${site.linkedin ? `<div><dt>LinkedIn</dt><dd><a class="link" href="${esc(site.linkedin)}" rel="noopener">${esc(site.linkedin.replace(/^https?:\/\/(www\.)?/, ""))}</a></dd></div>` : ""}
+      ${site.location ? `<div><dt>Based in</dt><dd>${esc(site.location)}</dd></div>` : ""}
+    </dl>
+  </div>
+
   <div class="about-strip" data-reveal>${picks.map((p) => `
     <a class="strip-item" href="${u.work(p.slug)}" data-cursor><img${srcset(p.cover, u, "(max-width: 560px) 100vw, 33vw")} alt="${esc(p.title)}" loading="lazy"><span>${esc(p.title)}</span></a>`).join("")}
   </div>
 </section>`;
-  return layout({ depth: 1, title: "About", body, cls: "page-about" });
+  return layout({ depth: 1, title: "About", desc: lines(site.about)[0], body, cls: "page-about" });
 }
 
 function notFound() {

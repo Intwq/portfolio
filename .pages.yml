@@ -67,7 +67,7 @@ content:
         list: true
 
   - name: site
-    label: Site text and contact
+    label: Site text, About and contact
     type: file
     path: src/site.json
     format: json
@@ -77,24 +77,86 @@ content:
         type: string
       - name: role
         label: Title
+        description: Shown in the header and as the big About heading.
         type: string
       - name: tagline
         label: Tagline
+        description: Shown under your name on the homepage.
         type: string
       - name: email
         label: Contact email
         type: string
-      - name: instagram
-        label: Instagram link
+      - name: location
+        label: Location
         type: string
       - name: linkedin
         label: LinkedIn link
         type: string
+      - name: instagram
+        label: Instagram link
+        type: string
+      - name: contact_line
+        label: Footer line above your email
+        type: string
       - name: about
         label: About text
-        description: Leave a blank line between paragraphs.
+        description: Leave a blank line between paragraphs. The first paragraph is shown larger.
         type: text
+      - name: stats
+        label: Key numbers
+        description: Shown as large figures near the top of the About page. Four works best.
+        type: object
+        list: true
+        fields:
+          - name: value
+            label: Number
+            type: string
+          - name: label
+            label: What it means
+            type: string
+      - name: experience
+        label: Experience
+        description: Newest first. Drag to reorder.
+        type: object
+        list: true
+        fields:
+          - name: company
+            label: Company
+            type: string
+          - name: role
+            label: Role
+            type: string
+          - name: dates
+            label: Dates
+            type: string
+          - name: summary
+            label: Summary
+            type: text
       - name: capabilities
         label: Capabilities
+        type: object
+        list: true
+        fields:
+          - name: title
+            label: Group name
+            type: string
+          - name: items
+            label: Items
+            description: One per line.
+            type: text
+      - name: education
+        label: Education
+        description: One per line.
+        type: text
+      - name: recognition
+        label: Recognition and teaching
+        description: One per line.
+        type: text
+      - name: languages
+        label: Languages
+        description: One per line.
+        type: text
+      - name: collaborations
+        label: Brands and collaborations
         description: One per line.
         type: text
