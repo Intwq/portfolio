@@ -72,7 +72,7 @@ const iconFor = (p) => {
   return "";
 };
 
-// ---------- case-study styles, reused from the main site and re-coloured for a light panel ----------
+// ---------- case-study styles, reused from the main site (same dark palette) ----------
 function caseCss() {
   const css = fs.readFileSync(path.join(SRC, "assets", "style.css"), "utf8").split("\n");
   const grab = (start, stop) => {
@@ -85,14 +85,11 @@ function caseCss() {
   // responsive rules for the case studies: the first 900px block that starts with .brief, up to the footer
   const i900 = css.findIndex((l, i) => l.startsWith("@media (max-width: 900px)") && css[i + 1] && css[i + 1].includes(".brief"));
   if (i900 > 0) { let j = i900; while (j < css.length && !css[j].startsWith("/* ============ footer")) j++; out += "\n" + css.slice(i900, j).join("\n"); }
-  return out
-    .replace(/rgba\(233,\s*235,\s*238,/g, "rgba(20,20,20,")
-    .replace(/rgba\(255,\s*255,\s*255,\s*0\.0(\d+)\)/g, "rgba(0,0,0,0.0$1)")
-    .replace(/#0a0c0f/g, "#ecece8");
+  return out;
 }
 
 // ---------- pages ----------
-const FONTS = "https://fonts.googleapis.com/css2?family=Doto:wght@500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap";
+const FONTS = "https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@400;500&display=swap";
 
 function fragment(p, i) {
   const spec = [["Company", p.company], ["Role", p.role], ["Year", p.year], ["Discipline", p.category], ["Status", p.status], ["Tools", p.tools]]
@@ -121,8 +118,8 @@ function indexPage() {
   for (const d of data) { let g = groups.find((x) => x.name === d.section); if (!g) groups.push(g = { name: d.section, items: [] }); g.items.push(d); }
   groups.sort((a, b) => (b.name === "Product launches") - (a.name === "Product launches"));
 
-  const prize = (d) => `<button class="prize" type="button" data-slug="${d.slug}" aria-label="Grab ${esc(d.title)}"><img src="${d.icon}" alt="" width="36" height="36" draggable="false"></button>`;
-  const row = (d) => `<li><button type="button" class="ix-row" data-open="${d.slug}"><img src="${d.icon}" alt="" width="36" height="36"><span class="ix-n">${pad(d.n)}</span><span class="ix-t">${esc(d.title)}</span><span class="ix-y">${esc(d.year)}</span></button></li>`;
+  const prize = (d) => `<button class="prize" type="button" data-slug="${d.slug}" aria-label="Grab ${esc(d.title)}"><img src="${d.icon}" alt="" width="52" height="52" draggable="false"></button>`;
+  const row = (d) => `<li><button type="button" class="ix-row" data-open="${d.slug}"><img src="${d.icon}" alt="" width="52" height="52"><span class="ix-n">${pad(d.n)}</span><span class="ix-t">${esc(d.title)}</span><span class="ix-y">${esc(d.year)}</span></button></li>`;
 
   return `<!doctype html>
 <html lang="en">
@@ -131,7 +128,7 @@ function indexPage() {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(site.name)} | Arcade</title>
 <meta name="description" content="${esc(site.name)}, ${esc(site.role)}. The portfolio as a claw machine: grab a prize to open a project.">
-<meta name="theme-color" content="#e9e9e6">
+<meta name="theme-color" content="#0e0b1f">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -140,19 +137,19 @@ function indexPage() {
 </head>
 <body>
 <main class="machine" id="machine">
+  <canvas class="bg" id="bg" aria-hidden="true"></canvas>
   <canvas class="rig" id="rig" aria-hidden="true"></canvas>
   <div class="pit" id="pit">${data.map(prize).join("")}</div>
-  <div class="floor" aria-hidden="true"></div>
 </main>
 
 <div class="fx" id="fx" aria-hidden="true"><div class="rays"></div><div class="glow"></div></div>
 
 <a class="logo" href="./" aria-label="${esc(site.name)} arcade, reload">
-  <span class="logo-dt">${esc(site.name.split(" ").map((w) => w[0]).join(""))}</span>
+  <span class="logo-dt" data-text="${esc(site.name.split(" ").map((w) => w[0]).join(""))}">${esc(site.name.split(" ").map((w) => w[0]).join(""))}</span>
   <span class="logo-sub">${esc(site.name.toUpperCase())}<br>CLAW / ARCADE-01</span>
 </a>
 
-<aside class="readout" aria-label="Contact and details">
+<aside class="readout px-panel" aria-label="Contact and details">
   <p><b>${esc(site.name)}</b><br>${esc(site.role)}</p>
   <p>${esc(site.location || "")}</p>
   <dl>
@@ -165,8 +162,7 @@ function indexPage() {
   </dl>
 </aside>
 
-<p class="hint" id="hint"><span class="led"></span><span data-hint>Move to aim. Click a prize to grab it.</span></p>
-<p class="lcd" aria-live="polite"><span data-lcd>Insert coin</span></p>
+<p class="hint" id="hint" aria-live="polite"><span class="led"></span><span data-hint>Move to aim. Click a prize to grab it.</span></p>
 
 <nav class="drawer" id="drawer" aria-label="All projects">
   <button class="tab" type="button" aria-expanded="false" aria-controls="ix"><span class="tab-arrow" aria-hidden="true">→</span><span class="tab-txt">Index</span></button>
