@@ -128,7 +128,7 @@ function indexPage() {
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(site.name)} | Arcade</title>
 <meta name="description" content="${esc(site.name)}, ${esc(site.role)}. The portfolio as a claw machine: grab a prize to open a project.">
-<meta name="theme-color" content="#0e0b1f">
+<meta name="theme-color" content="#eef0ff">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

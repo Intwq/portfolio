@@ -1,7 +1,8 @@
-// ARCADE: a pixel-art claw machine. Everything mechanical is drawn into low-resolution pixel
-// buffers and scaled up with hard edges. A trolley rides an I-beam, a verlet-simulated chain hangs
-// from it, and the claw follows the pointer. Click a prize: the claw drops, grabs, lifts, the prize
-// shakes in golden light and opens into the project window. Close (×) and it is dropped back.
+// ARCADE: a pixel-art claw machine. The rig (rail, trolley, chain, claw) is drawn into a
+// low-resolution pixel buffer and scaled up with hard edges. Prizes are little rigid bodies that
+// fall, bump, overlap and settle into a pile. Click a prize: the claw drops, grabs it out of the
+// pile, lifts it, the prize shakes in golden light and opens into the project window.
+// Close (×) and the claw carries it back and drops it onto the pile.
 (() => {
   const DATA = window.ARCADE || [];
   const $ = (s, r = document) => r.querySelector(s);
@@ -16,210 +17,196 @@
   // ---------- colours (ABGR for the pixel buffers) ----------
   const rgb = (h) => { const n = parseInt(h.slice(1), 16); return (255 << 24 | (n & 255) << 16 | (n >> 8 & 255) << 8 | n >> 16) >>> 0; };
   const P = Object.fromEntries(Object.entries({
-    out: "#0a0814", s0: "#2a2846", s1: "#56597e", s2: "#9aa2c2", s3: "#eef2ff",
-    d0: "#120f22", d1: "#25213d", d2: "#3f3a5e", red: "#e0263f", red2: "#ff8a9a", ora: "#ff6a14", ora2: "#ffc27a",
-    cyan: "#22e4ff", cyanD: "#0f3550", yel: "#f0b000", gold: "#fff0a0", ceil: "#241e48", ceil2: "#3a3470",
+    out: "#1a1430",
+    // rail + trolley: soft lilac-grey metal
+    m0: "#7d7aa6", m1: "#a9a7cc", m2: "#d3d2ec", m3: "#ffffff",
+    // claw: bubblegum pink + cream
+    k0: "#c2457a", k1: "#ff7eb0", k2: "#ffb3d1", k3: "#ffe3ef",
+    cream: "#fff6e6", cream2: "#f0dcc0",
+    eye: "#1a1430", eyeHi: "#ffffff", blush: "#ff8fa8",
+    mint: "#7ee0c4", mintD: "#3fae95", yel: "#ffd23f", yelD: "#e0a800", red: "#ff4d6d",
+    chain0: "#8d8ab5", chain1: "#c9c7e6",
   }).map(([k, v]) => [k, rgb(v)]));
 
   let W = 0, H = 0, PX = 2, LW = 0, LH = 0, S = 104, RAIL = 64, FLOOR = 34, U = 1;
-  let rigImg = null, rig = null;
+  let rig = null;
   const pointer = { x: 0, y: 0, seen: false };
   const trolley = { x: 0, v: 0, tx: 0 };
-  const N = 18;
+  const N = 16;
   const pts = Array.from({ length: N }, () => ({ x: 0, y: 0, px: 0, py: 0 }));
   let len = 160, lenT = 160;
   const claw = { open: 1, openT: 1 };
   let mode = "follow";
-  let held = null, timer = 0, current = null, clock = 0, clawAng = 0;
+  let held = null, timer = 0, current = null, clock = 0, clawAng = 0, blinkT = 3;
 
   const prizes = $$(".prize", pit).map((el, i) => ({
     el, i, slug: el.dataset.slug, d: DATA.find((d) => d.slug === el.dataset.slug),
-    x: 0, y: 0, hx: 0, hy: 0, vy: 0, falling: false, scale: 1,
+    x: 0, y: 0, vx: 0, vy: 0, scale: 1, dyn: true, sleep: 0, homeX: 0,
   }));
   const rnd = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
-  const anchorY = () => RAIL + 16 * PX;
+  const anchorY = () => RAIL + 13 * PX;
 
-  // ---------- pixel helpers (work on a Uint32 buffer of size LW x LH) ----------
+  // ---------- pixel helpers ----------
   function makeBuf(w, h) { const img = new ImageData(w, h); return { img, u: new Uint32Array(img.data.buffer), w, h }; }
-  const pset = (b, x, y, c) => { x |= 0; y |= 0; if (x >= 0 && y >= 0 && x < b.w && y < b.h) b.u[y * b.w + x] = c; };
+  const pset = (b, x, y, c) => { x = Math.round(x); y = Math.round(y); if (x >= 0 && y >= 0 && x < b.w && y < b.h) b.u[y * b.w + x] = c; };
   const rect = (b, x, y, w, h, c) => { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) pset(b, x + i, y + j, c); };
-  const disc = (b, cx, cy, r, c) => { const R = Math.ceil(r); for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) if (i * i + j * j <= r * r + 0.3) pset(b, Math.round(cx) + i, Math.round(cy) + j, c); };
+  const disc = (b, cx, cy, r, c) => { const R = Math.ceil(r); cx = Math.round(cx); cy = Math.round(cy); for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) if (i * i + j * j <= r * r + 0.3) pset(b, cx + i, cy + j, c); };
   function thick(b, x0, y0, x1, y1, r, c) {
     const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0)));
     for (let k = 0; k <= n; k++) disc(b, x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, r, c);
   }
-  function line(b, x0, y0, x1, y1, c) {
-    x0 = Math.round(x0); y0 = Math.round(y0); x1 = Math.round(x1); y1 = Math.round(y1);
-    const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1; let e = dx + dy;
-    for (;;) { pset(b, x0, y0, c); if (x0 === x1 && y0 === y1) break; const e2 = 2 * e; if (e2 >= dy) { e += dy; x0 += sx; } if (e2 <= dx) { e += dx; y0 += sy; } }
-  }
-  function poly(b, pts, c) {
-    let y0 = Infinity, y1 = -Infinity;
-    pts.forEach((p) => { y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
-    for (let y = Math.floor(y0); y <= Math.ceil(y1); y++) {
-      const xs = [], yc = y + 0.5;
-      for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
-        const [xi, yi] = pts[i], [xj, yj] = pts[j];
-        if ((yi > yc) !== (yj > yc)) xs.push(xi + (yc - yi) * (xj - xi) / (yj - yi));
-      }
-      xs.sort((a, b2) => a - b2);
-      for (let k = 0; k + 1 < xs.length; k += 2) for (let x = Math.round(xs[k]); x < Math.round(xs[k + 1]); x++) pset(b, x, y, c);
+  function ellipseFill(b, cx, cy, rx, ry, ang, fill) {   // fill(lx, ly, nx, ny) -> colour; nx,ny = normalised position
+    const R = Math.ceil(Math.max(rx, ry)) + 1, c = Math.cos(ang), s = Math.sin(ang);
+    for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) {
+      const lx = i * c + j * s, ly = -i * s + j * c;          // into the ellipse's frame
+      const nx = lx / rx, ny = ly / ry;
+      if (nx * nx + ny * ny <= 1) pset(b, cx + i, cy + j, fill(lx, ly, nx, ny));
     }
   }
-  function outline(b, x0, y0, x1, y1) {   // hard black outline around everything drawn in the box
+  function outline(b, x0, y0, x1, y1) {
     x0 = Math.max(1, x0 | 0); y0 = Math.max(1, y0 | 0); x1 = Math.min(b.w - 2, x1 | 0); y1 = Math.min(b.h - 2, y1 | 0);
     const u = b.u, w = b.w, mark = [];
     for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
       const i = y * w + x;
-      if (u[i]) continue;
-      if (u[i - 1] || u[i + 1] || u[i - w] || u[i + w]) mark.push(i);
+      if (!u[i] && (u[i - 1] || u[i + 1] || u[i - w] || u[i + w])) mark.push(i);
     }
     mark.forEach((i) => { u[i] = P.out; });
   }
 
-  // ---------- static background: night sky, skyline, gantry, floor ----------
+  // ---------- static background: soft sky, a few clouds, rail, floor ----------
   function drawBackground() {
     const b = makeBuf(LW, LH);
-    const bands = ["#221651", "#1d1446", "#18113b", "#140e31", "#110c28", "#0e0a21", "#0b0919"].map(rgb);
+    const bands = ["#dff0ff", "#e6f0ff", "#ecf0ff", "#f2f0fd", "#f8f1f9", "#fdf2f4"].map(rgb);
     const BAY = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
     for (let y = 0; y < LH; y++) {
       const t = (y / LH) * (bands.length - 1), k = Math.floor(t), f = t - k;
       for (let x = 0; x < LW; x++) b.u[y * LW + x] = bands[Math.min(bands.length - 1, k + (f * 16 > BAY[y & 3][x & 3] ? 1 : 0))];
     }
-    // stars
-    for (let k = 0; k < LW * LH / 520; k++) {
-      const x = rnd(k) * LW, y = rnd(k + 999) * LH * 0.62;
-      pset(b, x, y, rnd(k + 5) > 0.85 ? P.s3 : rgb("#6f68a8"));
-      if (rnd(k + 7) > 0.97) { pset(b, x + 1, y, rgb("#6f68a8")); pset(b, x - 1, y, rgb("#6f68a8")); pset(b, x, y + 1, rgb("#6f68a8")); pset(b, x, y - 1, rgb("#6f68a8")); }
-    }
-    // moon
-    const mx = Math.round(LW * 0.2), my = Math.round(LH * 0.3), mr = Math.max(10, Math.round(LH * 0.07));
-    disc(b, mx, my, mr + 2, rgb("#2b1f5c"));
-    disc(b, mx, my, mr, rgb("#f3d9ff"));
-    disc(b, mx + mr * 0.35, my - mr * 0.1, mr * 0.95, rgb("#c9a8f0"));
-    disc(b, mx + mr * 0.5, my - mr * 0.15, mr * 0.9, rgb("#221651"));
-    // skyline (two layers)
+    // three soft pixel clouds
+    const cloud = (cx, cy, s) => {
+      const blobs = [[0, 0, 1], [-1.1, 0.35, 0.7], [1.1, 0.3, 0.75], [-0.4, -0.45, 0.65], [0.5, -0.35, 0.7]];
+      blobs.forEach(([dx, dy, r]) => disc(b, cx + dx * s, cy + dy * s, r * s, rgb("#ffffff")));
+      rect(b, cx - 1.6 * s, cy + 0.6 * s, 3.2 * s, 1, rgb("#d9e6fb"));
+    };
+    cloud(LW * 0.18, LH * 0.3, Math.max(6, LH * 0.028));
+    cloud(LW * 0.62, LH * 0.2, Math.max(5, LH * 0.022));
+    cloud(LW * 0.86, LH * 0.42, Math.max(4, LH * 0.018));
+    // floor: a clean tiled ledge
     const floorTop = Math.round((H - FLOOR) / PX);
-    const skyTop = Math.round(LH * 0.46);
-    for (const layer of [{ c: rgb("#1c1742"), win: 0, min: 0.25, max: 0.85, seed: 1 }, { c: rgb("#130f2e"), win: 1, min: 0.1, max: 0.6, seed: 2 }]) {
-      let x = -4, k = layer.seed * 100;
-      while (x < LW) {
-        const w = 8 + Math.floor(rnd(k++) * 18), h = Math.round((floorTop - skyTop) * (layer.min + rnd(k++) * (layer.max - layer.min)));
-        const top = floorTop - h;
-        rect(b, x, top, w, h, layer.c);
-        if (rnd(k++) > 0.6) rect(b, x + Math.floor(w / 2), top - 4, 1, 4, layer.c);       // antenna
-        if (layer.win) for (let yy = top + 3; yy < floorTop - 2; yy += 4) for (let xx = x + 2; xx < x + w - 2; xx += 3)
-          if (rnd(xx * 7 + yy * 13) > 0.78) pset(b, xx, yy, [P.cyan, rgb("#ff3fb4"), P.yel, rgb("#6f68a8")][Math.floor(rnd(xx + yy) * 4)]);
-        x += w + Math.floor(rnd(k++) * 4);
-      }
-    }
-    // floor: steel grate with a neon edge
-    rect(b, 0, floorTop, LW, LH - floorTop, rgb("#16122e"));
-    for (let x = 0; x < LW; x += 6) rect(b, x, floorTop + 3, 1, LH - floorTop, rgb("#0c0a1c"));
-    rect(b, 0, floorTop, LW, 1, P.cyan);
-    rect(b, 0, floorTop + 1, LW, 1, P.cyanD);
-    // ceiling + hangers + I-beam
+    rect(b, 0, floorTop, LW, LH - floorTop, rgb("#efe7fb"));
+    for (let x = 0; x < LW; x += 12) rect(b, x, floorTop + 3, 1, LH - floorTop, rgb("#e2d8f5"));
+    rect(b, 0, floorTop, LW, 1, P.out);
+    rect(b, 0, floorTop + 1, LW, 2, P.k2);
+    // rail: rounded lilac beam with little bolts, two soft hangers per 160px
     const RL = Math.round(RAIL / PX);
-    rect(b, 0, 0, LW, 6, P.ceil); rect(b, 0, 6, LW, 1, P.ceil2); rect(b, 0, 7, LW, 1, P.out);
-    for (let x = 6; x < LW; x += 12) pset(b, x, 3, P.ceil2);
-    for (let x = 30; x < LW - 10; x += 70) {
-      rect(b, x - 1, 8, 3, RL - 13, P.s1); rect(b, x - 1, 8, 1, RL - 13, P.s2);
-      rect(b, x - 3, 8, 7, 2, P.s2); rect(b, x - 3, RL - 7, 7, 2, P.s1);
-    }
-    rect(b, 0, RL - 6, LW, 1, P.out);
-    rect(b, 0, RL - 5, LW, 1, P.s3); rect(b, 0, RL - 4, LW, 1, P.s2);              // top flange
-    rect(b, 0, RL - 3, LW, 6, P.s1);                                               // web
-    for (let x = 4; x < LW; x += 10) { pset(b, x, RL - 1, P.s2); pset(b, x, RL, P.s0); }
-    rect(b, 0, RL + 3, LW, 1, P.s2); rect(b, 0, RL + 4, LW, 1, P.s0);              // bottom flange
-    rect(b, 0, RL + 5, LW, 1, P.out);
-    rect(b, 0, RL + 6, LW, 1, P.cyanD);
-    for (const x0 of [0, LW - 16]) for (let i = 0; i < 16; i++) for (let j = 0; j < 6; j++)
-      pset(b, x0 + i, RL - 3 + j, ((i + j) >> 2) % 2 ? P.yel : P.out);              // hazard ends
+    for (let x = 40; x < LW - 20; x += 120) { rect(b, x - 1, 0, 3, RL - 4, P.m1); rect(b, x - 1, 0, 1, RL - 4, P.m2); }
+    rect(b, 0, RL - 5, LW, 1, P.out);
+    rect(b, 0, RL - 4, LW, 1, P.m3);
+    rect(b, 0, RL - 3, LW, 6, P.m2);
+    rect(b, 0, RL + 2, LW, 2, P.m1);
+    rect(b, 0, RL + 4, LW, 1, P.out);
+    for (let x = 6; x < LW; x += 14) { pset(b, x, RL - 1, P.m1); pset(b, x, RL - 2, P.m3); }
     bgC.width = LW; bgC.height = LH;
     bgX.putImageData(b.img, 0, 0);
   }
 
-  // ---------- dynamic rig: trolley, chain, claw ----------
+  // ---------- dynamic rig: trolley, chain, cute claw ----------
   function drawRig() {
     const b = rig; b.u.fill(0);
     const RL = Math.round(RAIL / PX), tx = Math.round(trolley.x / PX);
-    let bx0 = tx - 16, bx1 = tx + 16, by0 = RL - 12, by1 = RL + 20;
+    let bx0 = tx - 18, bx1 = tx + 18, by0 = RL - 12, by1 = RL + 20;
 
-    // chain
+    // chain: alternating round beads
     let carry = 0, n = 0;
     for (let i = 0; i < N - 1; i++) {
       const ax = pts[i].x / PX, ay = pts[i].y / PX, cx = pts[i + 1].x / PX, cy = pts[i + 1].y / PX;
       const d = Math.hypot(cx - ax, cy - ay) || 0.001;
       let t = carry;
       while (t < d) {
-        const x = Math.round(ax + (cx - ax) * t / d), y = Math.round(ay + (cy - ay) * t / d);
-        if (n++ % 2) { pset(b, x, y, P.s3); pset(b, x, y + 1, P.s2); }
-        else { pset(b, x - 1, y, P.s2); pset(b, x + 1, y, P.s1); pset(b, x, y - 1, P.s2); pset(b, x, y + 1, P.s1); }
+        const x = ax + (cx - ax) * t / d, y = ay + (cy - ay) * t / d;
+        if (n++ % 2) { pset(b, x, y, P.chain1); pset(b, x, y + 1, P.chain0); }
+        else { disc(b, x, y, 1.2, P.chain0); pset(b, x - 0.5, y - 0.5, P.chain1); }
         bx0 = Math.min(bx0, x - 3); bx1 = Math.max(bx1, x + 3); by1 = Math.max(by1, y + 3);
         t += 3;
       }
       carry = t - d;
     }
 
-    // trolley: wheels on the top flange, body hanging under the beam
+    // trolley: a little rounded cart with two wheels and a mint lamp
     const spin = Math.round(trolley.x / PX) % 4;
     for (const wx of [tx - 7, tx + 7]) {
-      disc(b, wx, RL - 8, 2.6, P.d1); pset(b, wx, RL - 8, P.s2);
-      pset(b, wx + [1, 0, -1, 0][spin], RL - 8 + [0, 1, 0, -1][spin], P.s3);
+      disc(b, wx, RL - 7, 2.6, P.m0); pset(b, wx, RL - 7, P.m2);
+      pset(b, wx + [1, 0, -1, 0][spin], RL - 7 + [0, 1, 0, -1][spin], P.m3);
     }
-    rect(b, tx - 9, RL - 6, 2, 12, P.s0); rect(b, tx + 8, RL - 6, 2, 12, P.s0);    // side plates
-    rect(b, tx - 12, RL + 6, 25, 8, P.s1);
-    rect(b, tx - 12, RL + 6, 25, 1, P.s3); rect(b, tx - 12, RL + 7, 1, 7, P.s2); rect(b, tx + 12, RL + 7, 1, 7, P.s0);
-    for (let i = 0; i < 25; i++) pset(b, tx - 12 + i, RL + 13, (i >> 1) % 2 ? P.yel : P.out);   // hazard band
-    const blink = (clock * 2 | 0) % 2 === 0 || mode !== "follow";
-    rect(b, tx + 7, RL + 9, 3, 2, blink ? (mode === "follow" ? P.red : P.cyan) : P.d2);
-    rect(b, tx - 9, RL + 9, 10, 2, P.d1);                                           // vent
-    for (let i = 0; i < 10; i += 2) pset(b, tx - 9 + i, RL + 9, P.d2);
-    rect(b, tx - 3, RL + 14, 7, 3, P.d1); rect(b, tx - 2, RL + 14, 5, 1, P.ora);    // spool
+    ellipseFill(b, tx, RL + 8, 12, 5.5, 0, (lx, ly, nx, ny) => (ny < -0.45 ? P.m3 : ny > 0.55 ? P.m1 : P.m2));
+    rect(b, tx - 9, RL - 5, 2, 9, P.m1); rect(b, tx + 8, RL - 5, 2, 9, P.m1);
+    const lamp = mode === "follow" ? ((clock * 1.5 | 0) % 2 ? P.mint : P.mintD) : P.yel;
+    disc(b, tx + 6, RL + 7, 1.6, lamp);
+    pset(b, tx - 6, RL + 7, P.m1); pset(b, tx - 3, RL + 7, P.m1); pset(b, tx, RL + 7, P.m1);
 
-    // claw
+    // cute claw
     const last = pts[N - 1], prev = pts[N - 2];
     const raw = Math.atan2(-(last.x - prev.x), last.y - prev.y);
-    clawAng += (Math.max(-0.45, Math.min(0.45, raw)) - clawAng) * 0.25;          // heavy claw: tilts, never flips
+    clawAng += (Math.max(-0.4, Math.min(0.4, raw)) - clawAng) * 0.25;
     const ang = clawAng, cs = Math.cos(ang), sn = Math.sin(ang);
     const ox = last.x / PX, oy = last.y / PX;
     const T = (lx, ly) => [ox + (lx * U) * cs - (ly * U) * sn, oy + (lx * U) * sn + (ly * U) * cs];
     const o = claw.open;
-    const arm = (side, back) => {
-      const sh = [side * 7, 13];
-      const a1 = side * (0.22 + o * 0.72), L1 = back ? 6 : 9;
-      const el = [sh[0] + Math.sin(a1) * L1, sh[1] + Math.cos(a1) * L1];
-      const a2 = a1 - side * (1.05 + (1 - o) * 0.35), L2 = back ? 6 : 9;
-      const tp = [el[0] + Math.sin(a2) * L2, el[1] + Math.cos(a2) * L2];
-      const [s0x, s0y] = T(...sh), [e0x, e0y] = T(...el), [t0x, t0y] = T(...tp);
-      thick(b, s0x, s0y, e0x, e0y, 1.4 * U, back ? P.s0 : P.s2);
-      if (!back) line(b, s0x, s0y, e0x, e0y, P.s3);
-      thick(b, e0x, e0y, t0x, t0y, 1.1 * U, back ? P.d1 : P.s1);
-      disc(b, e0x, e0y, 1.8 * U, back ? P.d1 : P.d2); pset(b, e0x, e0y, P.s2);
-      disc(b, t0x, t0y, 1.1 * U, back ? P.red : P.ora); pset(b, t0x, t0y, back ? P.red : P.ora2);
-      bx0 = Math.min(bx0, t0x - 4, e0x - 4); bx1 = Math.max(bx1, t0x + 4, e0x + 4); by1 = Math.max(by1, t0y + 4, e0y + 4);
-    };
-    arm(0.55, true);                                                   // back prong (behind the hub)
-    poly(b, [T(-2, -1), T(2, -1), T(2, 3), T(-2, 3)], P.d1);           // neck
-    poly(b, [T(-9, 3), T(9, 3), T(11, 6), T(11, 11), T(8, 14), T(-8, 14), T(-11, 11), T(-11, 6)], P.s1);   // hub
-    poly(b, [T(-9, 3), T(9, 3), T(10, 5), T(-10, 5)], P.s3);
-    poly(b, [T(-11, 11), T(11, 11), T(8, 14), T(-8, 14)], P.s0);
-    poly(b, [T(-7, 7), T(7, 7), T(7, 9.6), T(-7, 9.6)], P.out);        // visor
-    const eye = mode === "follow" ? P.red : mode === "open" ? P.gold : P.cyan;
-    poly(b, [T(-6, 7.6), T(6, 7.6), T(6, 9), T(-6, 9)], eye);
-    const scan = Math.round(((clock * 6) % 12) - 6);
-    const [ex, ey] = T(scan, 8.2); pset(b, ex, ey, mode === "follow" ? P.red2 : P.s3);
-    poly(b, [T(-13, 6), T(-11, 6), T(-11, 10), T(-13, 10)], P.d2);
-    poly(b, [T(11, 6), T(13, 6), T(13, 10), T(11, 10)], P.d2);
-    arm(-1, false); arm(1, false);
-    bx0 = Math.min(bx0, ox - 20 * U); bx1 = Math.max(bx1, ox + 20 * U); by1 = Math.max(by1, oy + 20 * U); by0 = Math.min(by0, oy - 4);
 
+    const arm = (side) => {
+      const sh = [side * 8.5, 9];
+      const a1 = side * (0.15 + o * 0.6), L1 = 7.5;
+      const el = [sh[0] + Math.sin(a1) * L1, sh[1] + Math.cos(a1) * L1];
+      const a2 = a1 - side * (0.75 + (1 - o) * 0.5), L2 = 7;
+      const tp = [el[0] + Math.sin(a2) * L2, el[1] + Math.cos(a2) * L2];
+      const [sx, sy] = T(...sh), [ex, ey] = T(...el), [qx, qy] = T(...tp);
+      thick(b, sx, sy, ex, ey, 1.8 * U, P.k1);
+      thick(b, ex, ey, qx, qy, 1.6 * U, P.k1);
+      disc(b, ex, ey, 1.6 * U, P.k2);
+      disc(b, qx, qy, 2.4 * U, P.cream); pset(b, qx - U * 0.7, qy - U * 0.8, P.m3);       // mitten tip
+      bx0 = Math.min(bx0, qx - 6, ex - 6); bx1 = Math.max(bx1, qx + 6, ex + 6); by1 = Math.max(by1, qy + 6, ey + 6);
+    };
+    arm(-1); arm(1);
+    // antenna + bobble
+    const [a0x, a0y] = T(0, -2), [a1x, a1y] = T(0, -6);
+    thick(b, a0x, a0y, a1x, a1y, 0.6, P.k0);
+    // round body
+    ellipseFill(b, ox + (-0 * cs - 4 * sn) * U, oy + (0 * sn + 4 * cs) * U, 11 * U, 8.5 * U, ang, (lx, ly, nx, ny) => {
+      const l = -nx * 0.45 - ny * 0.75;
+      return l > 0.62 ? P.k3 : l > 0.05 ? P.k2 : ny > 0.7 ? P.k0 : P.k1;
+    });
+    // face plate
+    const fcx = ox + (-0 * cs - 5 * sn) * U, fcy = oy + (0 * sn + 5 * cs) * U;
+    ellipseFill(b, fcx, fcy, 7 * U, 4.6 * U, ang, (lx, ly, nx, ny) => (ny > 0.55 ? P.cream2 : P.cream));
+    // eyes: blink, happy when holding, stars on the reveal
+    blinkT -= 1 / 60;
+    const blinking = blinkT < 0.12; if (blinkT < 0) blinkT = 2.5 + rnd(clock) * 3;
+    for (const side of [-1, 1]) {
+      const [ex, ey] = T(side * 3.4, 4.6);
+      if (mode === "reveal" || mode === "open") {
+        pset(b, ex, ey, P.yelD); pset(b, ex - 1, ey, P.yel); pset(b, ex + 1, ey, P.yel); pset(b, ex, ey - 1, P.yel); pset(b, ex, ey + 1, P.yel);
+      } else if (held || blinking) {
+        pset(b, ex - 1, ey, P.eye); pset(b, ex, ey - 1, P.eye); pset(b, ex + 1, ey, P.eye);                     // ^ ^
+      } else {
+        ellipseFill(b, ex, ey, Math.max(1.1, 1.05 * U), Math.max(1.6, 1.7 * U), ang, () => P.eye);   // tall shiny eyes
+        pset(b, ex - 0.5, ey - U, P.eyeHi);
+      }
+      const [bxx, byy] = T(side * 5.6, 6.6);
+      pset(b, bxx, byy, P.blush); pset(b, bxx + side, byy, P.blush);
+    }
+    const [mx, my] = T(0, 6.6);
+    if (held || mode === "reveal" || mode === "open") { pset(b, mx - 1, my, P.k0); pset(b, mx, my + 1, P.k0); pset(b, mx + 1, my, P.k0); }
+    else pset(b, mx, my, P.k0);
+    disc(b, a1x, a1y, 1.8, mode === "follow" ? P.yel : P.mint);
+    pset(b, a1x - 0.6, a1y - 0.6, P.m3);
+
+    bx0 = Math.min(bx0, ox - 20 * U); bx1 = Math.max(bx1, ox + 20 * U); by1 = Math.max(by1, oy + 26 * U); by0 = Math.min(by0, oy - 12 * U);
     outline(b, bx0 - 2, by0 - 2, bx1 + 2, by1 + 2);
     rigX.putImageData(b.img, 0, 0);
   }
 
   // ---------- layout ----------
-  function layout() {
+  function layout(first) {
     W = innerWidth; H = innerHeight;
     PX = W >= 1800 ? 3 : 2;
     const css = getComputedStyle(document.documentElement);
@@ -228,27 +215,79 @@
     LW = Math.ceil(W / PX); LH = Math.ceil(H / PX);
     for (const c of [bgC, rigC]) { c.style.width = LW * PX + "px"; c.style.height = LH * PX + "px"; }
     rigC.width = LW; rigC.height = LH; rig = makeBuf(LW, LH);
-
-    const n = prizes.length, margin = W < 700 ? 10 : 36, room = (H - FLOOR - RAIL - 140) * 0.66;
-    let cols, rows, cell;
-    const fits = (s) => { cell = s * 1.06; cols = Math.max(3, Math.floor((W - margin * 2 - s) / cell) + 1); rows = Math.ceil(n / cols); return rows * s * 0.84 + s * 0.3 < room; };
-    S = W >= 900 && fits(156) ? 156 : W >= 700 && fits(104) ? 104 : 52;
-    fits(S);
-    U = Math.max(0.9, (S / PX) / 40);
+    // prize size in whole pixel steps: big on wide screens, 1x on phones
+    const n = prizes.length, perRow = (s) => Math.floor((W - 20) / (s * 0.82));
+    const pileH = (s) => Math.ceil(n / perRow(s)) * s * 0.78;
+    const room = (H - FLOOR - RAIL) * 0.55;
+    S = W >= 700 && pileH(104) < room ? 104 : 52;
+    U = Math.max(1, (S / PX) / 34);
     document.documentElement.style.setProperty("--s", S + "px");
-    const floorY = H - FLOOR, rowH = S * 0.84;
-    prizes.forEach((p, k) => {
-      const r = Math.floor(k / cols), c = k % cols;
-      const inRow = Math.min(cols, n - r * cols);
-      const x0 = (W - (inRow - 1) * cell) / 2 + (r % 2 ? cell * 0.22 : 0);
-      p.hx = Math.round(Math.max(margin + S / 2, Math.min(W - margin - S / 2, x0 + c * cell + (rnd(k) - 0.5) * cell * 0.18)));
-      p.hy = Math.round(floorY - S * 0.46 - r * rowH - rnd(k + 9) * S * 0.08);
-      if (p !== held && !p.falling && current !== p) { p.x = p.hx; p.y = p.hy; }
-      p.el.style.zIndex = String(100 - r);
-    });
     if (!pointer.seen) { pointer.x = W * 0.5; pointer.y = Math.max(anchorY() + 140, H * 0.32); }
     if (!trolley.x) { trolley.x = trolley.tx = pointer.x; pts.forEach((p, i) => { p.x = p.px = trolley.x; p.y = p.py = anchorY() + (len * i) / (N - 1); }); }
+    if (first) {
+      // drop the prizes in from above, shuffled, so the pile builds itself
+      const order = prizes.map((p, i) => i).sort((a, b) => rnd(a + 40) - rnd(b + 40));
+      order.forEach((idx, k) => {
+        const p = prizes[idx];
+        p.x = S * 0.5 + ((k * 0.618034) % 1) * (W - S) + (rnd(idx * 3 + 1) - 0.5) * S * 0.4;
+        p.y = -S - k * S * 0.35;
+        p.vx = 0; p.vy = 0; p.dyn = true; p.sleep = 0;
+      });
+    } else {
+      prizes.forEach((p) => { p.sleep = 0; p.x = Math.max(S * 0.4, Math.min(W - S * 0.4, p.x)); });
+    }
     drawBackground();
+  }
+
+  // ---------- pile physics: circles that overlap a little, with gravity, friction and sleep ----------
+  const G = 2600;
+  const radius = () => S * 0.34;          // smaller than the sprite, so neighbours overlap a bit
+  const foot = () => S * 0.42;            // centre-to-floor distance
+  function pilePhysics(dt) {
+    const r = radius(), floorY = H - FLOOR, wallL = S * 0.36, wallR = W - S * 0.36;
+    const live = prizes.filter((p) => p.dyn);
+    for (const p of live) {
+      if (p.sleep > 0.4) continue;
+      p.vy += G * dt; p.vx *= 0.995;
+      p.x += p.vx * dt; p.y += p.vy * dt;
+    }
+    for (let it = 0; it < 4; it++) {
+      for (const p of live) {
+        if (p.y > floorY - foot()) { p.y = floorY - foot(); if (p.vy > 0) p.vy = p.vy > 300 ? -p.vy * 0.18 : 0; p.vx *= 0.8; }
+        if (p.x < wallL) { p.x = wallL; p.vx = Math.abs(p.vx) * 0.3; }
+        if (p.x > wallR) { p.x = wallR; p.vx = -Math.abs(p.vx) * 0.3; }
+      }
+      for (let i = 0; i < prizes.length; i++) {
+        const a = prizes[i];
+        if (!a.dyn && a !== held) continue;
+        for (let j = i + 1; j < prizes.length; j++) {
+          const b = prizes[j];
+          if (!b.dyn && b !== held) continue;
+          if (!a.dyn && !b.dyn) continue;
+          const dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy, min = r * 2;
+          if (d2 >= min * min || d2 === 0) continue;
+          const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, pen = min - d;
+          const wa = a.dyn ? (b.dyn ? 0.5 : 1) : 0, wb = b.dyn ? (a.dyn ? 0.5 : 1) : 0;
+          a.x -= nx * pen * wa; a.y -= ny * pen * wa; b.x += nx * pen * wb; b.y += ny * pen * wb;
+          const rvx = b.vx - a.vx, rvy = b.vy - a.vy, vn = rvx * nx + rvy * ny;
+          if (vn < 0) {
+            const jn = -(1.1 * vn) / ((a.dyn ? 1 : 0) + (b.dyn ? 1 : 0) || 1);
+            if (a.dyn) { a.vx -= jn * nx; a.vy -= jn * ny; }
+            if (b.dyn) { b.vx += jn * nx; b.vy += jn * ny; }
+            // friction along the contact
+            const tx = -ny, ty = nx, vt = rvx * tx + rvy * ty, jt = vt * 0.2;
+            if (a.dyn) { a.vx += jt * tx; a.vy += jt * ty; }
+            if (b.dyn) { b.vx -= jt * tx; b.vy -= jt * ty; }
+          }
+          if (pen > 1.5) { a.sleep = 0; b.sleep = 0; }
+        }
+      }
+    }
+    for (const p of live) {
+      const sp = Math.hypot(p.vx, p.vy);
+      p.sleep = sp < 18 ? p.sleep + dt : 0;
+      if (p.sleep > 0.4) { p.vx = 0; p.vy = 0; }
+    }
   }
 
   // ---------- input ----------
@@ -257,7 +296,6 @@
   addEventListener("pointermove", setPointer, { passive: true });
   addEventListener("pointerdown", setPointer, { passive: true });
   const say = (t) => { hint.textContent = t; };
-
   prizes.forEach((p) => {
     p.el.addEventListener("click", (e) => { e.stopPropagation(); grab(p); });
     const over = () => { if (mode === "follow") say(`▶ ${p.d.title}${p.d.year ? " · " + p.d.year : ""}`); };
@@ -286,12 +324,12 @@
 
   // ---------- grab sequence ----------
   function grab(p) {
-    if (mode !== "follow" || p.falling || !win.hidden) return;
-    current = p; mode = "seek"; timer = 0; claw.openT = 1;
+    if (mode !== "follow" || !win.hidden) return;
+    current = p; p.homeX = p.x; mode = "seek"; timer = 0; claw.openT = 1;
     say(`Grabbing ${p.d.title}…`);
     beep(440, 0.05); beep(660, 0.05, "square", 0.04, 0.06);
   }
-  const gripOffset = () => 24 * U * PX;
+  const gripOffset = () => 19 * U * PX;
   function grip() {
     const a = pts[N - 1];
     return { x: a.x - Math.sin(clawAng) * gripOffset(), y: a.y + Math.cos(clawAng) * gripOffset() };
@@ -349,7 +387,6 @@
   tickClock(); setInterval(tickClock, 1000);
 
   // ---------- simulation ----------
-  const G = 2600;
   function step(dt) {
     clock += dt;
     const ay = anchorY();
@@ -362,19 +399,19 @@
       const p = current;
       trolley.tx = p.x;
       const near = Math.abs(trolley.x - p.x) < 6 && Math.abs(trolley.v) < 60;
-      lenT = near ? Math.max(minL, p.y - ay - gripOffset() + S * 0.05) : Math.min(len, minL + 40);
+      lenT = near ? Math.max(minL, p.y - ay - gripOffset() + S * 0.04) : Math.min(len, minL + 40);
       const g = grip();
       if (near && Math.abs(len - lenT) < 3 && Math.abs(g.x - p.x) < S * 0.25) { mode = "grab"; timer = 0; claw.openT = 0; beep(200, 0.12, "sawtooth", 0.04); }
       if ((timer += dt) > 6) { mode = "grab"; timer = 0; claw.openT = 0; }
     } else if (mode === "grab") {
-      if ((timer += dt) > 0.3) { held = current; held.el.classList.add("held"); mode = "lift"; timer = 0; beep(520, 0.05); }
+      if ((timer += dt) > 0.3) { held = current; held.dyn = false; held.el.style.zIndex = "900"; held.el.classList.add("held"); mode = "lift"; timer = 0; beep(520, 0.05); prizes.forEach((q) => { q.sleep = 0; }); }
     } else if (mode === "lift") {
       lenT = minL + 20; timer += dt;
       if (len - lenT < 40) trolley.tx = W / 2;
       if ((timer > 0.6 && Math.abs(trolley.x - W / 2) < 10 && Math.abs(len - lenT) < 4) || timer > 5) { mode = "reveal"; timer = 0; startReveal(); }
     } else if (mode === "reveal") {
       timer += dt;
-      const cx = W / 2, cy = Math.max(anchorY() + S * 1.6, H * 0.44), k = Math.min(1, timer / 0.5), e = 1 - Math.pow(1 - k, 3);
+      const cx = W / 2, cy = Math.max(anchorY() + S * 1.6, H * 0.42), k = Math.min(1, timer / 0.5), e = 1 - Math.pow(1 - k, 3);
       const g = grip();
       current.x = g.x + (cx - g.x) * e; current.y = g.y + (cy - g.y) * e; current.scale = 1 + e * (S < 100 ? 1.6 : 0.9);
       fx.style.transform = `translate(${current.x}px, ${current.y}px)`;
@@ -388,12 +425,13 @@
       current.x += (g.x - current.x) * e; current.y += (g.y - current.y) * e; current.scale += (1 - current.scale) * e;
       if (k >= 1) { current.el.classList.remove("show"); held = current; mode = "return"; timer = 0; }
     } else if (mode === "return") {
-      lenT = minL + 20; trolley.tx = held.hx; timer += dt;
-      if ((Math.abs(trolley.x - held.hx) < 6 && Math.abs(trolley.v) < 80) || timer > 5) { mode = "release"; timer = 0; claw.openT = 1; beep(300, 0.06); }
+      const dropX = Math.max(S, Math.min(W - S, held.homeX));
+      lenT = minL + 20; trolley.tx = dropX; timer += dt;
+      if ((Math.abs(trolley.x - dropX) < 6 && Math.abs(trolley.v) < 80) || timer > 5) { mode = "release"; timer = 0; claw.openT = 1; beep(300, 0.06); }
     } else if (mode === "release") {
       if ((timer += dt) > 0.2) {
         const p = held; held = null;
-        p.el.classList.remove("held", "show"); p.falling = true; p.vy = 0;
+        p.el.classList.remove("held", "show"); p.dyn = true; p.sleep = 0; p.vx = trolley.v * 0.3; p.vy = 0;
         current = null; mode = "follow"; say(DEFAULT_HINT);
       }
     }
@@ -423,16 +461,12 @@
     }
     claw.open += (claw.openT - claw.open) * Math.min(1, dt * 14);
 
-    if (held && ["grab", "lift", "return", "release"].includes(mode)) { const g = grip(); held.x = g.x; held.y = g.y + S * 0.1; }
-    prizes.forEach((p) => {
-      if (!p.falling) return;
-      p.vy += G * 0.8 * dt; p.y += p.vy * dt; p.x += (p.hx - p.x) * Math.min(1, dt * 6);
-      if (p.y >= p.hy) {
-        p.y = p.hy;
-        if (Math.abs(p.vy) > 160) { p.vy *= -0.32; beep(120 + Math.abs(p.vy) * 0.2, 0.04, "triangle", 0.05); }
-        else { p.falling = false; p.vy = 0; p.x = p.hx; }
-      }
-    });
+    if (held && ["grab", "lift", "return", "release"].includes(mode)) {
+      const g = grip(), nx = g.x, ny = g.y + S * 0.12;
+      held.vx = (nx - held.x) / dt; held.vy = (ny - held.y) / dt;     // so it shoves its neighbours
+      held.x = nx; held.y = ny;
+    }
+    pilePhysics(dt);
   }
   function startReveal() {
     current.el.classList.add("show");
@@ -445,11 +479,11 @@
 
   function draw() {
     drawRig();
-    // prizes snap to the pixel grid so they stay crisp
     for (const p of prizes) {
       const x = Math.round((p.x - (S * p.scale) / 2) / PX) * PX, y = Math.round((p.y - (S * p.scale) / 2) / PX) * PX;
       p.el.style.transform = `translate(${x}px, ${y}px) scale(${p.scale})`;
       p.el.style.transformOrigin = "0 0";
+      if (p.dyn) p.el.style.zIndex = String(10 + Math.round(p.y / 4));      // lower in the pile = in front
     }
   }
 
@@ -461,8 +495,7 @@
     draw();
     requestAnimationFrame(frame);
   }
-  addEventListener("resize", layout);
-  layout();
-  prizes.forEach((p) => { p.y = p.hy - H; p.falling = true; p.vy = rnd(p.i) * 500; });   // the pile drops in
+  addEventListener("resize", () => layout(false));
+  layout(true);
   requestAnimationFrame(frame);
 })();
