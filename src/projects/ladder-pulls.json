@@ -1,14 +1,14 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "Ladder Pulls",
   "year": 2025,
   "order": 7,
   "category": "Door hardware",
-  "status": "Gate 3 complete; launch planned 2026",
-  "description": "Ladder pulls are one of CRL's largest architectural hardware categories, but sales fell 13% from 2022 to 2023 as competitors sold similar-looking pulls for close to half the price. Customers didn't understand why ours cost more.\n\nInstead of racing to the bottom, we split the line in two. CRL X is a premium exterior pull in 3 mm, marine-grade 316 stainless for coastal and winter climates, priced against the market's premium brand. CRL I is a 1.5 mm, 304 stainless interior pull at a value price. Both come from a new supplier with a lower cost structure. We focused on the fast-moving sizes, planned a sell-down of the old stock, ran first-article inspections on every component, and took the program through Gate 3.",
+  "status": "Stocked spring 2026; launch preparation underway",
+  "description": "Ladder pulls are one of CRL's largest architectural hardware categories, but sales fell 13% from 2022 to 2023 as competitors sold similar-looking pulls for close to half the price. Customers didn't understand why ours cost more.\n\nInstead of racing to the bottom, we split the line in two. CRL X is a premium exterior pull in 3 mm, marine-grade 316 stainless for coastal and winter climates, priced against the market's premium brand. CRL I is a 1.5 mm, 304 stainless interior pull at a value price. Both come from a new supplier with a lower cost structure. We focused on the fast-moving sizes, planned a sell-down of the old stock, ran first-article inspections on every component, and took the program through Gate 3 to stocked inventory in spring 2026.",
   "metrics": [
     {
       "value": "−13%",
@@ -176,11 +176,61 @@
     }
   ],
   "images": [
+    "/images/projects/ladder-pulls/04.jpg",
     "/images/projects/ladder-pulls/01.jpg",
     "/images/projects/ladder-pulls/02.jpg",
     "/images/projects/ladder-pulls/03.jpg"
   ],
-  "cover": "/images/projects/ladder-pulls/01.jpg",
+  "cover": "/images/projects/ladder-pulls/04.jpg",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I co-led the ladder pull program with the senior product manager from Gate 0. I built the decline analysis and the tiered-line strategy, managed the supplier change, set pricing for both lines, planned the sell-down of the old stock, and ran the first-article review with quality engineering.",
+  "stakeholders": [
+    {
+      "group": "Supplier",
+      "members": "New ladder pull manufacturer"
+    },
+    {
+      "group": "Quality",
+      "members": "Product quality engineering: first-article inspection"
+    },
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "recovery_title": "Plan to win back ladder pull sales",
+  "recovery_intro": "Sales had fallen every year since 2022, and slow-moving sizes sat on the shelf for anywhere from 4 to 62 months. Matching low-cost pulls on price would have meant matching them on quality too.",
+  "recovery": [
+    {
+      "label": "Split the line",
+      "text": "CRL X, 3 mm 316 marine-grade stainless for exteriors and harsh climates, priced against the market's premium brand; CRL I, 1.5 mm 304 stainless for interiors at a value price."
+    },
+    {
+      "label": "Explain the price",
+      "text": "Sales materials lead with material and wall thickness, so customers can see why a coastal or winter-climate entrance needs the exterior pull."
+    },
+    {
+      "label": "Clear the old stock",
+      "text": "Discount the previous line hard while it still sells, then move the remainder in one bulk sale to recover what was spent."
+    },
+    {
+      "label": "Buy smarter",
+      "text": "A new supplier with a lower cost structure, and stocking focused on the lengths that drive most of the revenue."
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "The new supplier's long lead time meant waiting for the usual post-launch buy would leave a gap on the shelf.",
+      "resolution": "I prepared an early initial purchase order with the new parts and product categories, the same approach we had used on TurboFlex, and got leadership approval ahead of the normal cycle."
+    },
+    {
+      "challenge": "First articles passed dimensional and fit checks, but the assemblies didn't match the drawings on parts and quantities, and parts shifted inside the box.",
+      "resolution": "Quality and I documented every gap on the inspection reports, sent drawing corrections and missing-part lists back to the supplier, and added packing material and proper box labels before the production run."
+    }
+  ]
 }

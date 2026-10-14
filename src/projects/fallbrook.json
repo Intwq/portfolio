@@ -1,26 +1,26 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
-  "title": "Fallbrook",
+  "title": "Fallbrook CTL Program",
   "year": 2025,
   "order": 5,
   "category": "Interior partitions",
-  "status": "Cut-to-length launched July 2025; wood door at Gate 0",
-  "description": "Fallbrook is CRL's demountable glass partition system for offices. I ran two programs to grow it.\n\nCut-to-length fabrication. Labor costs are rising and skilled installers are hard to find, so customers wanted partitions that arrive ready to install. We partnered with a fabrication specialist to cut and kit Fallbrook to each opening, and placed the new facility near our Southeast distribution center to serve the East Coast, where most Fallbrook sales are. It launched in July 2025. CRL's European business already sells nearly 80% of its systems this way.\n\nWood door option. In a partition, the door is usually the weakest point for sound. Two new frame extrusions and floating hinge and strike backup plates let Fallbrook accept standard 1-3/4\" U.S. wood doors with the hinges in any position. That suits privacy-critical rooms like law offices, libraries and conference rooms. It passed Gate 0 in March 2026.",
+  "status": "Cut-to-length launched July 2025; wood door option at Gate 0",
+  "description": "Fallbrook is CRL's demountable glass partition system for offices. The CTL (cut-to-length) program changed how it is sold: instead of stock lengths that installers cut on site, every order is cut, drilled and kitted to the exact opening before it ships.\n\nMost Fallbrook sales are on the East Coast, so we set up the fabrication on the East Coast too. Our long-time Austrian fabrication partner opened a shop in Gastonia, North Carolina, about 30 miles from CRL's distribution center in Rock Hill, South Carolina. Profiles ship from Austria straight to North Carolina, a shorter route than sending them to our Los Angeles plant and back across the country, and the partner cuts from its own inventory instead of ours.\n\nFor customers that means fewer field errors, less skilled labor on site, and a finished kit in roughly ten business days, at a fraction of the added cost of fabricating in-house. A second program, a wood door option for privacy-critical rooms, passed Gate 0 in 2026.",
   "metrics": [
     {
       "value": "58%",
-      "label": "2024 sales in the Eastern time zone"
+      "label": "2024 Fallbrook sales in the Eastern time zone"
     },
     {
-      "value": "+103%",
-      "label": "Fallbrook growth, 2021 to 2024"
+      "value": "21 vs 37",
+      "label": "Days by sea from Austria: North Carolina vs Los Angeles"
     },
     {
       "value": "~30%",
-      "label": "Added customer cost with partner fabrication, vs ~200% in-house"
+      "label": "Added cost with partner fabrication, vs ~200% in-house"
     },
     {
       "value": "10 days",
@@ -126,6 +126,30 @@
       "decimals": 1
     },
     {
+      "type": "hbar",
+      "title": "Sea freight from Austria",
+      "caption": "Profiles ship straight from the partner's Austrian base to the new East Coast shop instead of to our Los Angeles plant.",
+      "labels": "Gastonia, NC (5,192 nm)\nLos Angeles, CA (8,920 nm)",
+      "series": [
+        {
+          "name": "Days",
+          "values": "21, 37",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Gastonia, NC (5,192 nm)",
+      "suffix": " days",
+      "decimals": 0
+    },
+    {
+      "type": "table",
+      "title": "How a CTL order moves",
+      "caption": "From order to a finished kit at the Rock Hill distribution center in about ten business days.",
+      "columns": "Step | Where | Notes",
+      "rows": "Order placed | Online ordering tool | Sized to the opening\nDrawings, cut, drill, kit | Partner shop, Gastonia NC | About 1.5 hours per entrance, from partner stock\nTransfer | 30 miles to Rock Hill, SC | Hinges and components added at the DC\nShip | Rock Hill DC | Close to the East Coast accounts that drive most sales"
+    },
+    {
       "type": "line",
       "title": "Fallbrook forecast, with and without cut-to-length",
       "caption": "Indexed, 2021 = 100. Actual growth averaged about 21% a year from 2021 to 2024; we forecast cut-to-length adding roughly 10% of Fallbrook revenue once adoption settles.",
@@ -191,5 +215,42 @@
   ],
   "cover": "/images/projects/fallbrook/01.jpg",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I co-led the CTL program with the senior product manager from Gate 0 to launch. I built the business case and the logistics comparison, ran the risk and mitigation plan, worked out the order flow between the partner, our distribution center and our online ordering tool, and visited our top Fallbrook customers in Florida and the new North Carolina shop before launch.",
+  "stakeholders": [
+    {
+      "group": "Partner",
+      "members": "Austrian fabrication partner, 30-year relationship\nNew fabrication shop in Gastonia, NC"
+    },
+    {
+      "group": "Distribution",
+      "members": "Rock Hill, SC distribution center\nLogistics and freight"
+    },
+    {
+      "group": "Internal teams",
+      "members": "Sales and top Fallbrook accounts\nMarketing\nOnline ordering tool (SFOL)\nLos Angeles plant (backup fabrication)\nDemand planning"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "Cutting partitions on site is where errors happen, and fabricating them at our Los Angeles plant added about 200% to the customer's cost and a cross-country trip.",
+      "resolution": "Partner fabrication near the customer base added about 30% instead, includes shop drawings and packaging, and takes an average entrance about an hour and a half to cut and kit."
+    },
+    {
+      "challenge": "Shipping profiles from Austria to Los Angeles and then east to customers doubled the distance and tied up our inventory.",
+      "resolution": "Sea freight to North Carolina takes about 21 days versus 37 to Los Angeles, and the partner fabricates from its own stock, so material no longer moves through our plant first."
+    },
+    {
+      "challenge": "A single outside shop is a single point of failure, from machine downtime to running out of stock.",
+      "resolution": "The risk plan made the Los Angeles plant the fallback for fabrication, let the Rock Hill center supplement stock and transport, and set escalation steps for order issues. The partner's experienced crew started the shop and trained the local team to hold cutting accuracy."
+    },
+    {
+      "challenge": "Orders needed to flow from our online ordering tool to the fabricator and back without manual re-keying.",
+      "resolution": "We ran test orders from small to large through the tool before launch and defined one escalation path for every party."
+    }
+  ]
 }

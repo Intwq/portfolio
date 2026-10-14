@@ -439,6 +439,32 @@ body::after {
 .sw li { font-size: 13px; line-height: 1.6; padding-left: 16px; position: relative; }
 .sw li::before { content: ""; position: absolute; left: 0; top: 0.75em; width: 6px; height: 1px; background: var(--muted); }
 
+/* my role + stakeholders */
+.role { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); align-items: start; }
+.role-text p { margin: 0 0 1em; font-size: 15px; line-height: 1.75; color: rgba(233,235,238,0.88); max-width: 62ch; }
+.role-text p:first-child { font: 300 clamp(18px, 1.6vw, 22px)/1.5 var(--display); letter-spacing: -0.01em; color: var(--text); }
+.sh-head { margin: 0 0 6px; font: 400 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.sh-list { margin: 0; }
+.sh-list div { display: grid; grid-template-columns: 150px 1fr; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.sh-list dt { font-size: 12px; color: var(--signal); padding-top: 2px; }
+.sh-list dd { margin: 0; font-size: 13px; line-height: 1.6; color: rgba(233,235,238,0.86); }
+
+/* recovery plan */
+.plan { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr)); border-top: 1px solid var(--line-strong); }
+.plan li { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: 22px clamp(14px, 2vw, 26px) 26px 0; border-bottom: 1px solid var(--line); }
+.plan-n { font: 300 30px/1 var(--display); color: var(--signal); }
+.plan h3 { margin: 4px 0 10px; font: 500 14px/1.4 var(--mono); color: var(--text); }
+.plan p { margin: 0 0 0.6em; font-size: 13px; line-height: 1.65; color: rgba(233,235,238,0.84); }
+
+/* challenges and resolutions */
+.cr { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
+.cr li { display: grid; grid-template-columns: 56px minmax(0, 1fr) minmax(0, 1fr); gap: clamp(16px, 3vw, 48px); padding: 22px 0; border-bottom: 1px solid var(--line); }
+.cr-n { font: 400 12px/1.6 var(--mono); color: var(--muted); }
+.cr-k { display: block; margin-bottom: 8px; font: 400 11px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.cr-r .cr-k { color: var(--signal); }
+.cr p { margin: 0 0 0.6em; font-size: 13.5px; line-height: 1.7; }
+.cr-c p { color: rgba(233,235,238,0.72); }
+
 /* homepage groups */
 .work-group + .work-group { margin-top: clamp(100px, 16vh, 180px); }
 
@@ -451,6 +477,9 @@ body::after {
   .brief { grid-template-columns: 1fr; }
   .charts { grid-template-columns: 1fr; }
   .swot { grid-template-columns: 1fr; }
+  .role { grid-template-columns: 1fr; }
+  .cr li { grid-template-columns: 40px minmax(0, 1fr); }
+  .cr-r { grid-column: 2; }
   .gates { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 28px; }
   .gates::before, .gates::after { display: none; }
   .gate { border-top: 1px solid var(--line); padding-top: 26px; }
@@ -458,6 +487,9 @@ body::after {
 }
 @media (max-width: 560px) {
   .brief div { grid-template-columns: 1fr; gap: 6px; }
+  .sh-list div { grid-template-columns: 1fr; gap: 4px; }
+  .cr li { grid-template-columns: 1fr; gap: 12px; }
+  .cr-r { grid-column: auto; }
   .hb-row { grid-template-columns: 1fr auto; }
   .hb-label { grid-column: 1 / -1; }
   .gates { grid-template-columns: repeat(2, minmax(0, 1fr)); }

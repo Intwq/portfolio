@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "S100 4track-corner-pocket",
@@ -137,5 +137,46 @@
   ],
   "cover": "/images/projects/s100-4track-corner-pocket/01.jpg",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I co-led the S100 expansion with the senior product manager and took it through Gates 0 to 2 in one month, after leadership asked us to accelerate. I made the case from lost projects and the open pipeline, drafted the project charter with engineering, and scoped the 4-track, pocket and corner work around a live showroom project.",
+  "stakeholders": [
+    {
+      "group": "Project",
+      "members": "Architect and glazing contractor on the launch showroom"
+    },
+    {
+      "group": "Sales",
+      "members": "Architectural business development"
+    },
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "recovery_title": "Plan to win back S100 projects",
+  "recovery_intro": "S100 sales dropped about 35% from 2022 to 2023 and had only partly recovered. The system wasn't the problem; it couldn't be configured the way many projects needed, and our own sales team didn't know what was possible.",
+  "recovery": [
+    {
+      "label": "Close the configuration gap",
+      "text": "Add 4-track, pocket and post-free 90° corner configurations within the existing CW40 rating, so projects that need more panels aren't lost."
+    },
+    {
+      "label": "Prove it on a real job",
+      "text": "Use a high-profile Manhattan showroom that needed all three configurations at once as the first application."
+    },
+    {
+      "label": "Teach the sales team",
+      "text": "Train architectural sales on the new configurations so they can bring them to architects early, when the system is specified."
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "Leadership wanted to accelerate the program because much of the engineering already existed, but there was no charter defining the scope.",
+      "resolution": "We wrote the charter in a week covering all three configurations, reviewed it with engineering, and cleared Gates 0 to 2 in July 2025."
+    }
+  ]
 }

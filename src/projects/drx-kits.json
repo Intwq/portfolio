@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "DRX Kits",
@@ -95,6 +95,34 @@
   "charts": [
     {
       "type": "bar",
+      "title": "DRX sales against the original plan",
+      "caption": "Indexed to the first-year plan = 100. Actual sales ran at roughly a third of plan, then fell further behind; the kits were the response.",
+      "labels": "Year 1\nYear 2\nYear 3",
+      "series": [
+        {
+          "name": "Original plan",
+          "values": "100, 212, 300",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Actual",
+          "values": "36, 39, -",
+          "highlight": false,
+          "dashed": false
+        },
+        {
+          "name": "Forecast with kits",
+          "values": "-, -, 83",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "decimals": 0,
+      "wide": true
+    },
+    {
+      "type": "bar",
       "title": "What a buyer had to purchase to build one rail",
       "caption": "Before kits, DRX components were sold only in multi-packs. Gasket also dropped from a 100 ft roll to the 8 ft a single rail needs.",
       "labels": "Rail bodies\nSlide blocks\nSide covers\nEnd caps",
@@ -163,5 +191,54 @@
     "/images/projects/drx-kits/09.jpg"
   ],
   "cover": "/images/projects/drx-kits/01.jpg",
-  "hidden": false
+  "hidden": false,
+  "my_role": "I co-led DRX Kits with the senior product manager and ran it through all five gates in six months. I built the business case from custom-rail sales, defined the 16 SKUs and their pricing and discount rules, wrote the inventory plan, and coordinated manufacturing to repackage existing stock into kits instead of tooling anything new.",
+  "stakeholders": [
+    {
+      "group": "Manufacturing",
+      "members": "Los Angeles plant: kit assembly from existing stock"
+    },
+    {
+      "group": "Customers",
+      "members": "Glass temperers, glaziers and door repair shops"
+    },
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "recovery_title": "Plan to win back DRX sales",
+  "recovery_intro": "DRX launched to a strong forecast, but first-year sales reached about a third of plan and the second year fell further behind. Buyers liked the system; the ten-pack minimum stopped them from trying it.",
+  "recovery": [
+    {
+      "label": "Remove the minimum",
+      "text": "Sell everything for one door rail in a single box, so the first purchase is one door, not ten."
+    },
+    {
+      "label": "Use what's on the shelf",
+      "text": "Kits were built from existing DRX inventory at the service centers and plant, turning slow stock into sellable product with no new tooling."
+    },
+    {
+      "label": "Price against the real alternative",
+      "text": "Kits were priced against the custom factory rails buyers were already ordering, with a target of converting 10% of custom-rail demand in the first year."
+    },
+    {
+      "label": "Build the habit, then the stock",
+      "text": "Glaziers try DRX on one door; as demand builds, temperers have a reason to stock full packs again."
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "Early part numbering reused one number for blank, lock-prepared and panic-prepared rails, which would have broken ordering and costing.",
+      "resolution": "We dropped the panic option for launch, gave every variant a unique number following CRL's existing lock-suffix logic, and launched with nut strips customers can swap for other glass thicknesses instead of multiplying SKUs."
+    },
+    {
+      "challenge": "The kits had to be cheaper to build than the custom rail they replaced, using parts that were already made.",
+      "resolution": "Engineering ran a cost comparison of DRX against the equivalent custom rail before we committed; the kit came in lower, which set our pricing floor."
+    }
+  ]
 }

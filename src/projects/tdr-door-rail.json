@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "TDR Door Rail",
@@ -89,5 +89,12 @@
   ],
   "images": [],
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I ran the TDR rail from analysis to launch: sizing demand from custom-rail history, choosing finishes and lock options, setting stocking levels at the busiest service centers, and writing the product listings.",
+  "stakeholders": [
+    {
+      "group": "Internal teams",
+      "members": "Engineering\nDemand planning\nService centers\nMaster data\nMarketing"
+    }
+  ]
 }

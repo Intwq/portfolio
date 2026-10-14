@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "Modular Header",
@@ -114,5 +114,26 @@
   ],
   "cover": "/images/projects/modular-header/01.jpg",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I ran the modular header as a companion program to DRX Kits on the same gate schedule: defining the SKU set, sourcing the splice and drilling jig from an outside vendor, and aligning the marketing plan so both launched together in April 2025.",
+  "stakeholders": [
+    {
+      "group": "Supplier",
+      "members": "Outside vendor for splices and drilling jig"
+    },
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "Without a header, DRX customers still had to wait on a custom factory part or fabricate one themselves, which undercut the point of the kits.",
+      "resolution": "We reused existing header extrusion in 48\" lengths and added a splice and a jig that locates closer and pivot preparation, so a full opening can be built from stock."
+    }
+  ]
 }

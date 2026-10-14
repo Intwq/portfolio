@@ -1,0 +1,275 @@
+{
+  "company": "C.R. Laurence",
+  "role": "Product manager, program lead",
+  "section": "Product launches",
+  "tools": "",
+  "title": "TurboFlex",
+  "year": 2026,
+  "order": 0,
+  "category": "Life-safety glass railing system",
+  "status": "Launched April 2026 (U.S. and Canada); Miami-Dade approval in progress",
+  "description": "TurboFlex was my last and largest program at CRL: a dry-glazed glass railing system brought from OnLevel in Europe to the U.S. and Canadian markets under the CRL name, in about six months from first gate to launch.\n\nA glass railing is a guard. It keeps people from falling off balconies, terraces and mezzanines, so every part of it answers to building codes, structural engineers and certification bodies before it can be sold. The system had been engineered and tested to German DIN standards; my job was to prove it under U.S. codes, put it through Miami-Dade's hurricane impact testing, set up a three-country supply chain, and get product, packaging, pricing and training ready for 23 service centers on a fixed launch date.\n\nIt replaced CRL's Taper-Loc system, which had been losing share for three years. TurboFlex cuts the parts an installer has to stock from 178 to 10, swaps a large, expensive installation tool for a torque-limited bit that runs on a standard drill, and adds height adjustment on top of tilt, which the market was starting to expect.",
+  "metrics": [
+    {
+      "value": "178 → 10",
+      "label": "Components an installer needs to stock"
+    },
+    {
+      "value": "75 psf",
+      "label": "Passed Miami-Dade HVHZ impact testing, top and fascia mount"
+    },
+    {
+      "value": "6 mo.",
+      "label": "Partnership kickoff to U.S. and Canadian launch"
+    },
+    {
+      "value": "2×",
+      "label": "First order doubled after the GlassBuild pre-launch"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "CRL's Taper-Loc dry-glaze system had been largely unchanged for over 12 years. Competitors offered lower entry cost, more adjustment and wider glass compatibility, and some large Miami installers wouldn't carry it without High-Velocity Hurricane Zone approval. Sales fell 17.5% from 2022 to 2024."
+    },
+    {
+      "label": "Strategy",
+      "text": "Bring in a proven European system as CRL's premium dry-set railing and keep Taper-Loc as the entry-level option, so existing customers aren't stranded and new ones enter through TurboFlex."
+    },
+    {
+      "label": "Solution",
+      "text": "One base shoe in two mounts (top and fascia), three clamp sizes that cover the common glass range, 2° of tilt plus height adjustment, and a torque-limited install bit in place of a dedicated tool."
+    },
+    {
+      "label": "Customers",
+      "text": "Architects, glass temperers, and large and small glazing contractors on commercial and high-end residential projects."
+    },
+    {
+      "label": "Market",
+      "text": "Glass railing systems: about $2.8B worldwide in 2022, projected to reach $4.9B by 2030 (7.7% CAGR)."
+    },
+    {
+      "label": "Competition",
+      "text": "FHC Achieve, Q-Railing, Wagner and VIVA Railings."
+    }
+  ],
+  "my_role": "I led the program day to day, from the business case at Gate 0 through launch, alongside the senior product manager for the category. I ran the gate reviews, the weekly cadence with marketing, sourcing and leadership, a daily stand-up with the engineering team, and a bi-weekly call with OnLevel's leadership in Europe.\n\nBecause a railing is life-safety equipment, the work was as much about evidence as product. I coordinated the engineering report that translated OnLevel's German test results into U.S. load requirements, the update to CRL's ICC-ES evaluation report, the Miami-Dade test samples and approval package, and the supplier quality controls that approval requires. In parallel I built the forecast and inventory plan, set pricing with revenue operations, created the SKUs and drove the packaging, labeling, freight and training plans that put the system in 23 service centers.",
+  "stakeholders": [
+    {
+      "group": "Certification",
+      "members": "ICC Evaluation Service (ESR-3842)\nMiami-Dade County Product Control (NOA, HVHZ)\nIndependent test lab\nStructural engineers of record, U.S. and Florida"
+    },
+    {
+      "group": "Partner and suppliers",
+      "members": "OnLevel (system developer, Europe)\nExtrusion and component makers in Türkiye, China and Spain\nGasket supplier\nThird-party inspection\nCandidate domestic extruder"
+    },
+    {
+      "group": "Engineering and quality",
+      "members": "New product development\nProduct testing and certification\nQuality systems\nManufacturing (cladding and custom parts)"
+    },
+    {
+      "group": "Commercial",
+      "members": "Sales: inside, outside, branch managers, Canada\nRevenue operations and pricing\nMarketing: brand, packaging, digital, events\nOnline tools and configurator partner"
+    },
+    {
+      "group": "Operations",
+      "members": "Strategic sourcing and purchasing\nLogistics, freight and customs\nDemand planning and inventory control\nMaster data (SAP)"
+    },
+    {
+      "group": "Legal",
+      "members": "Distribution agreement, signed at GlassBuild 2025\nPatent review (U.S. application published)"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "gates": [
+    {
+      "gate": "G0",
+      "date": "Jul 2025",
+      "label": "Business case",
+      "done": true
+    },
+    {
+      "gate": "G1",
+      "date": "Aug 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G2",
+      "date": "Sep 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G3",
+      "date": "Sep 2025",
+      "label": "",
+      "done": true
+    },
+    {
+      "gate": "G4",
+      "date": "Mar 2026",
+      "label": "Launch readiness",
+      "done": true
+    },
+    {
+      "gate": "G5",
+      "date": "Apr 15, 2026",
+      "label": "Launched",
+      "done": true
+    }
+  ],
+  "recovery_title": "Plan to win back the dry-glaze market",
+  "recovery_intro": "Taper-Loc wasn't failing on quality. It was losing on entry cost, stocking complexity, adjustment and Florida certification. The plan addressed each one rather than discounting the old system.",
+  "recovery": [
+    {
+      "label": "Lower the cost of entry",
+      "text": "A torque-limited bit that runs on the drill installers already carry replaces a large, expensive dedicated tool, the most common complaint we heard."
+    },
+    {
+      "label": "Make it stockable",
+      "text": "Three clamps and one base shoe cover the glass range that used to take 178 parts, so installers can keep inventory on the truck and quote jobs faster."
+    },
+    {
+      "label": "Win back Florida",
+      "text": "Miami-Dade HVHZ impact testing passed at 75 psf for both mounts, the certification large Miami installers named as their reason for buying elsewhere."
+    },
+    {
+      "label": "Transition without stranding customers",
+      "text": "Taper-Loc stays as the entry-level system while its inventory runs down, supported by a promotion on its install tool; TurboFlex brings in new customers as the premium tier."
+    },
+    {
+      "label": "Ramp deliberately",
+      "text": "The plan assumes slow adoption, typical of railings: 20% of former dry-set volume in year one, rising to 80% by 2030, with a domestic extruder to cut tariff exposure."
+    }
+  ],
+  "research_intro": "I built the business case from our own sales history, a full component count of the Taper-Loc system and a benchmark of the four systems installers compared us against. Dollar figures are withheld; sales are shown as an index or share.",
+  "charts": [
+    {
+      "type": "line",
+      "title": "Taper-Loc system sales, indexed",
+      "caption": "2021 = 100. The decline from 2022 is what TurboFlex was brought in to reverse.",
+      "labels": "2021\n2022\n2023\n2024",
+      "series": [
+        {
+          "name": "Taper-Loc",
+          "values": "100, 104.1, 95.1, 86.6",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "decimals": 0
+    },
+    {
+      "type": "split",
+      "title": "Base shoe sales by glass thickness, 2024",
+      "caption": "Two thicknesses made up nearly 60% of demand, which shaped which clamp kits we stocked deepest.",
+      "labels": "9/16\"\n1/2\"\n27/32\"\n11/16\"\n3/4\"\nOther",
+      "series": [
+        {
+          "name": "Share",
+          "values": "29.6, 28.4, 17.1, 4.4, 1.8, 18.7",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "9/16\"\n1/2\""
+    },
+    {
+      "type": "split",
+      "title": "Taper-Loc demand mapped to TurboFlex clamps",
+      "caption": "Converting 2024 taper sales to linear feet showed where three clamp sizes would land.",
+      "labels": "TurboFlex 1 (12–15 mm)\nTurboFlex 2 (15–21.5 mm)\nTurboFlex 3 (21.5–31 mm)",
+      "series": [
+        {
+          "name": "Share",
+          "values": "75, 21, 4",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "TurboFlex 1 (12–15 mm)"
+    },
+    {
+      "type": "bar",
+      "title": "Adoption plan",
+      "caption": "Share of 2024 dry-set railing volume expected to move to TurboFlex. Railings adopt new systems slowly, so the ramp is gradual.",
+      "labels": "2026\n2027\n2028\n2029\n2030",
+      "series": [
+        {
+          "name": "Adoption",
+          "values": "20, 35, 50, 65, 80",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "suffix": "%"
+    },
+    {
+      "type": "table",
+      "title": "Competitive benchmark",
+      "caption": "Component count is the number of parts a distributor or installer has to stock to cover the system's glass range.",
+      "columns": "System | Glass range | Components | Adjustment | HVHZ",
+      "rows": "TurboFlex | 1/2\" to 27/32\" (to 1-1/4\" planned) | 10 | 2° tilt plus height | Impact test passed\nCRL Taper-Loc | 1/2\" to 1-1/16\" | 178 | 2° tilt | Yes\nCompetitor A | 1/2\" to 1-1/4\" | 80 | 1.2° tilt | Yes\nCompetitor B | 1/2\" to 27/32\" | 89 | ±0.6° tilt | Yes\nCompetitor C | 1/2\" to 13/16\" | 51 | None | No",
+      "highlight": "TurboFlex",
+      "wide": true
+    },
+    {
+      "type": "table",
+      "title": "Launch supply chain",
+      "caption": "Parts came from three countries and moved by air and sea so that displays, samples and first stock reached service centers before sales training.",
+      "columns": "Component | Source | First shipment | Plan",
+      "rows": "Base shoes and cladding | Türkiye | Air for first stock, sea for volume | Qualify a U.S. extruder to cut tariff exposure\nClamp kits, end caps, tools | China | Air and sea, split by urgency | Stay with OnLevel's supply base\nNew profiles | Spain | Later phase | Evaluate as a second source\nDisplays and samples | Germany | Air, consolidated | 25 floor and 100 travel displays",
+      "wide": true
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "The system was engineered to German DIN standards. U.S. codes load a guard differently, and certification bodies needed U.S. evidence before we could sell it as a life-safety product.",
+      "resolution": "I commissioned an independent engineering report that translated the DIN test results into U.S. load requirements and anchorage tables for steel, concrete and wood. In parallel, the clamp kits were re-tuned for U.S. glass thicknesses and tolerances, and the system was added to CRL's ICC-ES evaluation report."
+    },
+    {
+      "challenge": "Miami-Dade testing needed custom base shoes sized to the test chamber, short enough to air-freight. The supplier had no undrilled stock, so the samples would have waited until late January while the test plan went back and forth on anchor spacing.",
+      "resolution": "I made the anchor-spacing call with engineering to stop the loop, specified pre-drilled 91\" shoes, and air-freighted them with clamp kits and torque tools. The system passed impact testing at 75 psf in both top and fascia mount."
+    },
+    {
+      "challenge": "Miami-Dade grants product approval to manufacturers, and a third-party-built system needs documented controls at the factory, not only at our dock.",
+      "resolution": "We built the county's quality expectations into the supplier plan: audit rights, incoming-material and mill-certificate traceability, compliant labeling, and third-party inspection, so the approval would hold up after launch as well as at submission."
+    },
+    {
+      "challenge": "Packaging, labels, barcodes and the in-box instructions all had to be finished across three companies and two holiday shutdowns, and CRL's barcode standard changed in the middle of the process.",
+      "resolution": "I connected OnLevel directly with our marketing, inventory-control and brand teams, consolidated open items into one list with owners, and caught a mismatch between the clamp count shown in the instructions and the kit before it went to print. Labels moved to the sides of the boxes so they read on stacked pallets, and the second order's packaging was redesigned around the installer's workflow, fitting 24 more boxes per pallet."
+    },
+    {
+      "challenge": "A strong pre-launch at GlassBuild pushed demand well past the original forecast, and leadership asked for a second order before the first had landed.",
+      "resolution": "I re-planned quantities SKU by SKU with sourcing and demand planning, set up the new cladding, end-cap and custom parts in SAP, and the second order was confirmed in March, doubling the first."
+    },
+    {
+      "challenge": "Inventory, 125 displays and samples had to reach 23 service centers before training, and the freight forwarder, buyers and supplier were each working from different partial information, including a currency mismatch between the purchase order and the contract.",
+      "resolution": "I consolidated pickup, packing and pallet data into one thread, split shipments between air and sea by priority, and held invoicing to the contract terms leadership had agreed so goods weren't held up. Training for inside sales, branch managers and outside sales ran April 6 to 8, and the system launched April 15."
+    },
+    {
+      "challenge": "A 50% tariff on imported aluminum squeezed launch margins on the base shoe.",
+      "resolution": "We launched on imported stock to hold the date, priced TurboFlex as the premium tier, and started qualifying a U.S. extruder so long-term the only imported parts are the clamp kits."
+    }
+  ],
+  "quotes": [],
+  "images": [
+    "/images/projects/turboflex/01.jpg",
+    "/images/projects/turboflex/02.jpg",
+    "/images/projects/turboflex/03.jpg",
+    "/images/projects/turboflex/04.jpg",
+    "/images/projects/turboflex/05.jpg",
+    "/images/projects/turboflex/06.jpg",
+    "/images/projects/turboflex/07.jpg",
+    "/images/projects/turboflex/08.jpg",
+    "/images/projects/turboflex/09.jpg",
+    "/images/projects/turboflex/10.jpg"
+  ],
+  "cover": "/images/projects/turboflex/01.jpg",
+  "featured": true,
+  "hidden": false
+}

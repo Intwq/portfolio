@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "Lat34 Softbrake",
@@ -8,7 +8,7 @@
   "order": 8,
   "category": "Sliding systems",
   "status": "Gate 1 complete, December 2025",
-  "description": "Latitude is CRL's premium barn-door-style sliding system for glass and other heavy panels, launched in August 2024. Stopping a heavy glass panel raises safety, noise and wear concerns, so we added soft-close.\n\nWe moved to the supplier's second-generation track, which is backward compatible and houses an integrated Soft-Brake. Three Soft-Brake units cover panels from 60 to 300 lb, sit entirely inside the track profile, can be positioned anywhere along it and can be added after installation. Testing meets or exceeds DIN and ANSI standards, including the ADA disengage force. The new track also cost less than the one it replaced, which helped offset the cost of the soft-close.",
+  "description": "Latitude is CRL's premium barn-door-style sliding system for glass panels up to 300 lb, launched in August 2024 and growing quickly. Stopping a heavy glass panel safely and quietly is what separates a premium slider from a basic one, so the next step was soft-close.\n\nWe worked with KrownLab, the system's U.S. manufacturer, on its second-generation track with an integrated Soft-Brake. The mechanism sits entirely inside the track, can be positioned anywhere along it, and can be added after installation. The work was a negotiation between price and performance: the new track cost less than the one it replaced, which absorbed most of the cost of the brake, and testing set how many brake units we needed to cover every door weight without compromising safety or feel.",
   "metrics": [
     {
       "value": "8.6×",
@@ -19,12 +19,12 @@
       "label": "Max panel weight with Soft-Brake"
     },
     {
-      "value": "100,000",
-      "label": "Test cycles at 300 lb"
+      "value": "≤15 lbf",
+      "label": "ADA disengage force, met at every weight"
     },
     {
-      "value": ">$2B",
-      "label": "Luxury sliding door market, 4.2% CAGR"
+      "value": "1M",
+      "label": "Cycle rating on the Latitude systems"
     }
   ],
   "brief": [
@@ -42,11 +42,11 @@
     },
     {
       "label": "Value",
-      "text": "A more premium, safer user experience, especially for heavy panels, on a system that was already growing quickly."
+      "text": "Quiet, controlled closing and less wear on heavy glass doors, at a modest premium, which keeps Latitude at the top of its category on both feel and value."
     },
     {
-      "label": "Sourcing",
-      "text": "Buy: from the system's original supplier, with existing inventory exchanged for the new track."
+      "label": "Supplier",
+      "text": "KrownLab, the system's U.S. manufacturer. Existing first-generation track was exchanged for the new soft-close-ready track at a negotiated price."
     },
     {
       "label": "Competition",
@@ -149,5 +149,38 @@
   ],
   "cover": "/images/projects/lat34-softbrake/01.jpg",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I co-led Soft-Brake with the senior product manager through Gates 0 and 1. I built the business case and pricing, negotiated the track exchange with KrownLab, and worked through their test results with them to decide how many Soft-Brake units to offer and which door weights each should cover.",
+  "stakeholders": [
+    {
+      "group": "Supplier",
+      "members": "KrownLab (design, testing and manufacturing)"
+    },
+    {
+      "group": "Standards",
+      "members": "ANSI and DIN sliding door tests\nADA disengage-force requirement"
+    },
+    {
+      "group": "Internal teams",
+      "members": "Sourcing\nProduct engineering\nSales\nMarketing and trade shows\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "We wanted one Soft-Brake for every door weight to keep ordering simple. KrownLab re-ran its tests on a glass-panel setup to check: a light brake couldn't pull heavy doors closed, a heavy brake exceeded the ADA disengage limit on light doors, and a middle brake passed but would wear early above 200 lb.",
+      "resolution": "We kept weight-rated brakes rather than accept a field-failure risk on a premium product, and matched them to the Latitude models so most customers choose by system, not by weighing the door."
+    },
+    {
+      "challenge": "Moving to the new track meant replacing inventory we already held.",
+      "resolution": "I negotiated a track exchange with KrownLab, keeping our existing end caps and connector kits, at a set price per track. The tracks are backward compatible, so existing customers can add Soft-Brake later without new hardware."
+    },
+    {
+      "challenge": "Soft-close adds cost to a system already priced at the top of its category.",
+      "resolution": "The second-generation track came in lower than the first, which offset most of the brake's cost, so the soft-close upgrade adds a modest premium to a full system."
+    }
+  ]
 }

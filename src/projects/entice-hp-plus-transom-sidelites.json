@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "Entice HP+ (Transom & Sidelites)",
@@ -150,5 +150,24 @@
   ],
   "cover": "/images/projects/entice-hp-plus-transom-sidelites/01.jpg",
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I led this program from Gate 0 to Gate 3 in two months: making the case from lost projects and the open HP+ pipeline, defining the framing members with engineering, coordinating full-assembly testing, and getting installation manuals and SKUs set up for made-to-order production.",
+  "stakeholders": [
+    {
+      "group": "Testing",
+      "members": "Air, water, structural and racking assembly tests"
+    },
+    {
+      "group": "Manufacturing",
+      "members": "Los Angeles plant, made to order"
+    },
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ]
 }

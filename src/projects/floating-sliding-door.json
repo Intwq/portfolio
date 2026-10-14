@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "Floating Sliding Door",
@@ -194,5 +194,30 @@
     "/images/projects/floating-sliding-door/07.jpg"
   ],
   "cover": "/images/projects/floating-sliding-door/01.jpg",
-  "hidden": false
+  "hidden": false,
+  "my_role": "I took over the Floating Sliding Door at Gate 3. Before committing to inventory I ran a concept survey with architects, used the results to shape positioning and launch messaging, reviewed the European partner's quality report, and built the outside-sales training.",
+  "stakeholders": [
+    {
+      "group": "Partner",
+      "members": "European hardware partner (development and manufacturing)"
+    },
+    {
+      "group": "Research",
+      "members": "Architect concept survey"
+    },
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "challenges": [
+    {
+      "challenge": "The program changed hands at Gate 3, with inventory decisions still open and no direct customer validation of the concept.",
+      "resolution": "I surveyed architects before buying: 85% found it appealing and 77% said they were likely to specify it, which justified the buy and told us what to lead with."
+    }
+  ]
 }

@@ -172,6 +172,52 @@ function gatesHtml(p) {
   </section>`;
 }
 
+function roleHtml(p) {
+  const groups = (p.stakeholders || []).filter((g) => g && (g.group || g.members));
+  if (!p.my_role && !groups.length) return "";
+  return `
+  <section class="cs-block" aria-labelledby="m-${p.slug}">
+    <h2 class="cs-title" id="m-${p.slug}">My role</h2>
+    <div class="role" data-reveal>
+      ${p.my_role ? `<div class="role-text">${paras(p.my_role)}</div>` : ""}
+      ${groups.length ? `<div class="sh">
+        <p class="sh-head">Stakeholders I coordinated</p>
+        <dl class="sh-list">${groups.map((g, i) => `
+          <div style="--i:${i}"><dt>${esc(g.group || "")}</dt><dd>${esc(lines(g.members).join(" · "))}</dd></div>`).join("")}
+        </dl></div>` : ""}
+    </div>
+  </section>`;
+}
+
+function recoveryHtml(p) {
+  const steps = (p.recovery || []).filter((r) => r && r.text);
+  if (!steps.length) return "";
+  return `
+  <section class="cs-block" aria-labelledby="w-${p.slug}">
+    <h2 class="cs-title" id="w-${p.slug}">${esc(p.recovery_title || "Plan to win back the market")}</h2>
+    ${p.recovery_intro ? `<div class="cs-intro">${paras(p.recovery_intro)}</div>` : ""}
+    <ol class="plan" data-reveal>${steps.map((r, i) => `
+      <li style="--i:${i}"><span class="plan-n">${String(i + 1).padStart(2, "0")}</span><div><h3>${esc(r.label || "")}</h3>${paras(r.text)}</div></li>`).join("")}
+    </ol>
+  </section>`;
+}
+
+function challengesHtml(p) {
+  const list = (p.challenges || []).filter((c) => c && (c.challenge || c.resolution));
+  if (!list.length) return "";
+  return `
+  <section class="cs-block" aria-labelledby="c-${p.slug}">
+    <h2 class="cs-title" id="c-${p.slug}">Challenges and resolutions</h2>
+    <ol class="cr">${list.map((c, i) => `
+      <li data-reveal>
+        <span class="cr-n">${String(i + 1).padStart(2, "0")}</span>
+        <div class="cr-c"><span class="cr-k">Challenge</span>${paras(c.challenge)}</div>
+        <div class="cr-r"><span class="cr-k">Resolution</span>${paras(c.resolution)}</div>
+      </li>`).join("")}
+    </ol>
+  </section>`;
+}
+
 function caseStudy(p) {
   const metrics = (p.metrics || []).filter((m) => m && m.value);
   const brief = (p.brief || []).filter((b) => b && b.text);
@@ -180,7 +226,8 @@ function caseStudy(p) {
   const swot = p.swot || {};
   const swotKeys = [["strengths", "Strengths"], ["weaknesses", "Weaknesses"], ["opportunities", "Opportunities"], ["threats", "Threats"]]
     .filter(([k]) => lines(swot[k]).length);
-  if (!metrics.length && !brief.length && !charts.length && !quotes.length && !swotKeys.length && !(p.gates || []).length) return "";
+  if (!metrics.length && !brief.length && !charts.length && !quotes.length && !swotKeys.length && !(p.gates || []).length
+    && !p.my_role && !(p.challenges || []).length && !(p.recovery || []).length) return "";
 
   return `
 <div class="cs">
@@ -195,7 +242,11 @@ function caseStudy(p) {
     </dl>
   </section>` : ""}
 
+  ${roleHtml(p)}
+
   ${gatesHtml(p)}
+
+  ${recoveryHtml(p)}
 
   ${charts.length ? `<section class="cs-block" aria-labelledby="r-${p.slug}">
     <h2 class="cs-title" id="r-${p.slug}">Research</h2>
@@ -203,6 +254,8 @@ function caseStudy(p) {
     <div class="charts">${charts.map(chart).join("")}
     </div>
   </section>` : ""}
+
+  ${challengesHtml(p)}
 
   ${quotes.length ? `<section class="cs-block" aria-labelledby="q-${p.slug}">
     <h2 class="cs-title" id="q-${p.slug}">Voice of the customer</h2>

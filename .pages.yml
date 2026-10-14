@@ -199,6 +199,48 @@ content:
           - name: note
             label: Footnote
             type: string
+      - name: my_role
+        label: My role (paragraphs)
+        type: text
+      - name: stakeholders
+        label: Stakeholders
+        type: object
+        list: true
+        fields:
+          - name: group
+            label: Group
+            type: string
+          - name: members
+            label: Who (one per line)
+            type: text
+      - name: recovery_title
+        label: Win-back plan heading
+        type: string
+      - name: recovery_intro
+        label: Win-back plan intro
+        type: text
+      - name: recovery
+        label: Win-back plan steps
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Step
+            type: string
+          - name: text
+            label: Detail
+            type: text
+      - name: challenges
+        label: Challenges and resolutions
+        type: object
+        list: true
+        fields:
+          - name: challenge
+            label: Challenge
+            type: text
+          - name: resolution
+            label: Resolution
+            type: text
       - name: quotes
         label: Customer quotes
         type: object

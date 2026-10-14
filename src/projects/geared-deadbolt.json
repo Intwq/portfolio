@@ -1,6 +1,6 @@
 {
   "company": "C.R. Laurence",
-  "role": "Product management, co-lead",
+  "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
   "title": "Geared Deadbolt",
@@ -97,5 +97,31 @@
   ],
   "images": [],
   "featured": false,
-  "hidden": false
+  "hidden": false,
+  "my_role": "I co-led the geared deadbolt concept with the senior product manager through Gate 0: defining the field problems with sales and engineering, framing the market, and setting the requirements for an in-house design.",
+  "stakeholders": [
+    {
+      "group": "Internal teams",
+      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+    },
+    {
+      "group": "Gate committee",
+      "members": "VP Engineering\nVP Product Design & Development\nVP Sales\nVP Marketing\nHead of Product & Innovation"
+    }
+  ],
+  "recovery_title": "Plan to win back the deadbolt line",
+  "recovery": [
+    {
+      "label": "Fix the security flaw",
+      "text": "Reorient the turn so it can't be reached through the door gap."
+    },
+    {
+      "label": "Make tall pulls easy to lock",
+      "text": "A geared mechanism cuts the force needed on long ladder pulls."
+    },
+    {
+      "label": "Move into multi-point locking",
+      "text": "Support three or more locking points, building on what CRL learned from a recent three-point locking project."
+    }
+  ]
 }
