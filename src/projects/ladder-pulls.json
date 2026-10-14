@@ -232,5 +232,6 @@
       "challenge": "First articles passed dimensional and fit checks, but the assemblies didn't match the drawings on parts and quantities, and parts shifted inside the box.",
       "resolution": "Quality and I documented every gap on the inspection reports, sent drawing corrections and missing-part lists back to the supplier, and added packing material and proper box labels before the production run."
     }
-  ]
+  ],
+  "icon_from": "/images/projects/ladder-pulls/04.jpg"
 }

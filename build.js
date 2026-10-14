@@ -139,6 +139,7 @@ ${image ? `<meta property="og:image" content="${esc(u.asset(image))}">` : ""}
   <nav class="nav" aria-label="Main">
     <a href="${u.root}${PREVIEW ? "" : ""}#work" data-nav="work">Work</a>
     <a href="${u.about}" data-nav="about">About</a>
+    ${site.arcade_url ? `<a href="${esc(site.arcade_url)}">Arcade</a>` : ""}
     ${site.email ? `<a href="mailto:${esc(site.email)}">Contact</a>` : ""}
   </nav>
 </header>

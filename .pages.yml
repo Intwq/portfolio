@@ -199,6 +199,12 @@ content:
           - name: note
             label: Footnote
             type: string
+      - name: icon
+        label: Arcade icon (optional pixel-art PNG; leave empty to auto-generate)
+        type: image
+      - name: icon_from
+        label: Arcade icon source photo (optional; which image to pixelate)
+        type: image
       - name: my_role
         label: My role (paragraphs)
         type: text
@@ -299,6 +305,12 @@ content:
         type: string
       - name: linkedin
         label: LinkedIn link
+        type: string
+      - name: main_url
+        label: Main site address (shown on the arcade site)
+        type: string
+      - name: arcade_url
+        label: Arcade site address (adds an Arcade link to the main site menu)
         type: string
       - name: instagram
         label: Instagram link

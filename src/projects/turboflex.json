@@ -271,5 +271,6 @@
   ],
   "cover": "/images/projects/turboflex/01.jpg",
   "featured": true,
-  "hidden": false
+  "hidden": false,
+  "icon_from": "/images/projects/turboflex/05.jpg"
 }

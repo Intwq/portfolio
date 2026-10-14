@@ -3,3 +3,4 @@ dist/
 .sizes/
 .DS_Store
 __pycache__/
+dist-arcade/
