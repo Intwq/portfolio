@@ -26,7 +26,22 @@
     eye: "#1a1430", eyeHi: "#ffffff", blush: "#ff8fa8",
     mint: "#7ee0c4", mintD: "#3fae95", yel: "#ffd23f", yelD: "#e0a800", red: "#ff4d6d",
     chain0: "#8d8ab5", chain1: "#c9c7e6",
+    n0: "#ffffff", n1: "#e6e6e6", n2: "#a8a8ad", n3: "#1d1d1f", nred: "#d71921", glyphOff: "#4a4a50", inner: "#8a8a96",
   }).map(([k, v]) => [k, rgb(v)]));
+  const rgba = (h, a) => ((rgb(h) & 0x00ffffff) | (Math.round(a * 255) << 24)) >>> 0;
+  P.shell = rgba("#f4f8ff", 0.72); P.glass = rgba("#2a2a34", 0.55);
+  // Glyph strip pattern: a scanning dot while aiming, a falling pulse while dropping,
+  // all lit while holding, sparkle on a prize
+  function glyphOn(c, n) {
+    if (mode === "follow") {                       // a soft scanner with a fading tail
+      const p = (clock * 2.4) % (n * 2 - 2), k = p < n ? p : n * 2 - 2 - p, d = Math.abs(c - k);
+      return d < 0.6 ? true : d < 1.6 ? "dim" : false;
+    }
+    if (mode === "seek") return ((clock * 8) | 0) % 2 === c % 2;
+    if (mode === "reveal" || mode === "open") return rnd(c * 13 + ((clock * 12) | 0)) > 0.45;
+    if (held || mode === "grab") return true;
+    return c === ((clock * 6) | 0) % n;
+  }
 
   let W = 0, H = 0, PX = 2, LW = 0, LH = 0, S = 104, RAIL = 64, FLOOR = 34, U = 1;
   let rig = null;
@@ -37,11 +52,11 @@
   let len = 160, lenT = 160;
   const claw = { open: 1, openT: 1 };
   let mode = "follow";
-  let held = null, timer = 0, current = null, clock = 0, clawAng = 0, blinkT = 3;
+  let held = null, timer = 0, current = null, clock = 0, clawAng = 0;
 
   const prizes = $$(".prize", pit).map((el, i) => ({
     el, i, slug: el.dataset.slug, d: DATA.find((d) => d.slug === el.dataset.slug),
-    x: 0, y: 0, vx: 0, vy: 0, scale: 1, dyn: true, sleep: 0, homeX: 0,
+    x: 0, y: 0, vx: 0, vy: 0, rot: 0, vr: 0, scale: 1, dyn: true, sleep: 0, homeX: 0,
   }));
   const rnd = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
   const anchorY = () => RAIL + 13 * PX;
@@ -61,6 +76,30 @@
       const lx = i * c + j * s, ly = -i * s + j * c;          // into the ellipse's frame
       const nx = lx / rx, ny = ly / ry;
       if (nx * nx + ny * ny <= 1) pset(b, cx + i, cy + j, fill(lx, ly, nx, ny));
+    }
+  }
+  function capsule(cx, cy, hw, hh, r) {   // rounded rectangle as a polygon (screen space)
+    const pts = [];
+    for (const [qx, qy, a0] of [[hw - r, -hh + r, -Math.PI / 2], [hw - r, hh - r, 0], [-hw + r, hh - r, Math.PI / 2], [-hw + r, -hh + r, Math.PI]])
+      for (let k = 0; k <= 4; k++) { const a = a0 + (k / 4) * (Math.PI / 2); pts.push([cx + qx + Math.cos(a) * r, cy + qy + Math.sin(a) * r]); }
+    return pts;
+  }
+  const capsuleT = (T, cx, cy, hw, hh, r) => capsule(cx, cy, hw, hh, r).map(([x, y]) => T(x, y));
+  function line(b, x0, y0, x1, y1, c) {
+    const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0)));
+    for (let k = 0; k <= n; k++) pset(b, x0 + (x1 - x0) * k / n, y0 + (y1 - y0) * k / n, c);
+  }
+  function poly(b, pts, c) {
+    let y0 = Infinity, y1 = -Infinity;
+    pts.forEach((p) => { y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
+    for (let y = Math.floor(y0); y <= Math.ceil(y1); y++) {
+      const xs = [], yc = y + 0.5;
+      for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+        const [xi, yi] = pts[i], [xj, yj] = pts[j];
+        if ((yi > yc) !== (yj > yc)) xs.push(xi + (yc - yi) * (xj - xi) / (yj - yi));
+      }
+      xs.sort((a, b2) => a - b2);
+      for (let k = 0; k + 1 < xs.length; k += 2) for (let x = Math.round(xs[k]); x < Math.round(xs[k + 1]); x++) pset(b, x, y, c);
     }
   }
   function outline(b, x0, y0, x1, y1) {
@@ -110,7 +149,7 @@
     bgX.putImageData(b.img, 0, 0);
   }
 
-  // ---------- dynamic rig: trolley, chain, cute claw ----------
+  // ---------- dynamic rig: trolley, chain, claw ----------
   function drawRig() {
     const b = rig; b.u.fill(0);
     const RL = Math.round(RAIL / PX), tx = Math.round(trolley.x / PX);
@@ -132,19 +171,19 @@
       carry = t - d;
     }
 
-    // trolley: a little rounded cart with two wheels and a mint lamp
+    // trolley: white shell, smoked window, one red dot
     const spin = Math.round(trolley.x / PX) % 4;
     for (const wx of [tx - 7, tx + 7]) {
-      disc(b, wx, RL - 7, 2.6, P.m0); pset(b, wx, RL - 7, P.m2);
-      pset(b, wx + [1, 0, -1, 0][spin], RL - 7 + [0, 1, 0, -1][spin], P.m3);
+      disc(b, wx, RL - 7, 2.6, P.n3); pset(b, wx, RL - 7, P.n1);
+      pset(b, wx + [1, 0, -1, 0][spin], RL - 7 + [0, 1, 0, -1][spin], P.n0);
     }
-    ellipseFill(b, tx, RL + 8, 12, 5.5, 0, (lx, ly, nx, ny) => (ny < -0.45 ? P.m3 : ny > 0.55 ? P.m1 : P.m2));
-    rect(b, tx - 9, RL - 5, 2, 9, P.m1); rect(b, tx + 8, RL - 5, 2, 9, P.m1);
-    const lamp = mode === "follow" ? ((clock * 1.5 | 0) % 2 ? P.mint : P.mintD) : P.yel;
-    disc(b, tx + 6, RL + 7, 1.6, lamp);
-    pset(b, tx - 6, RL + 7, P.m1); pset(b, tx - 3, RL + 7, P.m1); pset(b, tx, RL + 7, P.m1);
+    rect(b, tx - 9, RL - 5, 2, 9, P.n2); rect(b, tx + 8, RL - 5, 2, 9, P.n2);
+    poly(b, capsule(tx, RL + 8, 12, 5, 4, 0), P.n0);
+    rect(b, tx - 9, RL + 6, 12, 3, P.glass);
+    for (let i = 0; i < 12; i += 2) pset(b, tx - 9 + i, RL + 7, glyphOn(i / 2, 6) ? P.n0 : P.n2);
+    disc(b, tx + 7, RL + 7, 1.3, P.nred);
 
-    // cute claw
+    // claw: transparent white shell with the mechanism visible, a dot-matrix glyph strip, red dot
     const last = pts[N - 1], prev = pts[N - 2];
     const raw = Math.atan2(-(last.x - prev.x), last.y - prev.y);
     clawAng += (Math.max(-0.4, Math.min(0.4, raw)) - clawAng) * 0.25;
@@ -153,54 +192,41 @@
     const T = (lx, ly) => [ox + (lx * U) * cs - (ly * U) * sn, oy + (lx * U) * sn + (ly * U) * cs];
     const o = claw.open;
 
-    const arm = (side) => {
-      const sh = [side * 8.5, 9];
-      const a1 = side * (0.15 + o * 0.6), L1 = 7.5;
+    const arm = (side, back) => {
+      const sh = [side * 7.5, 12];
+      const a1 = side * (0.12 + o * 0.62), L1 = back ? 6 : 8;
       const el = [sh[0] + Math.sin(a1) * L1, sh[1] + Math.cos(a1) * L1];
-      const a2 = a1 - side * (0.75 + (1 - o) * 0.5), L2 = 7;
+      const a2 = a1 - side * (0.85 + (1 - o) * 0.45), L2 = back ? 5 : 7.5;
       const tp = [el[0] + Math.sin(a2) * L2, el[1] + Math.cos(a2) * L2];
       const [sx, sy] = T(...sh), [ex, ey] = T(...el), [qx, qy] = T(...tp);
-      thick(b, sx, sy, ex, ey, 1.8 * U, P.k1);
-      thick(b, ex, ey, qx, qy, 1.6 * U, P.k1);
-      disc(b, ex, ey, 1.6 * U, P.k2);
-      disc(b, qx, qy, 2.4 * U, P.cream); pset(b, qx - U * 0.7, qy - U * 0.8, P.m3);       // mitten tip
+      thick(b, sx, sy, ex, ey, 1.25 * U, back ? P.n2 : P.n0);
+      if (!back) line(b, sx, sy, ex, ey, P.n1);
+      thick(b, ex, ey, qx, qy, 1.05 * U, back ? P.n2 : P.n0);
+      disc(b, ex, ey, 1.5 * U, P.n3); pset(b, ex, ey, P.n1);                          // black pivot, white pin
+      disc(b, qx, qy, 1.2 * U, P.n3); pset(b, qx - 0.5, qy - 0.5, P.n2);               // rubber tip
       bx0 = Math.min(bx0, qx - 6, ex - 6); bx1 = Math.max(bx1, qx + 6, ex + 6); by1 = Math.max(by1, qy + 6, ey + 6);
     };
+    arm(0.5, true);
     arm(-1); arm(1);
-    // antenna + bobble
-    const [a0x, a0y] = T(0, -2), [a1x, a1y] = T(0, -6);
-    thick(b, a0x, a0y, a1x, a1y, 0.6, P.k0);
-    // round body
-    ellipseFill(b, ox + (-0 * cs - 4 * sn) * U, oy + (0 * sn + 4 * cs) * U, 11 * U, 8.5 * U, ang, (lx, ly, nx, ny) => {
-      const l = -nx * 0.45 - ny * 0.75;
-      return l > 0.62 ? P.k3 : l > 0.05 ? P.k2 : ny > 0.7 ? P.k0 : P.k1;
-    });
-    // face plate
-    const fcx = ox + (-0 * cs - 5 * sn) * U, fcy = oy + (0 * sn + 5 * cs) * U;
-    ellipseFill(b, fcx, fcy, 7 * U, 4.6 * U, ang, (lx, ly, nx, ny) => (ny > 0.55 ? P.cream2 : P.cream));
-    // eyes: blink, happy when holding, stars on the reveal
-    blinkT -= 1 / 60;
-    const blinking = blinkT < 0.12; if (blinkT < 0) blinkT = 2.5 + rnd(clock) * 3;
-    for (const side of [-1, 1]) {
-      const [ex, ey] = T(side * 3.4, 4.6);
-      if (mode === "reveal" || mode === "open") {
-        pset(b, ex, ey, P.yelD); pset(b, ex - 1, ey, P.yel); pset(b, ex + 1, ey, P.yel); pset(b, ex, ey - 1, P.yel); pset(b, ex, ey + 1, P.yel);
-      } else if (held || blinking) {
-        pset(b, ex - 1, ey, P.eye); pset(b, ex, ey - 1, P.eye); pset(b, ex + 1, ey, P.eye);                     // ^ ^
-      } else {
-        ellipseFill(b, ex, ey, Math.max(1.1, 1.05 * U), Math.max(1.6, 1.7 * U), ang, () => P.eye);   // tall shiny eyes
-        pset(b, ex - 0.5, ey - U, P.eyeHi);
-      }
-      const [bxx, byy] = T(side * 5.6, 6.6);
-      pset(b, bxx, byy, P.blush); pset(b, bxx + side, byy, P.blush);
+    poly(b, [T(-2, -3), T(2, -3), T(2, 1), T(-2, 1)], P.n2);                             // neck
+    // transparent shell
+    poly(b, capsuleT(T, 0, 7.5, 11, 6.5, 4.5), P.shell);
+    // the mechanism behind it: gear, spring, ribbon cable, screws
+    const [gx, gy] = T(-6, 9);
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + clock * (mode === "follow" ? 0.6 : 4); pset(b, gx + Math.cos(a) * 3.2 * U, gy + Math.sin(a) * 3.2 * U, P.n2); }
+    disc(b, gx, gy, 2.4 * U, P.inner); pset(b, gx, gy, P.n1);
+    for (let k = 0; k < 6; k++) { const [x, y] = T(4 + (k % 2), 10 + k * 0.5); pset(b, x, y, P.inner); }
+    { const [x0, y0] = T(-3, 12.4), [x1, y1] = T(8, 12.4); line(b, x0, y0, x1, y1, P.nred); }
+    for (const [sx, sy] of [[-9, 3.6], [9, 3.6], [-9, 11.6], [9, 11.6]]) { const [x, y] = T(sx, sy); pset(b, x, y, P.inner); }
+    // dot-matrix glyph strip
+    poly(b, capsuleT(T, 1.5, 5.5, 7.5, 2.2, 2), P.n3);
+    const dot = Math.max(2, Math.round(U * 1.3));
+    for (let c = 0; c < 5; c++) {
+      const [x, y] = T(-4.6 + c * 3.1, 5.5), on = glyphOn(c, 5);
+      rect(b, Math.round(x - dot / 2), Math.round(y - dot / 2), dot, dot, on === true ? P.n0 : on ? P.n2 : P.glyphOff);
     }
-    const [mx, my] = T(0, 6.6);
-    if (held || mode === "reveal" || mode === "open") { pset(b, mx - 1, my, P.k0); pset(b, mx, my + 1, P.k0); pset(b, mx + 1, my, P.k0); }
-    else pset(b, mx, my, P.k0);
-    disc(b, a1x, a1y, 1.8, mode === "follow" ? P.yel : P.mint);
-    pset(b, a1x - 0.6, a1y - 0.6, P.m3);
-
-    bx0 = Math.min(bx0, ox - 20 * U); bx1 = Math.max(bx1, ox + 20 * U); by1 = Math.max(by1, oy + 26 * U); by0 = Math.min(by0, oy - 12 * U);
+    { const [x, y] = T(8.4, 3.2); disc(b, x, y, 0.9 * U, P.nred); }                      // the red dot
+    bx0 = Math.min(bx0, ox - 22 * U); bx1 = Math.max(bx1, ox + 22 * U); by1 = Math.max(by1, oy + 28 * U); by0 = Math.min(by0, oy - 8 * U);
     outline(b, bx0 - 2, by0 - 2, bx1 + 2, by1 + 2);
     rigX.putImageData(b.img, 0, 0);
   }
@@ -283,6 +309,12 @@
         }
       }
     }
+    for (const p of prizes) {                       // springy wobble that always settles upright
+      if (!p.vr && !p.rot) continue;
+      p.vr += (-p.rot * 90 - p.vr * 7) * dt; p.rot += p.vr * dt;
+      p.rot = Math.max(-16, Math.min(16, p.rot));
+      if (Math.abs(p.rot) < 0.4 && Math.abs(p.vr) < 4) { p.rot = 0; p.vr = 0; }
+    }
     for (const p of live) {
       const sp = Math.hypot(p.vx, p.vy);
       p.sleep = sp < 18 ? p.sleep + dt : 0;
@@ -296,6 +328,10 @@
   addEventListener("pointermove", setPointer, { passive: true });
   addEventListener("pointerdown", setPointer, { passive: true });
   const say = (t) => { hint.textContent = t; };
+  // scrolling jostles the machine: the pile hops and wobbles, the chain swings
+  let jolt = 0, joltX = 0, lastTop = 0;
+  addEventListener("wheel", (e) => { jolt += e.deltaY; joltX += e.deltaX; }, { passive: true });
+  winBody.addEventListener("scroll", () => { const d = winBody.scrollTop - lastTop; lastTop = winBody.scrollTop; jolt += d * 0.6; }, { passive: true });
   prizes.forEach((p) => {
     p.el.addEventListener("click", (e) => { e.stopPropagation(); grab(p); });
     const over = () => { if (mode === "follow") say(`▶ ${p.d.title}${p.d.year ? " · " + p.d.year : ""}`); };
@@ -344,7 +380,7 @@
     win.classList.add("closed");
     winTitle.textContent = `${String(d.n).padStart(2, "0")} / ${d.title}`;
     winBody.innerHTML = `<p class="win-load">Loading…</p>`;
-    winBody.scrollTop = 0;
+    winBody.scrollTop = 0; lastTop = 0;
     win.dataset.slug = d.slug;
     requestAnimationFrame(() => requestAnimationFrame(() => win.classList.remove("closed")));
     load(d.slug).then((html) => { if (win.dataset.slug === d.slug) { winBody.innerHTML = html; animateCharts(); } });
@@ -387,8 +423,28 @@
   tickClock(); setInterval(tickClock, 1000);
 
   // ---------- simulation ----------
+  let shakeCool = 0;
+  function shake(dt) {
+    shakeCool -= dt;
+    if (!jolt && !joltX) return;
+    if (shakeCool > 0) return;                      // keep accumulating until the cooldown passes
+    const k = Math.max(-160, Math.min(160, jolt)), kx = Math.max(-160, Math.min(160, joltX));
+    jolt = 0; joltX = 0; shakeCool = 0.12;
+    if (reduce) return;
+    const m = Math.min(160, Math.abs(k) + Math.abs(kx));
+    prizes.forEach((p, i) => {
+      if (!p.dyn) return;
+      p.vy -= m * (1.0 + rnd(i * 5 + clock) * 1.1);           // a small hop, a bigger one for a hard flick
+      p.vx += (rnd(i * 7 + clock) - 0.5) * m * 0.9 - kx * 0.6;
+      p.vr += (rnd(i * 3 + clock) - 0.5) * m * 0.9;
+      p.sleep = 0;
+    });
+    for (let i = 1; i < N; i++) pts[i].px += (k * 0.6 + kx) * 0.015 * (i / N);
+    trolley.v -= kx * 1.5;
+  }
   function step(dt) {
     clock += dt;
+    shake(dt);
     const ay = anchorY();
     const minL = 6 * PX, maxL = H - FLOOR - ay - gripOffset() - S * 0.2;
     if (mode === "follow") {
@@ -480,9 +536,8 @@
   function draw() {
     drawRig();
     for (const p of prizes) {
-      const x = Math.round((p.x - (S * p.scale) / 2) / PX) * PX, y = Math.round((p.y - (S * p.scale) / 2) / PX) * PX;
-      p.el.style.transform = `translate(${x}px, ${y}px) scale(${p.scale})`;
-      p.el.style.transformOrigin = "0 0";
+      const x = Math.round(p.x / PX) * PX - S / 2, y = Math.round(p.y / PX) * PX - S / 2;
+      p.el.style.transform = `translate(${x}px, ${y}px)${p.rot ? ` rotate(${p.rot.toFixed(1)}deg)` : ""} scale(${p.scale})`;
       if (p.dyn) p.el.style.zIndex = String(10 + Math.round(p.y / 4));      // lower in the pile = in front
     }
   }
