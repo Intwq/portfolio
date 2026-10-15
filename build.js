@@ -426,10 +426,10 @@ function chooserPage() {
   .side > * { pointer-events: none; }
 
   /* 01: portfolio, abstract artwork */
-  .one { background: #060708; color: #e9ebee; }
+  .one { background: #070c14; color: #e9ebee; }
   .one canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
   .one::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 60% 45%, transparent 40%, rgba(0,0,0,0.75)); }
-  .one .txt { position: absolute; z-index: 2; left: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 64px); max-width: 30ch; }
+  .one .txt { position: absolute; z-index: 2; left: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 64px); max-width: 32ch; padding: 10px 14px 12px; margin: -10px -14px; background: #070c14; }
   .one .n { font: 200 clamp(64px, 11vw, 168px)/0.85 "Unbounded", sans-serif; letter-spacing: -0.04em; }
   .one .h { margin: 18px 0 8px; font: 400 clamp(18px, 2vw, 26px)/1.1 "Unbounded", sans-serif; text-transform: uppercase; }
   .one .s { margin: 0; color: #868d97; font-size: 12px; }
@@ -440,19 +440,17 @@ function chooserPage() {
   /* 02: arcade, the same artwork as 01 but white and 8-bit */
   .two { background: #ffffff; color: #0b0b0d; font-family: "Press Start 2P", "IBM Plex Mono", monospace; }
   .two canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
-  .two .txt { position: absolute; z-index: 2; left: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 64px); max-width: 30ch; }
+  .two .txt { position: absolute; z-index: 2; left: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 64px); max-width: 32ch; padding: 10px 14px 12px; margin: -10px -14px; background: #ffffff; }
   .two .n { font-size: clamp(54px, 9vw, 136px); line-height: 0.9; letter-spacing: -0.04em; }
   .two .h { margin: 22px 0 10px; font-size: clamp(14px, 1.6vw, 21px); line-height: 1.2; text-transform: uppercase; }
   .two .s { margin: 0; color: #6b6b72; font: 400 12px/1.5 "IBM Plex Mono", monospace; }
   .two .go { margin-top: 18px; display: inline-flex; gap: 10px; align-items: center; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
   .two .go i { width: 34px; height: 4px; background: #d71921; transition: width 0.4s steps(4); }
   .two:hover .go i { width: 70px; }
-  .two .ro { position: absolute; z-index: 2; top: 30px; font-size: 8px; color: #0b0b0d; opacity: 0.7; }
-  .two .ro.l { left: 24px; } .two .ro.r { right: 24px; }
 
   /* centre seam */
   .seam { position: fixed; z-index: 5; left: 50%; top: 0; bottom: 0; width: 0; pointer-events: none; }
-  .head { position: fixed; z-index: 6; bottom: 16px; left: 50%; translate: -50% 0; pointer-events: none; text-align: center; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #868d97; mix-blend-mode: difference; }
+  .head { position: fixed; z-index: 6; top: 30px; left: 50%; translate: -50% 0; pointer-events: none; text-align: center; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #868d97; mix-blend-mode: difference; }
   .head b { display: block; font: 400 13px "Unbounded", sans-serif; letter-spacing: 0.24em; color: #fff; margin-bottom: 4px; }
   @media (max-width: 760px), (max-aspect-ratio: 4/5) {
     .split { flex-direction: column; }
@@ -460,7 +458,6 @@ function chooserPage() {
     .head { top: 14px; bottom: auto; left: 16px; translate: none; text-align: left; mix-blend-mode: normal; }
     .one .txt { bottom: 22px; }
     .one .txt, .two .txt { bottom: 22px; }
-    .two .ro { display: none; }
   }
   @media (prefers-reduced-motion: reduce) { .side { transition: none; } }
 </style>
@@ -479,7 +476,6 @@ function chooserPage() {
   </a>
   <a class="side two" href="${u.arcade}" aria-label="Option 2: the arcade claw machine">
     <canvas id="art8" aria-hidden="true"></canvas>
-    <span class="ro l" data-ro-l></span><span class="ro r" data-ro-r></span>
     <div class="txt">
       <div class="n">02</div>
       <p class="h">Arcade</p>
@@ -490,54 +486,181 @@ function chooserPage() {
 </main>
 <script>
 (() => {
-  // One instrument drawing, rendered twice: smooth and dark for 01, white and 8-bit for 02.
+  // One blueprint plot, rendered twice: smooth and dark for 01, white and 8-bit for 02.
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
   let mx = 0, my = 0;
   const t0 = performance.now();
   addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
 
-  function art(x, W, H, t, u, ink, sig, labels) {
-    const cx = W * 0.6 - mx * 24 * u, cy = H * 0.44 - my * 18 * u, R = Math.min(W, H) * 0.42;
-    x.lineWidth = 1;
-    const g = 40 * u;
-    x.strokeStyle = ink(0.06);
-    for (let gx = cx % g; gx < W; gx += g) { x.beginPath(); x.moveTo(Math.round(gx) + 0.5, 0); x.lineTo(Math.round(gx) + 0.5, H); x.stroke(); }
-    for (let gy = cy % g; gy < H; gy += g) { x.beginPath(); x.moveTo(0, Math.round(gy) + 0.5); x.lineTo(W, Math.round(gy) + 0.5); x.stroke(); }
-    x.strokeStyle = ink(0.2);
-    x.beginPath(); x.moveTo(0, cy); x.lineTo(W, cy); x.moveTo(cx, 0); x.lineTo(cx, H); x.stroke();
-    [[1, 0.14, 0, 2], [0.86, 0.3, 0.25, 1.2], [0.7, 0.2, -0.4, 0.8], [0.55, 0.38, 0.6, 1.5], [0.32, 0.28, -0.9, 0.6], [0.18, 0.6, 1.4, 2]].forEach(([k, a, sp, len]) => {
-      x.strokeStyle = ink(a); x.beginPath(); x.arc(cx, cy, R * k, t * sp * 0.2, t * sp * 0.2 + Math.PI * len); x.stroke();
-    });
-    for (let i = 0; i < 120; i++) {
-      const a = i / 120 * Math.PI * 2 + t * 0.02, l = (i % 10 === 0 ? 14 : 6) * u;
-      x.strokeStyle = ink(i % 10 === 0 ? 0.55 : 0.2); x.beginPath();
-      x.moveTo(cx + Math.cos(a) * R * 0.94, cy + Math.sin(a) * R * 0.94);
-      x.lineTo(cx + Math.cos(a) * (R * 0.94 - l), cy + Math.sin(a) * (R * 0.94 - l)); x.stroke();
+  // ---------- blueprint sheets: line drawings of products, no text ----------
+  // Units: a 240 x 170 sheet, y down. Stroke styles: o outline, h hidden, c centreline,
+  // d dimension (arrows, no numbers), x hatching, a accent.
+  const TAU = Math.PI * 2;
+  const rect = (x, y, w, h) => [[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]];
+  const circ = (cx, cy, r, a0 = 0, a1 = TAU, n = 64) => { const p = []; for (let i = 0; i <= n; i++) { const a = a0 + (a1 - a0) * i / n; p.push([cx + Math.cos(a) * r, cy + Math.sin(a) * r]); } return p; };
+  const rrect = (x, y, w, h, r) => { const p = []; [[x + w - r, y + r, -Math.PI / 2], [x + w - r, y + h - r, 0], [x + r, y + h - r, Math.PI / 2], [x + r, y + r, Math.PI]].forEach(([cx, cy, a]) => p.push(...circ(cx, cy, r, a, a + Math.PI / 2, 8))); p.push(p[0]); return p; };
+  const gear = (cx, cy, r, n, dep) => { const p = []; for (let i = 0; i <= n * 4; i++) { const k = i % 4, a = (i / (n * 4)) * TAU, rr = k === 1 || k === 2 ? r : r - dep; p.push([cx + Math.cos(a) * rr, cy + Math.sin(a) * rr]); } return p; };
+  function hatch(poly, gap, ang, holes = []) {   // section lines clipped to a polygon, skipping any holes
+    const c = Math.cos(ang), s = Math.sin(ang), rings = [poly, ...holes].map((r) => r.map(([x, y]) => [x * c + y * s, -x * s + y * c]));
+    let y0 = Infinity, y1 = -Infinity; rings[0].forEach((p) => { y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); });
+    const out = [];
+    for (let y = y0 + gap / 2; y < y1; y += gap) {
+      const xs = [];
+      for (const rot of rings) for (let i = 0; i < rot.length - 1; i++) { const [ax, ay] = rot[i], [bx, by] = rot[i + 1]; if ((ay > y) !== (by > y)) xs.push(ax + (y - ay) * (bx - ax) / (by - ay)); }
+      xs.sort((a, b) => a - b);
+      for (let k = 0; k + 1 < xs.length; k += 2) out.push({ s: "x", p: [[xs[k], y], [xs[k + 1], y]].map(([u, v]) => [u * c - v * s, u * s + v * c]) });
     }
-    x.strokeStyle = sig; x.lineWidth = 2 * Math.max(u, 0.5); x.beginPath(); x.arc(cx, cy, R * 0.7, -t * 0.12, -t * 0.12 + 0.35); x.stroke(); x.lineWidth = 1;
-    const oa = t * 0.35, ox = cx + Math.cos(oa) * R * 0.55, oy = cy + Math.sin(oa) * R * 0.55, q = Math.max(2, 4 * u);
-    x.fillStyle = sig; x.fillRect(ox - q / 2, oy - q / 2, q, q);
-    x.strokeStyle = ink(0.35); x.beginPath(); x.moveTo(ox, oy); x.lineTo(ox + 60 * u, oy - 40 * u); x.lineTo(ox + 120 * u, oy - 40 * u); x.stroke();
-    x.strokeStyle = ink(0.45);
-    const bk = 16 * u, m = 18 * u;
-    [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]].forEach(([px, py, sx, sy]) => {
-      x.beginPath(); x.moveTo(px, py + sy * bk); x.lineTo(px, py); x.lineTo(px + sx * bk, py); x.stroke();
-    });
-    x.fillStyle = ink(1); x.beginPath(); x.arc(cx, cy, 3 * Math.max(u, 0.6), 0, Math.PI * 2); x.fill();
-    if (labels) {
-      x.fillStyle = ink(W > 520 ? 0.5 : 0); x.font = "10px IBM Plex Mono, monospace";
-      x.fillText("SIG " + (oa % (Math.PI * 2)).toFixed(3), ox + 64, oy - 46);
-      x.fillText("DT / 01 — " + (cx | 0) + " : " + (cy | 0), m + 6, m + 30);
-      x.fillText("T+" + t.toFixed(1).padStart(6, "0"), W - m - 80, m + 30);
+    return out;
+  }
+  const O = (p) => ({ s: "o", p }), Hd = (p) => ({ s: "h", p }), Cl = (p) => ({ s: "c", p }), A = (p) => ({ s: "a", p });
+  function dim(x0, y0, x1, y1, off) {       // extension lines + dimension line with arrows, no number
+    const dx = x1 - x0, dy = y1 - y0, L = Math.hypot(dx, dy), nx = -dy / L * off, ny = dx / L * off, sg = Math.sign(off) * 3;
+    return [
+      { s: "d", p: [[x0, y0], [x0 + nx + (nx / Math.abs(off || 1)) * 3, y0 + ny + (ny / Math.abs(off || 1)) * 3]] },
+      { s: "d", p: [[x1, y1], [x1 + nx + (nx / Math.abs(off || 1)) * 3, y1 + ny + (ny / Math.abs(off || 1)) * 3]] },
+      { s: "d", p: [[x0 + nx, y0 + ny], [x1 + nx, y1 + ny]], arrows: true },
+    ];
+  }
+  const SHEETS = [
+    // base shoe railing in section: extrusion, glass, clamp, anchor, slab
+    () => {
+      const walls = [[70, 140], [70, 70], [92, 70], [92, 118], [148, 118], [148, 70], [170, 70], [170, 140], [70, 140]];
+      return [
+        Cl([[120, 2], [120, 166]]),
+        O(walls), O(rect(76, 80, 10, 30)), O(rect(154, 80, 10, 30)), O(rect(98, 124, 44, 10)),
+        O(rect(113, 6, 14, 112)), Hd([[120, 10], [120, 114]]),
+        A([[94, 94], [112, 90], [112, 116], [94, 116], [94, 94]]), A([[146, 94], [128, 90], [128, 116], [146, 116], [146, 94]]),
+        O(circ(112, 88, 1.6)), O(circ(128, 88, 1.6)),
+        Hd(rect(116, 118, 8, 34)),
+        O([[30, 140], [210, 140]]),
+        ...hatch(walls, 4, Math.PI / 4, [rect(76, 80, 10, 30), rect(154, 80, 10, 30), rect(98, 124, 44, 10), rect(116, 118, 8, 22)]),
+        ...hatch(rect(30, 140, 180, 14), 6, -Math.PI / 4, [rect(116, 140, 8, 14)]),
+        ...dim(70, 70, 170, 70, -12), ...dim(170, 70, 170, 140, -18),
+      ];
+    },
+    // back-to-back ladder pulls through glass, with a tube section detail
+    () => [
+      Cl([[87, 2], [87, 160]]), Cl([[153, 2], [153, 160]]),
+      O(rrect(80, 10, 14, 140, 7)), O(rrect(146, 10, 14, 140, 7)),
+      O(rect(117, 0, 6, 160)), Hd([[120, 2], [120, 158]]),
+      O(rect(94, 36, 52, 8)), O(rect(94, 116, 52, 8)),
+      A(rect(116, 37, 8, 6)), A(rect(116, 117, 8, 6)),
+      O(circ(205, 40, 14)), O(circ(205, 40, 10)), ...hatch(circ(205, 40, 14), 3, Math.PI / 4, [circ(205, 40, 10)]),
+      Cl([[186, 40], [224, 40]]), Cl([[205, 21], [205, 59]]),
+      ...dim(80, 10, 80, 150, 16), ...dim(146, 40, 146, 120, -26),
+    ],
+    // barn-door slider: track, two rollers, hangers, glass panel, soft-close block
+    () => [
+      O(rect(16, 28, 208, 10)), Hd([[18, 34], [222, 34]]),
+      ...[70, 170].flatMap((cx) => [O(circ(cx, 33, 10)), O(circ(cx, 33, 3)), Cl([[cx - 14, 33], [cx + 14, 33]]), Cl([[cx, 19], [cx, 47]]), O(rect(cx - 4, 42, 8, 30))]),
+      A(rect(186, 30, 24, 6)),
+      O(rect(46, 70, 148, 86)), O([[60, 84], [76, 100]]), O([[68, 82], [90, 104]]),
+      O(rect(112, 160, 16, 6)),
+      ...dim(16, 28, 224, 28, 12), ...dim(46, 156, 194, 156, -10),
+    ],
+    // geared deadbolt: housing, gear on its pitch circle, bolt in section, strike
+    () => [
+      O(rrect(30, 44, 112, 80, 8)),
+      Cl([[44, 84], [136, 84]]), Cl([[86, 46], [86, 122]]),
+      A(gear(86, 84, 28, 12, 5)), { s: "c", p: circ(86, 84, 25) }, O(circ(86, 84, 9)), O(circ(86, 84, 3)),
+      O(rect(142, 72, 62, 24)), ...hatch(rect(142, 72, 62, 24), 4, Math.PI / 4),
+      Hd(rect(198, 60, 24, 48)),
+      { s: "d", p: circ(86, 84, 38, -2.4, -1.2, 18), arrows: true },
+      ...dim(142, 96, 204, 96, -16),
+    ],
+    // all-glass entrance in plan: walls, two leaves on pivots, swing arcs
+    () => {
+      const wl = rect(10, 70, 40, 16), wr = rect(190, 70, 40, 16);
+      const leaf = (hx, ang) => { const L = 66, c = Math.cos(ang), s = Math.sin(ang), n = [-s * 2.5, c * 2.5]; return [[hx + n[0], 78 + n[1]], [hx + c * L + n[0], 78 + s * L + n[1]], [hx + c * L - n[0], 78 + s * L - n[1]], [hx - n[0], 78 - n[1]], [hx + n[0], 78 + n[1]]]; };
+      return [
+        O(wl), O(wr), ...hatch(wl, 4, Math.PI / 4), ...hatch(wr, 4, Math.PI / 4),
+        O([[50, 86], [190, 86]]), Cl([[120, 20], [120, 130]]),
+        O(leaf(54, -1.22)), O(leaf(186, Math.PI + 1.22)),
+        Hd(circ(54, 78, 66, -1.22, 0, 24)), Hd(circ(186, 78, 66, Math.PI, Math.PI + 1.22, 24)),
+        A(circ(54, 78, 2.5)), A(circ(186, 78, 2.5)),
+        ...dim(54, 86, 186, 86, -22),
+      ];
+    },
+    // speaker: sphere with driver on a twisted stand
+    () => {
+      const st = [];
+      for (let k = 0; k < 4; k++) { const p = []; for (let i = 0; i <= 30; i++) { const y = 100 + i * 1.6, ph = (i / 30) * Math.PI * 1.5 + k * Math.PI / 2; p.push([120 + Math.sin(ph) * (10 + i * 0.6), y]); } st.push(O(p)); }
+      return [
+        Cl([[120, 6], [120, 166]]),
+        O(circ(120, 58, 42)), Hd(circ(120, 58, 38, 0.3, 2.6, 24)),
+        O(circ(104, 60, 17)), O(circ(104, 60, 12)), A(circ(104, 60, 5)),
+        ...st, O([[80, 150], [160, 150]]), O(rect(84, 150, 72, 6)),
+        ...dim(78, 58, 162, 58, -50),
+      ];
+    },
+  ].map((f) => {
+    const strokes = f(); let total = 0;
+    strokes.forEach((s) => { s.len = 0; for (let i = 1; i < s.p.length; i++) s.len += Math.hypot(s.p[i][0] - s.p[i - 1][0], s.p[i][1] - s.p[i - 1][1]); total += s.len; });
+    return { strokes, total };
+  });
+  const CYCLE = 8, DRAW = 3.6, ERASE = 0.8;
+
+  function art(x, W, H, t, u, ink, sig, bpGrid) {
+    const m = 18 * u;
+    // blueprint grid + sheet frame + an empty title block
+    for (const [g, a] of [[10 * u, 0.04], [50 * u, 0.09]]) {
+      x.strokeStyle = bpGrid(a); x.lineWidth = 1; x.setLineDash([]);
+      for (let gx = m; gx < W - m; gx += g) { x.beginPath(); x.moveTo(Math.round(gx) + 0.5, m); x.lineTo(Math.round(gx) + 0.5, H - m); x.stroke(); }
+      for (let gy = m; gy < H - m; gy += g) { x.beginPath(); x.moveTo(m, Math.round(gy) + 0.5); x.lineTo(W - m, Math.round(gy) + 0.5); x.stroke(); }
     }
-    return { cx, cy, oa, t };
+    x.strokeStyle = ink(0.4); x.strokeRect(Math.round(m) + 0.5, Math.round(m) + 0.5, Math.round(W - 2 * m), Math.round(H - 2 * m));
+    for (let k = 1; k < 8; k++) { const gx = Math.round(m + (W - 2 * m) * k / 8) + 0.5, gy = Math.round(m + (H - 2 * m) * k / 8) + 0.5;
+      x.beginPath(); x.moveTo(gx, m); x.lineTo(gx, m + 6 * u); x.moveTo(gx, H - m); x.lineTo(gx, H - m - 6 * u); x.moveTo(m, gy); x.lineTo(m + 6 * u, gy); x.moveTo(W - m, gy); x.lineTo(W - m - 6 * u, gy); x.stroke(); }
+    if (W > 520 * u) {
+      const tw = 170 * u, th = 54 * u, tx = W - m - tw, ty = H - m - th;
+      x.strokeStyle = ink(0.35); x.strokeRect(Math.round(tx) + 0.5, Math.round(ty) + 0.5, Math.round(tw), Math.round(th));
+      x.beginPath();
+      x.moveTo(tx, ty + th * 0.5); x.lineTo(tx + tw, ty + th * 0.5);
+      x.moveTo(tx + tw * 0.62, ty); x.lineTo(tx + tw * 0.62, ty + th);
+      x.moveTo(tx + tw * 0.81, ty + th * 0.5); x.lineTo(tx + tw * 0.81, ty + th);
+      x.stroke();
+    }
+
+    // the current sheet, plotted stroke by stroke
+    const k = Math.floor(t / CYCLE), ph = t - k * CYCLE, sh = SHEETS[k % SHEETS.length];
+    const prog = reduce ? 1 : ph < DRAW ? 1 - Math.pow(1 - ph / DRAW, 2) : 1;
+    const fade = reduce ? 1 : ph > CYCLE - ERASE ? 1 - (ph - (CYCLE - ERASE)) / ERASE : 1;
+    const sc = Math.min((W - 2 * m) * 0.8 / 240, (H - 2 * m) * 0.66 / 170);
+    const ox = W * 0.58 - 120 * sc - mx * 16 * u, oy = H * 0.42 - 85 * sc - my * 12 * u;
+    const P = ([px, py]) => [ox + px * sc, oy + py * sc];
+    let budget = prog * sh.total;
+    const lw = Math.max(1, 1.3 * u * 1.15);
+    for (const s of sh.strokes) {
+      if (budget <= 0) break;
+      const st = {
+        o: [ink(0.9 * fade), [], lw], h: [ink(0.5 * fade), [5 * u + 2, 4 * u + 1], 1], c: [ink(0.35 * fade), [12 * u + 3, 3 * u + 1, 2 * u + 1, 3 * u + 1], 1],
+        d: [ink(0.55 * fade), [], 1], x: [ink(0.28 * fade), [], 1], a: [sig(fade), [], lw * 1.3],
+      }[s.s];
+      x.strokeStyle = st[0]; x.setLineDash(st[1]); x.lineWidth = st[2];
+      let left = Math.min(s.len, budget); budget -= s.len;
+      x.beginPath();
+      const p0 = P(s.p[0]); x.moveTo(p0[0], p0[1]);
+      for (let i = 1; i < s.p.length && left > 0; i++) {
+        const a = s.p[i - 1], b = s.p[i], seg = Math.hypot(b[0] - a[0], b[1] - a[1]), f = Math.min(1, left / (seg || 1));
+        const q = P([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f]); x.lineTo(q[0], q[1]); left -= seg;
+      }
+      x.stroke();
+      if (s.arrows && budget >= 0) {
+        x.setLineDash([]); x.fillStyle = st[0];
+        const ends = [[s.p[0], s.p[1]], [s.p[s.p.length - 1], s.p[s.p.length - 2]]];
+        for (const [tip, from] of ends) {
+          const [tx2, ty2] = P(tip), [fx, fy] = P(from), an = Math.atan2(ty2 - fy, tx2 - fx), al = Math.max(3, 7 * u);
+          x.beginPath(); x.moveTo(tx2, ty2); x.lineTo(tx2 - Math.cos(an - 0.32) * al, ty2 - Math.sin(an - 0.32) * al); x.lineTo(tx2 - Math.cos(an + 0.32) * al, ty2 - Math.sin(an + 0.32) * al); x.fill();
+        }
+      }
+    }
+    x.setLineDash([]);
   }
 
   // 01: smooth, light ink on black
   const c1 = document.getElementById("art"), x1 = c1.getContext("2d");
   // 02: drawn at 1/3 resolution in black on white, then snapped to a few hard tones
   const PIX = 3, c2 = document.getElementById("art8"), x2 = c2.getContext("2d", { willReadFrequently: true });
-  const roL = document.querySelector("[data-ro-l]"), roR = document.querySelector("[data-ro-r]");
   const red = [215, 25, 33];
   function frame(now) {
     const t = reduce ? 0 : (now - t0) / 1000;
@@ -545,12 +668,12 @@ function chooserPage() {
     const d = Math.min(2, devicePixelRatio || 1), W1 = c1.clientWidth, H1 = c1.clientHeight;
     if (c1.width !== Math.round(W1 * d) || c1.height !== Math.round(H1 * d)) { c1.width = Math.round(W1 * d); c1.height = Math.round(H1 * d); }
     x1.setTransform(d, 0, 0, d, 0, 0); x1.clearRect(0, 0, W1, H1);
-    art(x1, W1, H1, t, 1, (a) => "rgba(233,235,238," + a + ")", "#ff5b1f", true);
+    art(x1, W1, H1, t, 1, (a) => "rgba(233,235,238," + a + ")", (f) => "rgba(255,91,31," + f + ")", (a) => "rgba(120,170,255," + a + ")");
     // 02
     const W2 = Math.ceil(c2.clientWidth / PIX), H2 = Math.ceil(c2.clientHeight / PIX);
     if (c2.width !== W2 || c2.height !== H2) { c2.width = W2; c2.height = H2; }
     x2.clearRect(0, 0, W2, H2);
-    const s = art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.7) + ")", "rgb(215,25,33)", false);
+    art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.7) + ")", (f) => "rgba(215,25,33," + f + ")", (a) => (a > 0.05 ? "rgba(11,11,13,0.12)" : "rgba(0,0,0,0)"));
     const img = x2.getImageData(0, 0, W2, H2), p = img.data;
     for (let i = 0, n = 0; i < p.length; i += 4, n++) {
       const a = p[i + 3];
@@ -564,7 +687,6 @@ function chooserPage() {
       else p[i + 3] = 0;
     }
     x2.putImageData(img, 0, 0);
-    if (roL) { roL.textContent = "DT / 02 — " + ((s.cx * PIX) | 0) + " : " + ((s.cy * PIX) | 0); roR.textContent = "T+" + t.toFixed(1).padStart(6, "0"); }
     if (!reduce) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
