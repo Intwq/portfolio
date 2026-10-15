@@ -533,104 +533,232 @@ function chooserPage() {
   const move = (st, dx, dy, dz) => st.map((o) => ({ ...o, p: o.p.map(([x, y, z]) => [x + dx, y + dy, z + dz]) }));
   const style = (st, s) => st.map((o) => ({ ...o, s }));
 
+  // ---- technical drawing kit: any-axis circles, tubes, prisms, threads, fasteners, bearings, section hatching ----
+  const V3 = { add: (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]], mul: (a, k) => [a[0] * k, a[1] * k, a[2] * k],
+    cross: (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]],
+    norm: (a) => { const l = Math.hypot(a[0], a[1], a[2]) || 1; return [a[0] / l, a[1] / l, a[2] / l]; } };
+  const AXV = { x: [1, 0, 0], y: [0, 1, 0], z: [0, 0, 1] };
+  function basis(n) { n = V3.norm(typeof n === "string" ? AXV[n] : n); const t = Math.abs(n[1]) < 0.9 ? [0, 1, 0] : [1, 0, 0]; const u = V3.norm(V3.cross(n, t)); return [n, u, V3.cross(n, u)]; }
+  const pt = (c, B, h, r, a) => [0, 1, 2].map((j) => c[j] + B[0][j] * h + (B[1][j] * Math.cos(a) + B[2][j] * Math.sin(a)) * r);
+  const circA = (c, n, h, r, s = "f", seg = 36, a0 = 0) => { const B = basis(n); return { s, p: Array.from({ length: seg + 1 }, (_, i) => pt(c, B, h, r, a0 + i / seg * TAU)) }; };
+  const polyA = (c, n, h, r, k, s = "f", a0 = 0) => circA(c, n, h, r, s, k, a0);
+  const cline = (c, n, h0, h1) => { const B = basis(n); return { s: "c", p: [pt(c, B, h0, 0, 0), pt(c, B, h1, 0, 0)] }; };
+  function tube(c, n, r, h0, h1, s = "o", gens = 4, rings = 0) {
+    const B = basis(n), out = [circA(c, n, h0, r, s), circA(c, n, h1, r, s)];
+    for (let i = 1; i <= rings; i++) out.push(circA(c, n, h0 + (h1 - h0) * i / (rings + 1), r, "f"));
+    for (let g = 0; g < gens; g++) { const a = g / gens * TAU + 0.4; out.push({ s: "f", p: [pt(c, B, h0, r, a), pt(c, B, h1, r, a)] }); }
+    return out;
+  }
+  function prismA(c, n, h0, h1, r, k, s = "o", a0 = 0.5) {
+    const B = basis(n), out = [polyA(c, n, h0, r, k, s, a0), polyA(c, n, h1, r, k, s, a0)];
+    for (let i = 0; i < k; i++) out.push({ s: "f", p: [pt(c, B, h0, r, a0 + i / k * TAU), pt(c, B, h1, r, a0 + i / k * TAU)] });
+    return out;
+  }
+  function helixA(c, n, r, h0, h1, pitch, s = "f") {
+    const B = basis(n), turns = Math.abs(h1 - h0) / pitch, N = Math.max(8, Math.ceil(turns * 18)), p = [];
+    for (let i = 0; i <= N; i++) { const f = i / N; p.push(pt(c, B, h0 + (h1 - h0) * f, r, f * turns * TAU)); }
+    return { s, p };
+  }
+  // n points out of the work, toward the head; the shank runs back along -n. ex pulls it out along n (exploded).
+  function screw(c, n, { d = 6, len = 30, head = "socket", ex = 0 } = {}) {
+    const B = basis(n), cc = [0, 1, 2].map((j) => c[j] + B[0][j] * ex), r = d / 2, out = [];
+    let s0 = 0;
+    if (head === "socket") out.push(...tube(cc, n, d * 0.78, 0, d, "o", 6), polyA(cc, n, d, d * 0.3, 6, "f"), circA(cc, n, d, d * 0.62, "f"));
+    else if (head === "hex") out.push(...prismA(cc, n, 0, d * 0.65, d * 0.92, 6, "o"), circA(cc, n, d * 0.65, d * 0.8, "f"));
+    else if (head === "pan") { out.push(...tube(cc, n, d * 0.95, 0, d * 0.32, "o", 6), circA(cc, n, d * 0.5, d * 0.72, "f"), circA(cc, n, d * 0.6, d * 0.4, "f"));
+      for (const a of [0, Math.PI / 2]) out.push({ s: "f", p: [pt(cc, B, d * 0.6, d * 0.3, a), pt(cc, B, d * 0.6, d * 0.3, a + Math.PI)] }); }
+    else if (head === "csk") { s0 = -d * 0.5; out.push(circA(cc, n, 0, d, "o"), circA(cc, n, s0, r, "f"));
+      for (let g = 0; g < 6; g++) { const a = g / 6 * TAU; out.push({ s: "f", p: [pt(cc, B, 0, d, a), pt(cc, B, s0, r, a)] }); }
+      for (const a of [0.4, 0.4 + Math.PI / 2]) out.push({ s: "f", p: [pt(cc, B, 0, d * 0.5, a), pt(cc, B, 0, d * 0.5, a + Math.PI)] }); }
+    else out.push(circA(cc, n, 0, r, "o"), polyA(cc, n, 0, d * 0.28, 6, "f"));   // grub screw
+    const tip = -len;
+    out.push(circA(cc, n, s0, r, "f"), circA(cc, n, tip + r * 0.5, r, "f"), circA(cc, n, tip, r * 0.55, "f"));
+    for (const a of [0.5, 0.5 + Math.PI]) out.push({ s: "o", p: [pt(cc, B, s0, r, a), pt(cc, B, tip + r * 0.5, r, a), pt(cc, B, tip, r * 0.55, a)] });
+    out.push(helixA(cc, n, r, s0 - r * 0.4, tip + r * 0.6, Math.max(0.8, d * 0.32), "f"));
+    out.push(cline(cc, n, d * 1.6, tip - d));
+    if (ex) out.push({ s: "h", p: [pt(c, B, 0, 0, 0), pt(cc, B, tip, 0, 0)] });
+    return out;
+  }
+  const nut = (c, n, d) => [...prismA(c, n, 0, d * 0.8, d * 0.92, 6, "o"), circA(c, n, 0, d / 2, "f"), circA(c, n, d * 0.8, d / 2, "f"), circA(c, n, d * 0.8, d * 0.8, "f")];
+  function washer(c, n, ro, ri, t, s = "o") {
+    const B = basis(n), out = [circA(c, n, 0, ro, s), circA(c, n, t, ro, "f"), circA(c, n, 0, ri, "f"), circA(c, n, t, ri, "f")];
+    for (let g = 0; g < 4; g++) { const a = g / 4 * TAU + 0.4; out.push({ s: "f", p: [pt(c, B, 0, ro, a), pt(c, B, t, ro, a)] }); }
+    return out;
+  }
+  function bearing(c, n, ro, ri, w, k = 9) {
+    const B = basis(n), out = [], ra = ro * 0.84, rb = ri * 1.3, rm = (ra + rb) / 2, rball = (ra - rb) / 2 * 0.95;
+    for (const h of [-w / 2, w / 2]) out.push(circA(c, n, h, ro, "o"), circA(c, n, h, ra, "f"), circA(c, n, h, rb, "f"), circA(c, n, h, ri, "o"));
+    for (let g = 0; g < 8; g++) { const a = g / 8 * TAU; out.push({ s: "f", p: [pt(c, B, -w / 2, ro, a), pt(c, B, w / 2, ro, a)] }); }
+    for (let i = 0; i < k; i++) {
+      const a = i / k * TAU, bc = pt(c, B, 0, rm, a), tan = [0, 1, 2].map((j) => -B[1][j] * Math.sin(a) + B[2][j] * Math.cos(a));
+      out.push(circA(bc, n, 0, rball, "a", 14), circA(bc, tan, 0, rball, "f", 14));
+    }
+    out.push(circA(c, n, 0, rm, "h"));
+    return out;
+  }
+  function hatch2(poly, sp, ang = 0.785) {
+    const c = Math.cos(ang), s = Math.sin(ang), R = poly.map(([x, y]) => [x * c + y * s, -x * s + y * c]), ys = R.map((p) => p[1]), out = [];
+    for (let y = Math.min(...ys) + sp / 2; y < Math.max(...ys); y += sp) {
+      const xs = [];
+      for (let i = 0; i < R.length; i++) { const a = R[i], b = R[(i + 1) % R.length]; if ((a[1] <= y) !== (b[1] <= y)) xs.push(a[0] + (y - a[1]) / (b[1] - a[1]) * (b[0] - a[0])); }
+      xs.sort((p, q) => p - q);
+      for (let i = 0; i + 1 < xs.length; i += 2) out.push([[xs[i] * c - y * s, xs[i] * s + y * c], [xs[i + 1] * c - y * s, xs[i + 1] * s + y * c]]);
+    }
+    return out;
+  }
+  const hatchZ = (poly, z, sp, ang) => hatch2(poly, sp, ang).map(([a, b]) => ({ s: "t", p: [[a[0], a[1], z], [b[0], b[1], z]] }));
+  const hatchX = (polyZY, x, sp, ang) => swapX(hatchZ(polyZY, x, sp, ang));
+
   const MODELS = [
-    // 1. railing base shoe: extrusion with chambers, glass, clamp wedges, anchors, drilled side, exploded end cap
-    { cam: { yaw: -0.62, pitch: 0.42, zoom: 1.25, fx: 0.05, fy: 0.0 }, comp: 0, build: () => {
-      const U = [[-50, 0], [50, 0], [50, 70], [36, 70], [36, 24], [-36, 24], [-36, 70], [-50, 70]];
-      const st = [
-        ...extrudeZ(U, -90, 90, "o"),
-        ...style(extrudeZ(R2(-46, 8, -40, 60), -90, 90, "f", 4), "f"), ...style(extrudeZ(R2(40, 8, 46, 60), -90, 90, "f", 4), "f"),
-        ...style(extrudeZ(R2(-22, 6, 22, 16), -90, 90, "f", 4), "f"),
-        ...box(-7, 30, -90, 7, 175, 90), { s: "h", p: [[0, 32, -90], [0, 173, -90]] },
-        ...[-80, -50, -20, 10, 40, 70].map((z) => ({ s: "f", p: [[-7, 175, z], [7, 175, z]] })),
-        ...style(move(box(-50, 0, -90, 50, 4, 90), 0, -8, 0), "f"),
-      ];
-      for (const z of [-62, -12, 38]) {
-        st.push(...style(extrudeZ([[-36, 24], [-7, 32], [-7, 64], [-36, 58]], z, z + 30), "a"));
-        st.push(...style(extrudeZ([[36, 24], [7, 32], [7, 64], [36, 58]], z, z + 30), "a"));
-        st.push(ring([-7, 62, z + 15], 2.2, "x", "o"), ring([7, 62, z + 15], 2.2, "x", "o"));
+    // 1. glass railing base shoe, cut open: serrated walls, taper-wedge clamps, gasket, setting blocks, anchors in a slab, end cap pulled off
+    { cam: { yaw: -0.62, pitch: 0.34, zoom: 2.0, fx: 0.02, fy: 0.04, at: [0, 45, -20] }, comp: 0, build: () => {
+      const st = [], Z0 = -70, Z1 = 70;
+      const teeth = (sd) => { const p = []; for (let y = 76; y > 30; y -= 6) p.push([30 * sd, y], [27 * sd, y - 3]); return p; };
+      const U = [[-40, 0], [40, 0], [40, 80], [35, 85], [30, 80], ...teeth(1), [30, 22], [-30, 22], ...teeth(-1).reverse(), [-30, 80], [-35, 85], [-40, 80]];
+      st.push(...extrudeZ(U, Z0, Z1, "o", 4), ...hatchZ(U, Z0, 4.5));
+      for (const x of [-22, 22]) st.push(ring([x, 10, Z0], 3.4, "z", "o"), ring([x, 10, Z1], 3.4, "z", "f"), { s: "f", p: [[x, 13.4, Z0], [x, 13.4, Z1]] });
+      st.push(...box(-6, 30, Z0, 6, 230, Z1), { s: "f", p: [[0, 30, Z0], [0, 230, Z0]] }, ...hatchZ(R2(-6, 30, 6, 230), Z0, 7, 2.36), cline([0, 0, Z0], "y", -10, 250));
+      for (const z of [-58, 38]) st.push(...style(box(-10, 22, z, 10, 30, z + 20), "f"));
+      for (const sd of [-1, 1]) {
+        const wedge = [[7 * sd, 32], [14 * sd, 32], [26 * sd, 76], [7 * sd, 76]];
+        for (const z of [-62, -14, 34]) { st.push(...style(extrudeZ(wedge, z, z + 24), "a")); for (let y = 41; y < 76; y += 9) { const x = (14 + (y - 32) / 44 * 12) * sd; st.push({ s: "a", p: [[x, y, z], [x - 2.5 * sd, y + 2, z]] }); } }
+        const gk = [[6 * sd, 85]]; for (let i = 0; i <= 6; i++) gk.push([(8 + i * 3.6) * sd, i % 2 ? 78 : 81]); gk.push([30 * sd, 81], [30 * sd, 85]);
+        st.push({ s: "o", p: close(gk.map(([x, y]) => [x, y, Z0])) }, { s: "f", p: gk.map(([x, y]) => [x, y, Z1]) });
       }
-      for (const z of [-75, 0, 75]) { st.push(...hex([0, 24, z], 6, 4)); st.push(...style(cyl([0, 0, z], 3, -40, 24, "y", 1, 4), "h")); }
-      for (const z of [-60, -20, 20, 60]) st.push(ring([50, 42, z], 4.5, "x", "o"), ring([50, 42, z], 2.5, "x", "f"));
-      const cap = U.map(([x, y]) => [x, y, 118]);
-      st.push({ s: "o", p: close(cap) }, { s: "f", p: close(U.map(([x, y]) => [x, y, 124])) });
-      U.forEach(([x, y], i) => i % 2 === 0 && st.push({ s: "h", p: [[x, y, 92], [x, y, 114]] }));
-      for (let x = -120; x <= 120; x += 30) st.push({ s: "f", p: [[x, -8, -130], [x, -8, 130]] });
+      for (const z of [-22, 18]) st.push(...washer([0, 22, z], "y", 9, 4.4, 2), ...screw([0, 24, z], [0, 1, 0], { d: 8, len: 78, head: "hex" }));
+      st.push({ s: "f", p: close([[-95, 0, Z0], [95, 0, Z0], [95, -70, Z0], [-95, -70, Z0]]) }, { s: "f", p: [[-95, 0, Z0], [-95, 0, Z1]] }, { s: "f", p: [[95, 0, Z0], [95, 0, Z1]] }, ...hatchZ(R2(-95, -70, 95, 0), Z0, 9, -0.6));
+      const capP = [[-40, 0], [40, 0], [40, 80], [35, 85], [30, 80], [30, 22], [-30, 22], [-30, 80], [-35, 85], [-40, 80]];
+      st.push(...extrudeZ(capP, Z0 - 36, Z0 - 30, "o"));
+      for (const [x, y] of [[-40, 0], [40, 0], [40, 80], [-40, 80]]) st.push({ s: "h", p: [[x, y, Z0 - 30], [x, y, Z0]] });
+      for (const x of [-22, 22]) st.push(...screw([x, 10, Z0 - 52], [0, 0, -1], { d: 5, len: 16, head: "csk" }), { s: "h", p: [[x, 10, Z0 - 36], [x, 10, Z0]] });
       return st;
     } },
-    // 2. ladder pull: twin tubes, standoffs through glass, washers, set screws, rounded caps
-    { cam: { yaw: -0.85, pitch: 0.28, zoom: 1.4, fx: 0.0, fy: -0.02 }, comp: 1, build: () => {
-      const st = [...box(-4, -120, -70, 4, 160, 70)];
-      for (const x of [-36, 36]) {
-        st.push(...cyl([x, 0, 0], 11, -120, 150, "y", 12, 10));
-        for (let k = 1; k <= 4; k++) st.push(ring([x, 150 + Math.sin(k / 4 * Math.PI / 2) * 11, 0], Math.cos(k / 4 * Math.PI / 2) * 11, "y", k === 4 ? "o" : "f"));
-        st.push(ring([x, -120, 0], 7, "y", "f"));
+    // 2. back-to-back ladder pull through glass: tubes with wall, domed caps, standoffs, nylon washers, threaded rod, grub screws; back half exploded off
+    { cam: { yaw: -0.72, pitch: 0.3, zoom: 1.45, fx: 0.0, fy: 0.02, at: [0, 30, 0] }, comp: 1, build: () => {
+      const st = [], EX = -40;
+      st.push(...box(-6, -150, -70, 6, 180, 70), ...hatchZ(R2(-6, -150, 6, 180), -70, 7, 2.36), { s: "f", p: [[0, -150, -70], [0, 180, -70]] });
+      for (const y of [0, 110]) st.push(ring([6, y, 0], 7, "x", "f"), ring([-6, y, 0], 7, "x", "f"));
+      for (const sd of [1, -1]) {
+        const X = (v) => v * sd + (sd < 0 ? EX : 0), tx = X(52), T = [tx, 0, 0];
+        st.push(...tube(T, "y", 13, -125, 150, "o", 6, 5), circA(T, "y", 150, 11.2, "f"), circA(T, "y", -125, 11.2, "f"), cline(T, "y", -150, 180));
+        for (let k = 1; k <= 3; k++) { const a = k / 4 * Math.PI / 2; st.push(circA(T, "y", 150 + Math.sin(a) * 13, Math.cos(a) * 13, "f"), circA(T, "y", -125 - Math.sin(a) * 13, Math.cos(a) * 13, "f")); }
+        for (const y of [0, 110]) {
+          const a0 = Math.min(X(8.4), X(40)), a1 = Math.max(X(8.4), X(40)), S = [0, y, 0];
+          st.push(...tube(S, "x", 8, a0, a1, "o", 6, 1), circA(S, "x", sd > 0 ? a1 - 2 : a0 + 2, 9, "f"));
+          st.push(...style(washer([X(6), y, 0], [sd, 0, 0], 11, 4, 2.4), "a"));
+          st.push(...screw([X(26), y - 8, 0], [0, -1, 0], { d: 4, len: 7, head: "none", ex: sd > 0 ? 18 : 0 }));
+        }
       }
-      for (const y of [0, 110]) {
-        st.push(...cyl([0, y, 0], 6, -26, 26, "x", 4, 8));
-        for (const x of [-4, 4]) st.push(ring([x, y, 0], 10, "x", "a"), ring([x * 1.6, y, 0], 10, "x", "a"));
-        st.push(ring([-36, y + 6, 11], 1.6, "z", "o"), ring([36, y + 6, 11], 1.6, "z", "o"));
-      }
-      for (let y = -110; y < 160; y += 22) st.push({ s: "f", p: [[4, y, 70], [4, y + 14, 56]] });
+      for (const y of [0, 110]) st.push(helixA([0, y, 0], "x", 3.4, -26, 40, 2.2, "f"), circA([0, y, 0], "x", -26, 3.4, "o"), cline([0, y, 0], "x", -125, 115), { s: "h", p: [[-26, y + 5, 0], [EX - 8, y + 5, 0]] });
       return st;
     } },
-    // 3. geared deadbolt: chamfered housing, gear on a hub, rack on the bolt, screws
-    { cam: { yaw: -0.55, pitch: 0.5, zoom: 1.5, fx: -0.05, fy: 0.0 }, comp: 2, build: () => {
-      const hous = [[-70, -44], [44, -44], [52, -36], [52, 36], [44, 44], [-70, 44], [-78, 36], [-78, -36]];
-      const st = [...extrudeZ(hous, -12, 12, "o"), ...style(extrudeZ([[-62, -36], [36, -36], [36, 36], [-62, 36]], 12, 14, "f"), "f")];
-      st.push(...style(extrudeZ(G2(-14, 0, 30, 14, 5), 14, 24), "a"), ...cyl([-14, 0, 0], 9, 14, 34, "z", 3, 8), ring([-14, 0, 34], 4, "z", "o"));
-      for (let a = 0; a < 6; a++) { const ang = a / 6 * TAU; st.push({ s: "f", p: [[-14 + Math.cos(ang) * 10, Math.sin(ang) * 10, 24], [-14 + Math.cos(ang) * 22, Math.sin(ang) * 22, 24]] }); }
-      st.push(...box(20, -12, -8, 128, 12, 8), ...style(box(128, -12, -8, 134, 12, 8), "o"));
-      const rack = []; for (let x = 22; x <= 96; x += 6) rack.push([x, 12, 8], [x + 3, 17, 8]); st.push({ s: "o", p: rack }, { s: "f", p: rack.map(([x, y]) => [x, y, -8]) });
-      for (const [x, y] of [[-66, -34], [40, -34], [-66, 34], [40, 34]]) { st.push(...hex([x, y, 14], 4.5, 3, "z")); st.push({ s: "f", p: [[x - 3, y, 17], [x + 3, y, 17]] }); }
-      st.push(...style(box(150, -26, -16, 176, 26, 16), "h"));
-      return st;
-    } },
-    // 4. barn-door roller in its track, hanger plate, soft-close block
-    { cam: { yaw: -0.5, pitch: 0.32, zoom: 1.4, fx: 0.08, fy: 0.1 }, comp: 3, build: () => {
-      const C = [[-16, 0], [16, 0], [16, 30], [9, 30], [9, 6], [-9, 6], [-9, 30], [-16, 30]];
-      const st = [...swapX(extrudeZ(C, -140, 160, "o"))];
-      for (const x of [-40, 80]) {
-        st.push(...cyl([x, 18, 0], 10, -6, 6, "z", 3, 12), ...cyl([x, 18, 0], 2.5, -20, 20, "z", 1, 6), ring([x, 18, 6], 6, "z", "f"));
-        st.push(...box(x - 14, -70, 20, x + 14, 22, 25));
-        st.push(ring([x, -20, 25], 3.5, "z", "o"), ring([x, -50, 25], 3.5, "z", "o"), ...hex([x, 18, 25], 4, 3, "z"));
+    // 3. geared mortise deadbolt, cover lifted: hub with square drive, pinion on a rack, detent spring, anti-saw pins, faceplate, strike and box
+    { cam: { yaw: -0.5, pitch: 0.6, zoom: 1.9, fx: 0.0, fy: 0.02, at: [30, 0, 10] }, comp: 2, build: () => {
+      const st = [];
+      const hous = [[-75, -52], [56, -52], [60, -48], [60, 58], [56, 62], [-75, 62], [-79, 58], [-79, -48]];
+      st.push(...extrudeZ(hous, -14, 12, "o"), { s: "f", p: close([[-73, -46], [54, -46], [54, 56], [-73, 56]].map(([x, y]) => [x, y, 12])) });
+      st.push(...extrudeZ(hous, 44, 47, "o"));
+      for (const [x, y] of [[-70, -42], [48, -42], [-70, 52], [48, 52]]) {
+        st.push(...tube([x, y, 0], "z", 4.5, -10, 12, "f", 3), circA([x, y, 0], "z", 12, 2, "f"), circA([x, y, 0], "z", 47, 2.4, "f"));
+        st.push(...screw([x, y, 64], [0, 0, 1], { d: 4, len: 14, head: "pan" }), { s: "h", p: [[x, y, 50], [x, y, 12]] });
       }
-      st.push(...style(box(110, 8, -7, 150, 18, 7), "a"), ...style(box(150, 8, -4, 158, 18, 4), "a"));
-      st.push(...box(-90, -220, 14, 140, -70, 30));
-      for (let x = -80; x < 140; x += 40) st.push({ s: "f", p: [[x, -80, 30], [x + 20, -100, 30]] });
+      const H = [-30, 10, 0];
+      st.push(...tube(H, "z", 13, -10, 10, "o", 8), polyA(H, "z", 10, 6.5, 4, "o", Math.PI / 4), polyA(H, "z", -10, 6.5, 4, "f", Math.PI / 4), cline(H, "z", -30, 70));
+      st.push(...style(extrudeZ(G2(-30, 10, 26, 14, 5), -4, 4), "a"));
+      for (let g = 0; g < 4; g++) { const a = g / 4 * TAU + 0.3; st.push(circA([-30 + Math.cos(a) * 17, 10 + Math.sin(a) * 17, 0], "z", 4, 3.5, "a", 16)); }
+      st.push(...box(-55, -40, -8, 130, -16, 8));
+      const rack = []; for (let x = -54; x <= 0; x += 5.6) rack.push([x, -16, 8], [x + 1.4, -11.5, 8], [x + 4.2, -11.5, 8], [x + 5.6, -16, 8]);
+      st.push({ s: "a", p: rack }, { s: "f", p: rack.map(([x, y]) => [x, y, -8]) });
+      st.push(...hatchX(R2(-8, -40, 8, -16), 130, 3.5), { s: "f", p: [[124, -40, 8], [130, -34, 8]] }, { s: "f", p: [[124, -16, 8], [130, -22, 8]] });
+      for (const x of [92, 112]) st.push(...tube([x, -28, 0], "z", 3, -8, 8, "f", 4));
+      st.push(helixA([0, -28, 0], "x", 6, -76, -55, 3.4, "a"), circA([0, -28, 0], "x", -76, 6, "f"), circA([0, -28, 0], "x", -55, 6, "f"), cline([0, -28, 0], "x", -84, 140));
+      st.push(...box(60, -74, -18, 66, 84, 18));
+      for (const y of [-62, 72]) st.push(...screw([66, y, 0], [1, 0, 0], { d: 5, len: 26, head: "csk" }));
+      st.push(...box(150, -74, -18, 154, 70, 18), { s: "o", p: close([[150, -44, -10], [150, -12, -10], [150, -12, 10], [150, -44, 10]]) });
+      st.push(...style(box(154, -44, -10, 186, -12, 10), "h"));
+      for (const y of [-62, 58]) st.push(...screw([150, y, 0], [-1, 0, 0], { d: 5, len: 26, head: "csk" }));
       return st;
     } },
-    // 5. sphere speaker: lat/long shell, tilted driver, twisted stand, base
-    { cam: { yaw: -0.4, pitch: 0.25, zoom: 1.45, fx: 0.0, fy: 0.12 }, comp: 4, build: () => {
+    // 4. barn-door roller on a flat-bar track: bearing wheels, axle bolts and nuts, spacers, hanger plates and lag bolts, wall standoffs, soft-close damper
+    { cam: { yaw: -0.48, pitch: 0.3, zoom: 1.9, fx: 0.04, fy: 0.04, at: [10, 10, 10] }, comp: 3, build: () => {
+      const st = [];
+      st.push(...swapX(extrudeZ(R2(-3, -20, 3, 20), -150, 175, "o")), ...hatchX(R2(-3, -20, 3, 20), -150, 3, 0.8));
+      for (const x of [-110, 20, 150]) {
+        st.push(...tube([x, 0, 0], "z", 8, -30, -3, "o", 6), ...tube([x, 0, 0], "z", 14, -36, -30, "f", 6));
+        st.push(...washer([x, 0, 3], "z", 9, 4.5, 2), ...screw([x, 0, 5], [0, 0, 1], { d: 8, len: 70, head: "hex" }));
+      }
+      for (const x of [-50, 80]) {
+        const W = [x, 36, 0];
+        st.push(...tube(W, "z", 16, -6, 6, "o", 12), circA(W, "z", 0, 14, "f"), circA(W, "z", -3, 15, "f"), circA(W, "z", 3, 15, "f"));
+        st.push(...bearing(W, "z", 9, 3.6, 8, 8));
+        st.push(...tube(W, "z", 5, 6, 10, "f", 4));
+        const arc = []; for (let i = 0; i <= 14; i++) { const a = i / 14 * Math.PI; arc.push([x + Math.cos(a) * 15, 36 + Math.sin(a) * 15]); }
+        st.push(...extrudeZ([...arc, [x - 15, -62], [x + 15, -62]], 10, 15, "o", 5));
+        st.push(...screw([x, 36, 15], [0, 0, 1], { d: 7, len: 26, head: "hex" }), ...nut([x, 36, -7], [0, 0, -1], 7));
+        for (const y of [-22, -48]) st.push(...screw([x, y, 10], [0, 0, -1], { d: 6, len: 36, head: "hex", ex: x > 0 && y < -30 ? 26 : 0 }));
+      }
+      st.push(...box(-95, -210, 15, 150, -42, 55), ...hatchX([[15, -210], [55, -210], [55, -42], [15, -42]], -95, 8, 0.25));
+      st.push(...style(box(20, -42, 15, 40, -30, 24), "f"));
+      st.push(...style(tube([0, -34, 26], "x", 6, 100, 132, "o", 6, 2), "a"), ...style(tube([0, -34, 26], "x", 2, 132, 160, "f", 3), "a"), helixA([0, -34, 26], "x", 4, 134, 158, 3, "a"), cline([0, -34, 26], "x", 90, 180));
+      st.push(...box(160, -30, -3, 166, -20, 3), ...screw([163, -20, 0], [0, 1, 0], { d: 3, len: 8, head: "socket", ex: 28 }));
+      return st;
+    } },
+    // 5. sphere speaker, driver pulled forward: basket, surround, cone, dust cap, motor stack, pan-head screws; helix stand on a threaded rod; sectioned base
+    { cam: { yaw: -0.4, pitch: 0.22, zoom: 1.6, fx: 0.0, fy: 0.06, at: [-8, 20, 15] }, comp: 4, build: () => {
       const st = [], c = [0, 40, 0], R = 52;
       for (let k = -3; k <= 3; k++) { const y = Math.sin(k / 4 * Math.PI / 2) * R; st.push(ring([0, 40 + y, 0], Math.sqrt(R * R - y * y), "y", k === 0 ? "o" : "f")); }
       for (let k = 0; k < 8; k++) { const a = k / 8 * Math.PI, p = []; for (let i = 0; i <= 48; i++) { const b = i / 48 * TAU; p.push([Math.cos(a) * Math.cos(b) * R, 40 + Math.sin(b) * R, Math.sin(a) * Math.cos(b) * R]); } st.push({ s: k === 0 ? "o" : "f", p }); }
-      const n = [-0.45, 0.12, 0.88], ln = Math.hypot(...n), nn = n.map((v) => v / ln);
-      const t1 = [nn[2], 0, -nn[0]], t1l = Math.hypot(...t1), u1 = t1.map((v) => v / t1l), v1 = [nn[1] * u1[2] - nn[2] * u1[1], nn[2] * u1[0] - nn[0] * u1[2], nn[0] * u1[1] - nn[1] * u1[0]];
-      for (const [rr, d, s] of [[26, 0.86, "o"], [20, 0.9, "f"], [14, 0.94, "a"], [6, 1.02, "a"]]) {
-        const p = []; for (let i = 0; i <= 48; i++) { const a = i / 48 * TAU; p.push([0, 1, 2].map((j) => c[j] + nn[j] * R * d + (u1[j] * Math.cos(a) + v1[j] * Math.sin(a)) * rr)); } st.push({ s, p });
-      }
-      for (let k = 0; k < 5; k++) { const p = []; for (let i = 0; i <= 60; i++) { const y = -12 - i * 1.4, a = i / 60 * Math.PI * 2.2 + k / 5 * TAU, r = 8 + i * 0.45; p.push([Math.cos(a) * r, y, Math.sin(a) * r]); } st.push({ s: "o", p }); }
-      st.push(...cyl([0, -98, 0], 46, -104, -98, "y", 1, 12));
+      st.push(ring([0, 40, 0], R - 3, "y", "f"));
+      const nn = V3.norm([-0.45, 0.12, 0.88]), B = basis(nn), hc = Math.sqrt(R * R - 28 * 28);
+      st.push(circA(c, nn, hc, 28, "o"), circA(c, nn, hc - 3, 27, "f"));
+      for (let g = 0; g < 4; g++) st.push(circA(pt(c, B, hc, 31, g / 4 * TAU + 1.19), nn, 0, 1.4, "f", 10));
+      const D = V3.add(c, V3.mul(nn, hc + 40));
+      st.push(circA(D, nn, 0, 30, "o"), circA(D, nn, -2, 30, "f"), circA(D, nn, 0, 25, "f"));
+      st.push(circA(D, nn, 1.8, 23.5, "f"), circA(D, nn, 2.4, 21.5, "f"), circA(D, nn, 1.8, 19.5, "f"));
+      st.push(circA(D, nn, 0, 18.5, "o"), circA(D, nn, -6, 13, "f"), circA(D, nn, -12, 8.5, "f"));
+      for (let g = 0; g < 12; g++) { const a = g / 12 * TAU; st.push({ s: "f", p: [pt(D, B, 0, 18.5, a), pt(D, B, -12, 8.5, a)] }); }
+      st.push(circA(D, nn, -10.5, 7, "a"), circA(D, nn, -9.2, 5, "a"), circA(D, nn, -8.6, 2.5, "a"));
+      for (let g = 0; g < 4; g++) { const a = g / 4 * TAU + 0.4; st.push({ s: "o", p: [pt(D, B, -1, 27, a), pt(D, B, -10, 22, a), pt(D, B, -22, 13, a)] }); }
+      st.push(...tube(D, nn, 13, -24, -22, "o", 6), ...tube(D, nn, 16, -33, -24, "o", 10, 1), ...tube(D, nn, 13, -36, -33, "o", 6), circA(D, nn, -36, 3, "f"), cline(D, nn, 20, -hc - 50));
+      for (let g = 0; g < 4; g++) st.push(...screw(pt(D, B, 0, 28, g / 4 * TAU + 1.19), nn, { d: 3, len: 8, head: "pan", ex: 14 }));
+      for (const a of [0.4, 0.4 + Math.PI]) st.push({ s: "h", p: [pt(D, B, -2, 30, a), pt(c, B, hc, 28, a)] });
+      for (let k = 0; k < 5; k++) { const p = []; for (let i = 0; i <= 60; i++) { const y = -14 - i * 1.4, a = i / 60 * Math.PI * 2.2 + k / 5 * TAU, r = 9 + i * 0.45; p.push([Math.cos(a) * r, y, Math.sin(a) * r]); } st.push({ s: "o", p }); }
+      st.push(...tube([0, 0, 0], "y", 11, -14, -4, "o", 6), ...screw([11, -9, 0], [1, 0, 0], { d: 3, len: 6, head: "none", ex: 10 }));
+      st.push(helixA([0, 0, 0], "y", 3.5, -98, -14, 2.4, "f"), cline([0, 0, 0], "y", -125, 110));
+      st.push(...tube([0, 0, 0], "y", 46, -108, -98, "o", 12), circA([0, 0, 0], "y", -98, 43, "f"), ...hatchZ(R2(0, -108, 46, -98), 0, 2.6));
+      for (let g = 0; g < 4; g++) { const a = g / 4 * TAU + 0.8; st.push(...tube([Math.cos(a) * 36, 0, Math.sin(a) * 36], "y", 5, -112, -108, "f", 4)); }
+      st.push(...nut([0, -108, 0], [0, -1, 0], 7), ...tube([0, -103, 46], "z", 4, 0, 10, "f", 4));
       return st;
     } },
-    // 6. tapered door rail: wedge body, glass, lock cylinder, hidden wedges, end cap
-    { cam: { yaw: -0.7, pitch: 0.36, zoom: 1.2, fx: 0.08, fy: 0.0 }, comp: 5, build: () => {
-      const body = [[-130, 0], [130, 0], [118, 40], [-118, 40]];
-      const st = [...extrudeZ(body, -12, 12, "o"), ...style(extrudeZ([[-110, 34], [110, 34], [106, 40], [-106, 40]], -12, 12, "f"), "f")];
-      st.push(...box(-112, 38, -5, 112, 190, 5));
-      for (const x of [-80, -20, 40]) st.push(...style(extrudeZ([[x, 14], [x + 34, 14], [x + 30, 30], [x + 4, 30]], -9, 9), "h"));
-      st.push(...cyl([80, 18, 0], 8, 12, 20, "z", 2, 10), { s: "a", p: [[80, 13, 20.5], [80, 23, 20.5]] }, ring([80, 18, 20], 3, "z", "a"));
-      st.push(...style(extrudeZ(body.map(([x, y]) => [x, y]), 18, 22), "f").slice(0, 2));
-      st.push(...style(move(extrudeZ([[118, 0], [130, 0], [118, 40]], -12, 12), 22, 0, 0), "a"));
+    // 6. tapered glass-door bottom rail: sectioned profile, glass on setting blocks, taper shims, pin-tumbler cylinder, drop bolt, brush seal, exploded end cap
+    { cam: { yaw: -0.7, pitch: 0.34, zoom: 1.9, fx: 0.04, fy: 0.04, at: [60, 30, 0] }, comp: 5, build: () => {
+      const st = [];
+      const P = [[-22, 0], [22, 0], [18, 60], [8, 62], [8, 14], [-8, 14], [-8, 62], [-18, 60]];
+      st.push(...swapX(extrudeZ(P, -140, 140, "o", 2)), ...hatchX(P, -140, 4));
+      st.push(...box(-130, 20, -6, 75, 200, 6), { s: "f", p: [[-130, 20, 0], [-130, 200, 0]] }, cline([-130, 0, 0], "y", -20, 220));
+      for (const x of [-100, 40]) st.push(...style(box(x, 14, -6, x + 28, 20, 6), "f"));
+      for (const sd of [-1, 1]) for (const x of [-120, -40, 20]) st.push(...style(swapX(extrudeZ([[6.2 * sd, 24], [7.8 * sd, 24], [7.8 * sd, 60], [6.2 * sd, 52]], x, x + 40)), "a"));
+      const L = [105, 34, 0];
+      st.push(...tube(L, "z", 11, -26, 26, "o", 8), ...tube(L, "z", 7.5, -26, 26, "f", 4), cline(L, "z", -44, 44));
+      st.push({ s: "o", p: [[103, 40, 26.2], [107, 37, 26.2], [103, 34, 26.2], [107, 31, 26.2], [104, 28, 26.2]] });
+      st.push(...style(box(99, 45, -22, 111, 62, 22), "f"));
+      for (const z of [-16, -8, 0, 8, 16]) {
+        st.push(...tube([105, 0, z], "y", 1.7, 34, 46, "f", 2), ...tube([105, 0, z], "y", 1.7, 46, 52, "a", 2), helixA([105, 0, z], "y", 1.6, 52, 61, 1.1, "f"));
+      }
+      st.push(...style(extrudeZ([[96, 34], [114, 34], [110, 18], [100, 18]], -3, 3), "a"));
+      st.push(...box(98, -34, -5, 112, 18, 5), ...hatchZ(R2(98, -34, 112, 18), 5, 3.5, 0.5));
+      for (let x = -136; x <= 136; x += 4) for (const z of [-6, 6]) st.push({ s: "f", p: [[x, 0, z], [x + 1, -9, z * 1.3]] });
+      st.push(...swapX(extrudeZ(P, 172, 178, "o")));
+      for (const [z, y] of [[-22, 0], [22, 0], [18, 60], [-18, 60]]) st.push({ s: "h", p: [[140, y, z], [172, y, z]] });
+      for (const y of [10, 44]) st.push(...screw([196, y, 15 * (y > 20 ? 0.8 : 0)], [1, 0, 0], { d: 4.5, len: 16, head: "csk" }), { s: "h", p: [[178, y, 15 * (y > 20 ? 0.8 : 0)], [140, y, 15 * (y > 20 ? 0.8 : 0)]] });
       return st;
     } },
   ].map((m) => {
     const strokes = m.build(); let total = 0;
     strokes.forEach((s) => { s.len = 0; for (let i = 1; i < s.p.length; i++) s.len += Math.hypot(s.p[i][0] - s.p[i - 1][0], s.p[i][1] - s.p[i - 1][1], s.p[i][2] - s.p[i - 1][2]); total += s.len; });
     let lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
-    strokes.forEach((s) => s.p.forEach((p) => p.forEach((v, i) => { lo[i] = Math.min(lo[i], v); hi[i] = Math.max(hi[i], v); })));
-    return { ...m, strokes, total, centre: lo.map((v, i) => (v + hi[i]) / 2), size: Math.max(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]) };
+    strokes.forEach((s) => s.s !== "c" && s.p.forEach((p) => p.forEach((v, i) => { lo[i] = Math.min(lo[i], v); hi[i] = Math.max(hi[i], v); })));
+    return { ...m, strokes, total, centre: m.cam.at || lo.map((v, i) => (v + hi[i]) / 2), size: Math.max(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2]) };
   });
 
   // Sutnar-style compositions: big flat circles, slabs, a bar-and-arrow and a dot field, per model
@@ -726,10 +854,10 @@ function chooserPage() {
         pts.push(proj([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f])); left -= seg;
       }
       const depth = pts.reduce((v, p) => v + p[2], 0) / pts.length, near = Math.max(0.3, Math.min(1, 0.75 - depth / dz));
-      const base = { o: 0.95, f: 0.5, h: 0.45, a: 1 }[s.s] * near * fade;
+      const base = { o: 0.95, f: 0.5, h: 0.45, a: 1, c: 0.4, t: 0.3 }[s.s] * near * fade;
       x.strokeStyle = s.s === "a" ? accent(base) : ink(base);
       x.lineWidth = s.s === "o" ? lw : s.s === "a" ? lw * 1.3 : 1;
-      x.setLineDash(s.s === "h" ? [5 * u + 2, 4 * u + 1] : []);
+      x.setLineDash(s.s === "h" ? [5 * u + 2, 4 * u + 1] : s.s === "c" ? [16 * u + 4, 3 * u + 2, 2 * u + 1, 3 * u + 2] : []);
       x.beginPath(); x.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) x.lineTo(pts[i][0], pts[i][1]); x.stroke();
     }
     x.setLineDash([]);
@@ -759,7 +887,7 @@ function chooserPage() {
     art(x2, W2, H2, t, 1 / PIX, null, null, null, PAL2css, "shapes", SET2);
     const A = x2.getImageData(0, 0, W2, H2).data;
     x2.clearRect(0, 0, W2, H2);
-    art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.6) + ")", (a) => "rgba(215,25,33," + Math.min(1, a * 1.4) + ")", (a) => "rgba(11,11,13,0.12)", PAL2css, "lines", SET2);
+    art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.15) + ")", (a) => "rgba(215,25,33," + Math.min(1, a * 1.4) + ")", (a) => "rgba(11,11,13,0.12)", PAL2css, "lines", SET2);
     const img = x2.getImageData(0, 0, W2, H2), p = img.data;
     for (let i = 0; i < p.length; i += 4) {
       const a = p[i + 3], f = a / 255, isRed = a && p[i] > 120 && p[i + 1] < 90;
