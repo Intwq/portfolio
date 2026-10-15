@@ -635,7 +635,7 @@ function chooserPage() {
 
   // Sutnar-style compositions: big flat circles, slabs, a bar-and-arrow and a dot field, per model
   const COMPS = [
-    [["c", 0.66, 0.42, 0.3, 0], ["r", 0.06, 0.1, 0.16, 0.6, 1], ["arrow", 0.1, 0.86, 0.46, 0.62, 3], ["dots", 0.78, 0.08, 4, 4, 2]],
+    [["c", 0.66, 0.42, 0.3, 0], ["r", 0.06, 0.1, 0.16, 0.6, 1], ["arrow", 0.3, 0.06, 0.52, 0.3, 3], ["dots", 0.78, 0.08, 4, 4, 2]],
     [["r", 0.52, 0.12, 0.36, 0.42, 2], ["c", 0.3, 0.3, 0.17, 1], ["arrow", 0.88, 0.9, 0.62, 0.62, 0], ["dots", 0.08, 0.06, 5, 3, 3]],
     [["c", 0.42, 0.46, 0.34, 1], ["r", 0.72, 0.06, 0.2, 0.5, 0], ["arrow", 0.08, 0.3, 0.36, 0.3, 3], ["dots", 0.68, 0.7, 4, 3, 2]],
     [["r", 0.08, 0.36, 0.86, 0.18, 2], ["c", 0.74, 0.24, 0.16, 0], ["arrow", 0.3, 0.08, 0.3, 0.32, 3], ["dots", 0.12, 0.08, 3, 4, 1]],
@@ -644,33 +644,55 @@ function chooserPage() {
   ];
   const CYCLE = 9, DRAW = 4.2, ERASE = 0.8;
 
-  function drawComp(x, W, H, comp, grow, pal) {
+  // Each Sutnar element rides its own slow closed curve (Catmull-Rom loop through four points),
+  // and arrows are thick cubic Béziers whose handles sway, so the whole composition breathes.
+  const hs = (i, k) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
+  function drift(seed, t, period, amp) {
+    const P = [0, 1, 2, 3].map((i) => { const a = i / 4 * TAU + hs(seed, i) * 1.2, r = amp * (0.45 + hs(seed, i + 5) * 0.55); return [Math.cos(a) * r, Math.sin(a) * r]; });
+    const u = ((t / period + hs(seed, 9)) % 1) * 4, i = Math.floor(u), f = u - i;
+    const p0 = P[(i + 3) % 4], p1 = P[i], p2 = P[(i + 1) % 4], p3 = P[(i + 2) % 4], f2 = f * f, f3 = f2 * f;
+    return [0, 1].map((j) => 0.5 * (2 * p1[j] + (p2[j] - p0[j]) * f + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * f2 + (3 * p1[j] - p0[j] - 3 * p2[j] + p3[j]) * f3));
+  }
+  const bez = (a, b, c, d, f) => { const g = 1 - f; return [0, 1].map((j) => g * g * g * a[j] + 3 * g * g * f * b[j] + 3 * g * f * f * c[j] + f * f * f * d[j]); };
+  function drawComp(x, W, H, comp, grow, pal, t, seed) {
     const s = Math.min(W, H), e = (k) => Math.max(0, Math.min(1, grow * 1.6 - k * 0.18));
     comp.forEach((sh, k) => {
       const g = 1 - Math.pow(1 - e(k), 3); if (g <= 0) return;
-      x.fillStyle = pal[sh[sh.length - 1]];
-      if (sh[0] === "c") { x.beginPath(); x.arc(sh[1] * W, sh[2] * H, sh[3] * s * g, 0, TAU); x.fill(); }
-      else if (sh[0] === "r") x.fillRect(sh[1] * W, sh[2] * H, sh[3] * W * g, sh[4] * H);
+      const sd = seed * 10 + k, [dx, dy] = reduce ? [0, 0] : drift(sd, t, 11 + hs(sd, 7) * 9, s * (sh[0] === "dots" ? 0.03 : 0.06));
+      x.fillStyle = pal[sh[sh.length - 1]]; x.strokeStyle = x.fillStyle;
+      if (sh[0] === "c") { x.beginPath(); x.arc(sh[1] * W + dx, sh[2] * H + dy, sh[3] * s * g, 0, TAU); x.fill(); }
+      else if (sh[0] === "r") x.fillRect(sh[1] * W + dx, sh[2] * H + dy, sh[3] * W * g, sh[4] * H);
       else if (sh[0] === "arrow") {
-        const x0 = sh[1] * W, y0 = sh[2] * H, x1 = x0 + (sh[3] * W - x0) * g, y1 = y0 + (sh[4] * H - y0) * g, a = Math.atan2(y1 - y0, x1 - x0), w = s * 0.022, hd = s * 0.06;
-        x.save(); x.translate(x0, y0); x.rotate(a); const L = Math.hypot(x1 - x0, y1 - y0);
-        x.fillRect(0, -w / 2, Math.max(0, L - hd), w);
-        x.beginPath(); x.moveTo(L, 0); x.lineTo(L - hd, -hd * 0.55); x.lineTo(L - hd, hd * 0.55); x.fill(); x.restore();
+        const A0 = [sh[1] * W + dx, sh[2] * H + dy], [ex, ey] = reduce ? [0, 0] : drift(sd + 50, t, 13, s * 0.05), A3 = [sh[3] * W + ex, sh[4] * H + ey];
+        const L = Math.hypot(A3[0] - A0[0], A3[1] - A0[1]), nx = -(A3[1] - A0[1]) / L, ny = (A3[0] - A0[0]) / L;
+        const b1 = 0.35 * Math.sin(t * 0.45 + sd), b2 = 0.35 * Math.sin(t * 0.37 + sd * 2 + 1.7);
+        const A1 = [A0[0] + (A3[0] - A0[0]) * 0.33 + nx * L * b1, A0[1] + (A3[1] - A0[1]) * 0.33 + ny * L * b1];
+        const A2 = [A0[0] + (A3[0] - A0[0]) * 0.66 - nx * L * b2, A0[1] + (A3[1] - A0[1]) * 0.66 - ny * L * b2];
+        const w = s * 0.022, hd = s * 0.06, N = 48, pts = [];
+        for (let i = 0; i <= N * g; i++) pts.push(bez(A0, A1, A2, A3, i / N));
+        if (pts.length < 2) return;
+        const end = pts[pts.length - 1], prev = pts[pts.length - 2], a = Math.atan2(end[1] - prev[1], end[0] - prev[0]);
+        x.lineWidth = w; x.lineCap = "butt"; x.lineJoin = "round"; x.setLineDash([]);
+        x.beginPath(); x.moveTo(pts[0][0], pts[0][1]); for (const p of pts) x.lineTo(p[0], p[1]); x.stroke();
+        x.save(); x.translate(end[0], end[1]); x.rotate(a);
+        x.beginPath(); x.moveTo(hd * 0.6, 0); x.lineTo(-hd * 0.4, -hd * 0.55); x.lineTo(-hd * 0.4, hd * 0.55); x.fill(); x.restore();
       } else if (sh[0] === "dots") {
         const gap = s * 0.035, r = s * 0.008;
-        for (let i = 0; i < sh[3]; i++) for (let j = 0; j < sh[4]; j++) if ((i + j) / (sh[3] + sh[4]) < g) { x.beginPath(); x.arc(sh[1] * W + i * gap, sh[2] * H + j * gap, r, 0, TAU); x.fill(); }
+        for (let i = 0; i < sh[3]; i++) for (let j = 0; j < sh[4]; j++) if ((i + j) / (sh[3] + sh[4]) < g) {
+          const wv = reduce ? 0 : Math.sin(t * 0.9 - (i + j) * 0.55) * gap * 0.25;
+          x.beginPath(); x.arc(sh[1] * W + dx + i * gap, sh[2] * H + dy + j * gap + wv, r, 0, TAU); x.fill(); }
       }
     });
   }
 
-  function art(x, W, H, t, u, ink, accent, grid, pal, layer) {
+  function art(x, W, H, t, u, ink, accent, grid, pal, layer, set) {
     const m = 18 * u;
-    // just the sphere speaker: it draws on once, then holds and drifts
-    const ph = t, mod = MODELS[4];
+    // each side cycles through its own three products, so the two halves never show the same one
+    const k = Math.floor(t / CYCLE), ph = t - k * CYCLE, mod = MODELS[set[k % set.length]];
     const prog = reduce ? 1 : ph < DRAW ? 1 - Math.pow(1 - ph / DRAW, 2) : 1;
-    const fade = 1;
+    const fade = reduce ? 1 : ph > CYCLE - ERASE ? 1 - (ph - (CYCLE - ERASE)) / ERASE : 1;
     if (layer !== "lines") {
-      x.globalAlpha = fade; drawComp(x, W, H, COMPS[mod.comp], reduce ? 1 : Math.min(1, ph / 1.4), pal); x.globalAlpha = 1;
+      x.globalAlpha = fade; drawComp(x, W, H, COMPS[mod.comp], reduce ? 1 : Math.min(1, ph / 1.4), pal, t, mod.comp + 1); x.globalAlpha = 1;
       if (layer === "shapes") return;
     }
     // fine frame + grid
@@ -719,6 +741,7 @@ function chooserPage() {
   const PIX = 3, c2 = document.getElementById("art8"), x2 = c2.getContext("2d", { willReadFrequently: true });
   const red = [215, 25, 33];
   const BAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const SET1 = [4, 0, 1], SET2 = [2, 3, 5];   // 01: sphere speaker, base shoe, ladder pull · 02: deadbolt, barn roller, door rail
   const PAL1 = ["#e0412f", "#f0b92c", "#2f5fd0", "#e9e3d3"];
   const PAL2 = [[215, 25, 33], [242, 190, 40], [40, 80, 200], [11, 11, 13]];
   const PAL2css = PAL2.map((c) => "rgb(" + c.join(",") + ")");
@@ -728,15 +751,15 @@ function chooserPage() {
     const d = Math.min(2, devicePixelRatio || 1), W1 = c1.clientWidth, H1 = c1.clientHeight;
     if (c1.width !== Math.round(W1 * d) || c1.height !== Math.round(H1 * d)) { c1.width = Math.round(W1 * d); c1.height = Math.round(H1 * d); }
     x1.setTransform(d, 0, 0, d, 0, 0); x1.clearRect(0, 0, W1, H1);
-    art(x1, W1, H1, t, 1, (a) => "rgba(240,242,246," + a + ")", (a) => "rgba(255,206,58," + a + ")", (a) => "rgba(120,170,255," + a + ")", PAL1, "all");
+    art(x1, W1, H1, t, 1, (a) => "rgba(240,242,246," + a + ")", (a) => "rgba(255,206,58," + a + ")", (a) => "rgba(120,170,255," + a + ")", PAL1, "all", SET1);
     // 02: same frame at 1/3 resolution; colour blocks snapped to four flat colours, lines to hard tones
     const W2 = Math.ceil(c2.clientWidth / PIX), H2 = Math.ceil(c2.clientHeight / PIX);
     if (c2.width !== W2 || c2.height !== H2) { c2.width = W2; c2.height = H2; }
     x2.clearRect(0, 0, W2, H2);
-    art(x2, W2, H2, t, 1 / PIX, null, null, null, PAL2css, "shapes");
+    art(x2, W2, H2, t, 1 / PIX, null, null, null, PAL2css, "shapes", SET2);
     const A = x2.getImageData(0, 0, W2, H2).data;
     x2.clearRect(0, 0, W2, H2);
-    art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.6) + ")", (a) => "rgba(215,25,33," + Math.min(1, a * 1.4) + ")", (a) => "rgba(11,11,13,0.12)", PAL2css, "lines");
+    art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.6) + ")", (a) => "rgba(215,25,33," + Math.min(1, a * 1.4) + ")", (a) => "rgba(11,11,13,0.12)", PAL2css, "lines", SET2);
     const img = x2.getImageData(0, 0, W2, H2), p = img.data;
     for (let i = 0; i < p.length; i += 4) {
       const a = p[i + 3], f = a / 255, isRed = a && p[i] > 120 && p[i + 1] < 90;
