@@ -401,8 +401,6 @@ function notFound() {
 // ---------- entry page: pick a version ----------
 function chooserPage() {
   const u = make(0);
-  const sprites = ["turboflex", "ladder-pulls", "jar", "sputnik-speaker", "shop-thermostat", "geared-deadbolt"]
-    .filter((s) => fs.existsSync(path.join(SRC, "arcade", "px", `${s}.png`)));
   return `<!doctype html>
 <html lang="en">
 <head>
@@ -439,22 +437,18 @@ function chooserPage() {
   .one .go i { width: 34px; height: 1px; background: #ff5b1f; transition: width 0.6s; }
   .one:hover .go i { width: 70px; }
 
-  /* 02: arcade, 8-bit */
-  .two { background: linear-gradient(180deg, #ffffff 0%, #000000 50%, #ffffff 100%); color: #fff; font-family: "Press Start 2P", "IBM Plex Mono", monospace; }
-  .two .spot { position: absolute; border-radius: 50%; background: #d71921; }
-  .two .spot.sq { border-radius: 0; }
-  .two .txt { position: absolute; z-index: 2; left: 0; right: 0; top: 50%; translate: 0 -50%; text-align: center; }
-  .two .n { font-size: clamp(40px, 7vw, 96px); line-height: 1; color: #fff; text-shadow: 4px 4px 0 #d71921; }
-  .two .h { margin: 22px 0 14px; font-size: clamp(14px, 1.8vw, 22px); letter-spacing: 0.06em; }
-  .two .s { margin: 0 auto; max-width: 30ch; font: 400 12px/1.6 "IBM Plex Mono", monospace; color: #b8b8b8; }
-  .two .go { margin-top: 22px; font-size: 11px; color: #fff; animation: blink 1s steps(2) infinite; }
-  .two .row { display: flex; justify-content: center; gap: clamp(8px, 2vw, 22px); margin-top: 28px; }
-  .two .row img { width: 52px; height: 52px; image-rendering: pixelated; animation: bob 1.6s steps(4) infinite; animation-delay: calc(var(--i) * -0.27s); }
-  .two:hover .row img { animation-duration: 0.6s; }
-  .two .top, .two .bot { position: absolute; left: 0; right: 0; text-align: center; font-size: 9px; color: #000; letter-spacing: 0.1em; }
-  .two .top { top: 74px; } .two .bot { bottom: 26px; }
-  @keyframes blink { 50% { opacity: 0; } }
-  @keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+  /* 02: arcade, the same artwork as 01 but white and 8-bit */
+  .two { background: #ffffff; color: #0b0b0d; font-family: "Press Start 2P", "IBM Plex Mono", monospace; }
+  .two canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+  .two .txt { position: absolute; z-index: 2; left: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 64px); max-width: 30ch; }
+  .two .n { font-size: clamp(54px, 9vw, 136px); line-height: 0.9; letter-spacing: -0.04em; }
+  .two .h { margin: 22px 0 10px; font-size: clamp(14px, 1.6vw, 21px); line-height: 1.2; text-transform: uppercase; }
+  .two .s { margin: 0; color: #6b6b72; font: 400 12px/1.5 "IBM Plex Mono", monospace; }
+  .two .go { margin-top: 18px; display: inline-flex; gap: 10px; align-items: center; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; }
+  .two .go i { width: 34px; height: 4px; background: #d71921; transition: width 0.4s steps(4); }
+  .two:hover .go i { width: 70px; }
+  .two .ro { position: absolute; z-index: 2; top: 30px; font-size: 8px; color: #0b0b0d; opacity: 0.7; }
+  .two .ro.l { left: 24px; } .two .ro.r { right: 24px; }
 
   /* centre seam */
   .seam { position: fixed; z-index: 5; left: 50%; top: 0; bottom: 0; width: 0; pointer-events: none; }
@@ -464,12 +458,11 @@ function chooserPage() {
     .split { flex-direction: column; }
     .side:hover, .side:focus-visible { flex-grow: 1.15; }
     .head { top: 14px; bottom: auto; left: 16px; translate: none; text-align: left; mix-blend-mode: normal; }
-    .two .top { top: 20px; }
     .one .txt { bottom: 22px; }
-    .two .row img { width: 40px; height: 40px; }
-    .two .row { margin-top: 18px; }
+    .one .txt, .two .txt { bottom: 22px; }
+    .two .ro { display: none; }
   }
-  @media (prefers-reduced-motion: reduce) { .side { transition: none; } .two .row img, .two .go { animation: none; } }
+  @media (prefers-reduced-motion: reduce) { .side { transition: none; } }
 </style>
 </head>
 <body>
@@ -485,83 +478,93 @@ function chooserPage() {
     </div>
   </a>
   <a class="side two" href="${u.arcade}" aria-label="Option 2: the arcade claw machine">
-    <div id="spots" aria-hidden="true"></div>
-    <p class="top">8-bit edition</p>
+    <canvas id="art8" aria-hidden="true"></canvas>
+    <span class="ro l" data-ro-l></span><span class="ro r" data-ro-r></span>
     <div class="txt">
       <div class="n">02</div>
       <p class="h">Arcade</p>
-      <p class="s">The same projects, inside a claw machine. Grab one to open it.</p>
-      <div class="row" aria-hidden="true">${sprites.map((s, i) => `<img src="${u.asset(`arcade/px/${s}.png`)}" alt="" style="--i:${i}">`).join("")}</div>
-      <p class="go">Press start</p>
+      <p class="s">The same projects, inside an 8-bit claw machine. Grab one to open it.</p>
+      <span class="go"><i></i>Press start</span>
     </div>
-    <p class="bot">Player 2</p>
   </a>
 </main>
 <script>
 (() => {
-  // red spots for the arcade side (fixed seed so the layout never jumps)
-  const spots = document.getElementById("spots");
-  let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
-  for (let i = 0; i < 26; i++) {
-    const d = document.createElement("i"), z = r() < 0.75 ? 4 + Math.floor(r() * 4) * 4 : 18 + r() * 34;
-    d.className = "spot" + (r() < 0.4 ? " sq" : "");
-    Object.assign(d.style, { width: z + "px", height: z + "px", left: r() * 96 + "%", top: (r() < 0.5 ? r() * 30 : 70 + r() * 28) + "%", opacity: 0.55 + r() * 0.45 });
-    spots.appendChild(d);
-  }
-
-  // abstract instrument artwork for the portfolio side
-  const c = document.getElementById("art"), x = c.getContext("2d");
+  // One instrument drawing, rendered twice: smooth and dark for 01, white and 8-bit for 02.
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  let W, H, dpr, mx = 0, my = 0, t0 = performance.now();
-  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; };
-  addEventListener("resize", size); size();
+  let mx = 0, my = 0;
+  const t0 = performance.now();
   addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
-  const ink = (a) => "rgba(233,235,238," + a + ")", sig = "#ff5b1f";
-  function frame(now) {
-    const t = reduce ? 0 : (now - t0) / 1000;
-    if (c.clientWidth !== W || c.clientHeight !== H) size();
-    x.setTransform(dpr, 0, 0, dpr, 0, 0);
-    x.clearRect(0, 0, W, H);
-    const cx = W * 0.6 - mx * 24, cy = H * 0.44 - my * 18, R = Math.min(W, H) * 0.42;
-    // faint grid
-    x.strokeStyle = ink(0.035); x.lineWidth = 1;
-    for (let gx = (cx % 40); gx < W; gx += 40) { x.beginPath(); x.moveTo(gx + 0.5, 0); x.lineTo(gx + 0.5, H); x.stroke(); }
-    for (let gy = (cy % 40); gy < H; gy += 40) { x.beginPath(); x.moveTo(0, gy + 0.5); x.lineTo(W, gy + 0.5); x.stroke(); }
-    // crosshair
-    x.strokeStyle = ink(0.16);
+
+  function art(x, W, H, t, u, ink, sig, labels) {
+    const cx = W * 0.6 - mx * 24 * u, cy = H * 0.44 - my * 18 * u, R = Math.min(W, H) * 0.42;
+    x.lineWidth = 1;
+    const g = 40 * u;
+    x.strokeStyle = ink(0.06);
+    for (let gx = cx % g; gx < W; gx += g) { x.beginPath(); x.moveTo(Math.round(gx) + 0.5, 0); x.lineTo(Math.round(gx) + 0.5, H); x.stroke(); }
+    for (let gy = cy % g; gy < H; gy += g) { x.beginPath(); x.moveTo(0, Math.round(gy) + 0.5); x.lineTo(W, Math.round(gy) + 0.5); x.stroke(); }
+    x.strokeStyle = ink(0.2);
     x.beginPath(); x.moveTo(0, cy); x.lineTo(W, cy); x.moveTo(cx, 0); x.lineTo(cx, H); x.stroke();
-    // rings and partial arcs turning at different speeds
-    const rings = [[1, 0.1, 0, 2], [0.86, 0.22, 0.25, 1.2], [0.7, 0.14, -0.4, 0.8], [0.55, 0.3, 0.6, 1.5], [0.32, 0.2, -0.9, 0.6], [0.18, 0.5, 1.4, 2]];
-    rings.forEach(([k, a, sp, len]) => {
-      x.strokeStyle = ink(a); x.beginPath();
-      x.arc(cx, cy, R * k, t * sp * 0.2, t * sp * 0.2 + Math.PI * len); x.stroke();
+    [[1, 0.14, 0, 2], [0.86, 0.3, 0.25, 1.2], [0.7, 0.2, -0.4, 0.8], [0.55, 0.38, 0.6, 1.5], [0.32, 0.28, -0.9, 0.6], [0.18, 0.6, 1.4, 2]].forEach(([k, a, sp, len]) => {
+      x.strokeStyle = ink(a); x.beginPath(); x.arc(cx, cy, R * k, t * sp * 0.2, t * sp * 0.2 + Math.PI * len); x.stroke();
     });
-    // tick ring
     for (let i = 0; i < 120; i++) {
-      const a = i / 120 * Math.PI * 2 + t * 0.02, l = i % 10 === 0 ? 14 : 6;
-      x.strokeStyle = ink(i % 10 === 0 ? 0.45 : 0.15); x.beginPath();
+      const a = i / 120 * Math.PI * 2 + t * 0.02, l = (i % 10 === 0 ? 14 : 6) * u;
+      x.strokeStyle = ink(i % 10 === 0 ? 0.55 : 0.2); x.beginPath();
       x.moveTo(cx + Math.cos(a) * R * 0.94, cy + Math.sin(a) * R * 0.94);
       x.lineTo(cx + Math.cos(a) * (R * 0.94 - l), cy + Math.sin(a) * (R * 0.94 - l)); x.stroke();
     }
-    // signal: an orange arc and an orbiting marker
-    x.strokeStyle = sig; x.lineWidth = 2; x.beginPath();
-    x.arc(cx, cy, R * 0.7, -t * 0.12, -t * 0.12 + 0.35); x.stroke(); x.lineWidth = 1;
-    const oa = t * 0.35, ox = cx + Math.cos(oa) * R * 0.55, oy = cy + Math.sin(oa) * R * 0.55;
-    x.fillStyle = sig; x.fillRect(ox - 2, oy - 2, 4, 4);
-    x.strokeStyle = ink(0.3); x.beginPath(); x.moveTo(ox, oy); x.lineTo(ox + 60, oy - 40); x.lineTo(ox + 120, oy - 40); x.stroke();
-    x.fillStyle = ink(0.6); x.font = "10px IBM Plex Mono, monospace";
-    x.fillText("SIG " + (oa % (Math.PI * 2)).toFixed(3), ox + 64, oy - 46);
-    // corner brackets and readouts
-    x.strokeStyle = ink(0.4);
-    const b = 16, m = 18;
+    x.strokeStyle = sig; x.lineWidth = 2 * Math.max(u, 0.5); x.beginPath(); x.arc(cx, cy, R * 0.7, -t * 0.12, -t * 0.12 + 0.35); x.stroke(); x.lineWidth = 1;
+    const oa = t * 0.35, ox = cx + Math.cos(oa) * R * 0.55, oy = cy + Math.sin(oa) * R * 0.55, q = Math.max(2, 4 * u);
+    x.fillStyle = sig; x.fillRect(ox - q / 2, oy - q / 2, q, q);
+    x.strokeStyle = ink(0.35); x.beginPath(); x.moveTo(ox, oy); x.lineTo(ox + 60 * u, oy - 40 * u); x.lineTo(ox + 120 * u, oy - 40 * u); x.stroke();
+    x.strokeStyle = ink(0.45);
+    const bk = 16 * u, m = 18 * u;
     [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]].forEach(([px, py, sx, sy]) => {
-      x.beginPath(); x.moveTo(px, py + sy * b); x.lineTo(px, py); x.lineTo(px + sx * b, py); x.stroke();
+      x.beginPath(); x.moveTo(px, py + sy * bk); x.lineTo(px, py); x.lineTo(px + sx * bk, py); x.stroke();
     });
-    x.fillStyle = ink(W > 520 ? 0.45 : 0);
-    x.fillText("DT / 01 — " + (cx | 0) + " : " + (cy | 0), m + 6, m + 30);
-    x.fillText("T+" + t.toFixed(1).padStart(6, "0"), W - m - 80, m + 30);
-    // the centre: a small solid core
-    x.fillStyle = ink(0.9); x.beginPath(); x.arc(cx, cy, 3, 0, Math.PI * 2); x.fill();
+    x.fillStyle = ink(1); x.beginPath(); x.arc(cx, cy, 3 * Math.max(u, 0.6), 0, Math.PI * 2); x.fill();
+    if (labels) {
+      x.fillStyle = ink(W > 520 ? 0.5 : 0); x.font = "10px IBM Plex Mono, monospace";
+      x.fillText("SIG " + (oa % (Math.PI * 2)).toFixed(3), ox + 64, oy - 46);
+      x.fillText("DT / 01 — " + (cx | 0) + " : " + (cy | 0), m + 6, m + 30);
+      x.fillText("T+" + t.toFixed(1).padStart(6, "0"), W - m - 80, m + 30);
+    }
+    return { cx, cy, oa, t };
+  }
+
+  // 01: smooth, light ink on black
+  const c1 = document.getElementById("art"), x1 = c1.getContext("2d");
+  // 02: drawn at 1/3 resolution in black on white, then snapped to a few hard tones
+  const PIX = 3, c2 = document.getElementById("art8"), x2 = c2.getContext("2d", { willReadFrequently: true });
+  const roL = document.querySelector("[data-ro-l]"), roR = document.querySelector("[data-ro-r]");
+  const red = [215, 25, 33];
+  function frame(now) {
+    const t = reduce ? 0 : (now - t0) / 1000;
+    // 01
+    const d = Math.min(2, devicePixelRatio || 1), W1 = c1.clientWidth, H1 = c1.clientHeight;
+    if (c1.width !== Math.round(W1 * d) || c1.height !== Math.round(H1 * d)) { c1.width = Math.round(W1 * d); c1.height = Math.round(H1 * d); }
+    x1.setTransform(d, 0, 0, d, 0, 0); x1.clearRect(0, 0, W1, H1);
+    art(x1, W1, H1, t, 1, (a) => "rgba(233,235,238," + a + ")", "#ff5b1f", true);
+    // 02
+    const W2 = Math.ceil(c2.clientWidth / PIX), H2 = Math.ceil(c2.clientHeight / PIX);
+    if (c2.width !== W2 || c2.height !== H2) { c2.width = W2; c2.height = H2; }
+    x2.clearRect(0, 0, W2, H2);
+    const s = art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.7) + ")", "rgb(215,25,33)", false);
+    const img = x2.getImageData(0, 0, W2, H2), p = img.data;
+    for (let i = 0, n = 0; i < p.length; i += 4, n++) {
+      const a = p[i + 3];
+      if (!a) continue;
+      const isRed = p[i] > 120 && p[i + 1] < 90, f = a / 255;
+      // three-tone pixel ink: strong strokes go black, faint ones a light grey, nothing in between
+      if (isRed && f > 0.25) { p[i] = red[0]; p[i + 1] = red[1]; p[i + 2] = red[2]; p[i + 3] = 255; }
+      else if (f > 0.42) { p[i] = 11; p[i + 1] = 11; p[i + 2] = 13; p[i + 3] = 255; }
+      else if (f > 0.2) { p[i] = 172; p[i + 1] = 172; p[i + 2] = 180; p[i + 3] = 255; }
+      else if (f > 0.07) { p[i] = 232; p[i + 1] = 232; p[i + 2] = 236; p[i + 3] = 255; }
+      else p[i + 3] = 0;
+    }
+    x2.putImageData(img, 0, 0);
+    if (roL) { roL.textContent = "DT / 02 — " + ((s.cx * PIX) | 0) + " : " + ((s.cy * PIX) | 0); roR.textContent = "T+" + t.toFixed(1).padStart(6, "0"); }
     if (!reduce) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
