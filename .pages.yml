@@ -306,12 +306,6 @@ content:
       - name: linkedin
         label: LinkedIn link
         type: string
-      - name: main_url
-        label: Main site address (shown on the arcade site)
-        type: string
-      - name: arcade_url
-        label: Arcade site address (adds an Arcade link to the main site menu)
-        type: string
       - name: instagram
         label: Instagram link
         type: string

@@ -56,7 +56,7 @@
 
   const prizes = $$(".prize", pit).map((el, i) => ({
     el, i, slug: el.dataset.slug, d: DATA.find((d) => d.slug === el.dataset.slug),
-    x: 0, y: 0, vx: 0, vy: 0, rot: 0, vr: 0, scale: 1, dyn: true, sleep: 0, homeX: 0,
+    x: 0, y: 0, vx: 0, vy: 0, rot: 0, vr: 0, rest: 0, scale: 1, dyn: true, sleep: 0, homeX: 0,
   }));
   const rnd = (n) => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
   const anchorY = () => RAIL + 13 * PX;
@@ -255,9 +255,12 @@
       const order = prizes.map((p, i) => i).sort((a, b) => rnd(a + 40) - rnd(b + 40));
       order.forEach((idx, k) => {
         const p = prizes[idx];
-        p.x = S * 0.5 + ((k * 0.618034) % 1) * (W - S) + (rnd(idx * 3 + 1) - 0.5) * S * 0.4;
-        p.y = -S - k * S * 0.35;
-        p.vx = 0; p.vy = 0; p.dyn = true; p.sleep = 0;
+        p.x = W * (0.12 + ((k * 0.618034) % 1) * 0.76) + (rnd(idx * 3 + 1) - 0.5) * S;
+        p.y = -S - k * S * 0.32;
+        p.vx = (rnd(idx * 5 + 2) - 0.5) * 520; p.vy = rnd(idx + 8) * 300;          // tossed in, not placed
+        p.vr = (rnd(idx * 9 + 4) - 0.5) * 500; p.rot = (rnd(idx * 2) - 0.5) * 40;
+        p.rest = (rnd(idx * 11 + 6) - 0.5) * 24;                                       // each prize settles at its own tilt
+        p.dyn = true; p.sleep = 0;
       });
     } else {
       prizes.forEach((p) => { p.sleep = 0; p.x = Math.max(S * 0.4, Math.min(W - S * 0.4, p.x)); });
@@ -279,7 +282,7 @@
     }
     for (let it = 0; it < 4; it++) {
       for (const p of live) {
-        if (p.y > floorY - foot()) { p.y = floorY - foot(); if (p.vy > 0) p.vy = p.vy > 300 ? -p.vy * 0.18 : 0; p.vx *= 0.8; }
+        if (p.y > floorY - foot()) { p.y = floorY - foot(); if (p.vy > 0) { if (p.vy > 300) p.vr += (rnd(p.i + p.vy) - 0.5) * p.vy * 0.4; p.vy = p.vy > 300 ? -p.vy * 0.18 : 0; } p.vx *= 0.97; }
         if (p.x < wallL) { p.x = wallL; p.vx = Math.abs(p.vx) * 0.3; }
         if (p.x > wallR) { p.x = wallR; p.vx = -Math.abs(p.vx) * 0.3; }
       }
@@ -305,15 +308,20 @@
             if (a.dyn) { a.vx += jt * tx; a.vy += jt * ty; }
             if (b.dyn) { b.vx -= jt * tx; b.vy -= jt * ty; }
           }
+          // a prize sitting straight on top of another slides off one side, like a real pile
+          const up = ny > 0 ? a : b, low = up === a ? b : a;
+          if (up.dyn && Math.abs(nx) < 0.3) up.vx += (nx === 0 ? (rnd(i * 31 + j) < 0.5 ? -1 : 1) : Math.sign(up === b ? nx : -nx)) * 900 * dt;
+          if (up.dyn && pen > 0.5) up.rest += ((up === b ? nx : -nx) * 28 - up.rest) * 0.02;    // lean with the slope it rests on
           if (pen > 1.5) { a.sleep = 0; b.sleep = 0; }
         }
       }
     }
-    for (const p of prizes) {                       // springy wobble that always settles upright
-      if (!p.vr && !p.rot) continue;
-      p.vr += (-p.rot * 90 - p.vr * 7) * dt; p.rot += p.vr * dt;
-      p.rot = Math.max(-16, Math.min(16, p.rot));
-      if (Math.abs(p.rot) < 0.4 && Math.abs(p.vr) < 4) { p.rot = 0; p.vr = 0; }
+    for (const p of prizes) {                       // springy wobble that settles at the prize's resting tilt
+      if (!p.dyn) { p.rot += (0 - p.rot) * Math.min(1, dt * 10); p.vr = 0; continue; }
+      const target = Math.max(-22, Math.min(22, p.rest));
+      if (Math.abs(p.rot - target) < 0.3 && Math.abs(p.vr) < 3) { p.rot = target; p.vr = 0; continue; }
+      p.vr += (-(p.rot - target) * 90 - p.vr * 7) * dt; p.rot += p.vr * dt;
+      p.rot = Math.max(-40, Math.min(40, p.rot));
     }
     for (const p of live) {
       const sp = Math.hypot(p.vx, p.vy);
@@ -537,7 +545,7 @@
     drawRig();
     for (const p of prizes) {
       const x = Math.round(p.x / PX) * PX - S / 2, y = Math.round(p.y / PX) * PX - S / 2;
-      p.el.style.transform = `translate(${x}px, ${y}px)${p.rot ? ` rotate(${p.rot.toFixed(1)}deg)` : ""} scale(${p.scale})`;
+      p.el.style.transform = `translate(${x}px, ${y}px)${p.rot ? ` rotate(${Math.round(p.rot)}deg)` : ""} scale(${p.scale})`;
       if (p.dyn) p.el.style.zIndex = String(10 + Math.round(p.y / 4));      // lower in the pile = in front
     }
   }

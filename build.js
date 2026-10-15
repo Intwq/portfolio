@@ -85,6 +85,8 @@ const make = (depth) => {
     root: PREVIEW ? root + "index.html" : root,
     asset: (p) => root + String(p).replace(/^\/+/, ""),
     work: (slug) => page(`work/${slug}/`),
+    home: page("portfolio/"),
+    arcade: page("arcade/"),
     about: page("about/"),
   };
 };
@@ -134,12 +136,12 @@ ${image ? `<meta property="og:image" content="${esc(u.asset(image))}">` : ""}
 <body class="${cls}">
 <a class="skip" href="#main">Skip to content</a>
 <header class="hud" data-hud>
-  <a class="mark" href="${u.root}" aria-label="${esc(site.name)}, home"><span>${esc(site.name)}</span></a>
+  <a class="mark" href="${u.home}" aria-label="${esc(site.name)}, home"><span>${esc(site.name)}</span></a>
   <span class="hud-role">${esc(site.role)}</span>
   <nav class="nav" aria-label="Main">
-    <a href="${u.root}${PREVIEW ? "" : ""}#work" data-nav="work">Work</a>
+    <a href="${u.home}#work" data-nav="work">Work</a>
     <a href="${u.about}" data-nav="about">About</a>
-    ${site.arcade_url ? `<a href="${esc(site.arcade_url)}">Arcade</a>` : ""}
+    <a href="${u.arcade}">Arcade</a>
     ${site.email ? `<a href="mailto:${esc(site.email)}">Contact</a>` : ""}
   </nav>
 </header>
@@ -174,7 +176,7 @@ ${body}
 const SPANS = [7, 5, 4, 4, 4, 5, 7, 6, 6]; // repeating grid rhythm on a 12-column grid
 
 function homePage() {
-  const u = make(0);
+  const u = make(1);
   const slides = featured.map((p, i) => `
     <figure class="slide${i === 0 ? " is-on" : ""}" data-slide data-title="${esc(p.title)}" data-year="${esc(p.year)}" data-href="${u.work(p.slug)}">
       <img${srcset(p.cover, u, "100vw")} alt=""${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
@@ -251,7 +253,7 @@ function homePage() {
 <section class="work" id="work" aria-labelledby="work-h">
 ${sections}
 </section>`;
-  return layout({ depth: 0, body, cls: "page-home", image: featured[0].cover });
+  return layout({ depth: 1, body, cls: "page-home", image: featured[0].cover });
 }
 
 function galleryRows(images) {
@@ -396,11 +398,186 @@ function notFound() {
   return layout({ depth: 0, title: "Page not found", body, cls: "page-about" });
 }
 
+// ---------- entry page: pick a version ----------
+function chooserPage() {
+  const u = make(0);
+  const sprites = ["turboflex", "ladder-pulls", "jar", "sputnik-speaker", "shop-thermostat", "geared-deadbolt"]
+    .filter((s) => fs.existsSync(path.join(SRC, "arcade", "px", `${s}.png`)));
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(site.name)} | ${esc(site.role)}</title>
+<meta name="description" content="${esc(site.tagline)}">
+<meta property="og:title" content="${esc(site.name)} | ${esc(site.role)}">
+<meta property="og:description" content="${esc(site.tagline)}">
+<meta name="theme-color" content="#060708">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@200;300;400&family=Press+Start+2P&display=swap">
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { overflow: hidden; background: #060708; font: 400 13px/1.5 "IBM Plex Mono", monospace; -webkit-font-smoothing: antialiased; }
+  .split { display: flex; height: 100vh; height: 100dvh; }
+  .side { position: relative; flex: 1 1 0; min-width: 0; min-height: 0; overflow: hidden; text-decoration: none; display: block; transition: flex-grow 0.8s cubic-bezier(0.22, 1, 0.36, 1); }
+  .side:hover, .side:focus-visible { flex-grow: 1.35; }
+  .side:focus-visible { outline: 2px solid #ff5b1f; outline-offset: -6px; }
+  .side > * { pointer-events: none; }
+
+  /* 01: portfolio, abstract artwork */
+  .one { background: #060708; color: #e9ebee; }
+  .one canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .one::after { content: ""; position: absolute; inset: 0; background: radial-gradient(120% 90% at 60% 45%, transparent 40%, rgba(0,0,0,0.75)); }
+  .one .txt { position: absolute; z-index: 2; left: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 64px); max-width: 30ch; }
+  .one .n { font: 200 clamp(64px, 11vw, 168px)/0.85 "Unbounded", sans-serif; letter-spacing: -0.04em; }
+  .one .h { margin: 18px 0 8px; font: 400 clamp(18px, 2vw, 26px)/1.1 "Unbounded", sans-serif; text-transform: uppercase; }
+  .one .s { margin: 0; color: #868d97; font-size: 12px; }
+  .one .go { margin-top: 18px; display: inline-flex; gap: 10px; align-items: center; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; }
+  .one .go i { width: 34px; height: 1px; background: #ff5b1f; transition: width 0.6s; }
+  .one:hover .go i { width: 70px; }
+
+  /* 02: arcade, 8-bit */
+  .two { background: linear-gradient(180deg, #ffffff 0%, #000000 50%, #ffffff 100%); color: #fff; font-family: "Press Start 2P", "IBM Plex Mono", monospace; }
+  .two .spot { position: absolute; border-radius: 50%; background: #d71921; }
+  .two .spot.sq { border-radius: 0; }
+  .two .txt { position: absolute; z-index: 2; left: 0; right: 0; top: 50%; translate: 0 -50%; text-align: center; }
+  .two .n { font-size: clamp(40px, 7vw, 96px); line-height: 1; color: #fff; text-shadow: 4px 4px 0 #d71921; }
+  .two .h { margin: 22px 0 14px; font-size: clamp(14px, 1.8vw, 22px); letter-spacing: 0.06em; }
+  .two .s { margin: 0 auto; max-width: 30ch; font: 400 12px/1.6 "IBM Plex Mono", monospace; color: #b8b8b8; }
+  .two .go { margin-top: 22px; font-size: 11px; color: #fff; animation: blink 1s steps(2) infinite; }
+  .two .row { display: flex; justify-content: center; gap: clamp(8px, 2vw, 22px); margin-top: 28px; }
+  .two .row img { width: 52px; height: 52px; image-rendering: pixelated; animation: bob 1.6s steps(4) infinite; animation-delay: calc(var(--i) * -0.27s); }
+  .two:hover .row img { animation-duration: 0.6s; }
+  .two .top, .two .bot { position: absolute; left: 0; right: 0; text-align: center; font-size: 9px; color: #000; letter-spacing: 0.1em; }
+  .two .top { top: 74px; } .two .bot { bottom: 26px; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes bob { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+
+  /* centre seam */
+  .seam { position: fixed; z-index: 5; left: 50%; top: 0; bottom: 0; width: 0; pointer-events: none; }
+  .head { position: fixed; z-index: 6; bottom: 16px; left: 50%; translate: -50% 0; pointer-events: none; text-align: center; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #868d97; mix-blend-mode: difference; }
+  .head b { display: block; font: 400 13px "Unbounded", sans-serif; letter-spacing: 0.24em; color: #fff; margin-bottom: 4px; }
+  @media (max-width: 760px), (max-aspect-ratio: 4/5) {
+    .split { flex-direction: column; }
+    .side:hover, .side:focus-visible { flex-grow: 1.15; }
+    .head { top: 14px; bottom: auto; left: 16px; translate: none; text-align: left; mix-blend-mode: normal; }
+    .two .top { top: 20px; }
+    .one .txt { bottom: 22px; }
+    .two .row img { width: 40px; height: 40px; }
+    .two .row { margin-top: 18px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .side { transition: none; } .two .row img, .two .go { animation: none; } }
+</style>
+</head>
+<body>
+<p class="head"><b>${esc(site.name)}</b>Choose a version · click a side</p>
+<main class="split">
+  <a class="side one" href="${u.home}" aria-label="Option 1: the portfolio">
+    <canvas id="art" aria-hidden="true"></canvas>
+    <div class="txt">
+      <div class="n">01</div>
+      <p class="h">Portfolio</p>
+      <p class="s">${esc(site.role)}. Product launches, research and design work.</p>
+      <span class="go"><i></i>Enter</span>
+    </div>
+  </a>
+  <a class="side two" href="${u.arcade}" aria-label="Option 2: the arcade claw machine">
+    <div id="spots" aria-hidden="true"></div>
+    <p class="top">8-bit edition</p>
+    <div class="txt">
+      <div class="n">02</div>
+      <p class="h">Arcade</p>
+      <p class="s">The same projects, inside a claw machine. Grab one to open it.</p>
+      <div class="row" aria-hidden="true">${sprites.map((s, i) => `<img src="${u.asset(`arcade/px/${s}.png`)}" alt="" style="--i:${i}">`).join("")}</div>
+      <p class="go">Press start</p>
+    </div>
+    <p class="bot">Player 2</p>
+  </a>
+</main>
+<script>
+(() => {
+  // red spots for the arcade side (fixed seed so the layout never jumps)
+  const spots = document.getElementById("spots");
+  let s = 7; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 26; i++) {
+    const d = document.createElement("i"), z = r() < 0.75 ? 4 + Math.floor(r() * 4) * 4 : 18 + r() * 34;
+    d.className = "spot" + (r() < 0.4 ? " sq" : "");
+    Object.assign(d.style, { width: z + "px", height: z + "px", left: r() * 96 + "%", top: (r() < 0.5 ? r() * 30 : 70 + r() * 28) + "%", opacity: 0.55 + r() * 0.45 });
+    spots.appendChild(d);
+  }
+
+  // abstract instrument artwork for the portfolio side
+  const c = document.getElementById("art"), x = c.getContext("2d");
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let W, H, dpr, mx = 0, my = 0, t0 = performance.now();
+  const size = () => { dpr = Math.min(2, devicePixelRatio || 1); W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; };
+  addEventListener("resize", size); size();
+  addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
+  const ink = (a) => "rgba(233,235,238," + a + ")", sig = "#ff5b1f";
+  function frame(now) {
+    const t = reduce ? 0 : (now - t0) / 1000;
+    if (c.clientWidth !== W || c.clientHeight !== H) size();
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    x.clearRect(0, 0, W, H);
+    const cx = W * 0.6 - mx * 24, cy = H * 0.44 - my * 18, R = Math.min(W, H) * 0.42;
+    // faint grid
+    x.strokeStyle = ink(0.035); x.lineWidth = 1;
+    for (let gx = (cx % 40); gx < W; gx += 40) { x.beginPath(); x.moveTo(gx + 0.5, 0); x.lineTo(gx + 0.5, H); x.stroke(); }
+    for (let gy = (cy % 40); gy < H; gy += 40) { x.beginPath(); x.moveTo(0, gy + 0.5); x.lineTo(W, gy + 0.5); x.stroke(); }
+    // crosshair
+    x.strokeStyle = ink(0.16);
+    x.beginPath(); x.moveTo(0, cy); x.lineTo(W, cy); x.moveTo(cx, 0); x.lineTo(cx, H); x.stroke();
+    // rings and partial arcs turning at different speeds
+    const rings = [[1, 0.1, 0, 2], [0.86, 0.22, 0.25, 1.2], [0.7, 0.14, -0.4, 0.8], [0.55, 0.3, 0.6, 1.5], [0.32, 0.2, -0.9, 0.6], [0.18, 0.5, 1.4, 2]];
+    rings.forEach(([k, a, sp, len]) => {
+      x.strokeStyle = ink(a); x.beginPath();
+      x.arc(cx, cy, R * k, t * sp * 0.2, t * sp * 0.2 + Math.PI * len); x.stroke();
+    });
+    // tick ring
+    for (let i = 0; i < 120; i++) {
+      const a = i / 120 * Math.PI * 2 + t * 0.02, l = i % 10 === 0 ? 14 : 6;
+      x.strokeStyle = ink(i % 10 === 0 ? 0.45 : 0.15); x.beginPath();
+      x.moveTo(cx + Math.cos(a) * R * 0.94, cy + Math.sin(a) * R * 0.94);
+      x.lineTo(cx + Math.cos(a) * (R * 0.94 - l), cy + Math.sin(a) * (R * 0.94 - l)); x.stroke();
+    }
+    // signal: an orange arc and an orbiting marker
+    x.strokeStyle = sig; x.lineWidth = 2; x.beginPath();
+    x.arc(cx, cy, R * 0.7, -t * 0.12, -t * 0.12 + 0.35); x.stroke(); x.lineWidth = 1;
+    const oa = t * 0.35, ox = cx + Math.cos(oa) * R * 0.55, oy = cy + Math.sin(oa) * R * 0.55;
+    x.fillStyle = sig; x.fillRect(ox - 2, oy - 2, 4, 4);
+    x.strokeStyle = ink(0.3); x.beginPath(); x.moveTo(ox, oy); x.lineTo(ox + 60, oy - 40); x.lineTo(ox + 120, oy - 40); x.stroke();
+    x.fillStyle = ink(0.6); x.font = "10px IBM Plex Mono, monospace";
+    x.fillText("SIG " + (oa % (Math.PI * 2)).toFixed(3), ox + 64, oy - 46);
+    // corner brackets and readouts
+    x.strokeStyle = ink(0.4);
+    const b = 16, m = 18;
+    [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]].forEach(([px, py, sx, sy]) => {
+      x.beginPath(); x.moveTo(px, py + sy * b); x.lineTo(px, py); x.lineTo(px + sx * b, py); x.stroke();
+    });
+    x.fillStyle = ink(W > 520 ? 0.45 : 0);
+    x.fillText("DT / 01 — " + (cx | 0) + " : " + (cy | 0), m + 6, m + 30);
+    x.fillText("T+" + t.toFixed(1).padStart(6, "0"), W - m - 80, m + 30);
+    // the centre: a small solid core
+    x.fillStyle = ink(0.9); x.beginPath(); x.arc(cx, cy, 3, 0, Math.PI * 2); x.fill();
+    if (!reduce) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
+`;
+}
+
 // ---------- write ----------
 fs.rmSync(OUT, { recursive: true, force: true });
 const write = (rel, html) => { const f = path.join(OUT, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, html); };
 
-write("index.html", homePage());
+write("index.html", chooserPage());
+write("portfolio/index.html", homePage());
 projects.forEach((p, i) => write(`work/${p.slug}/index.html`, projectPage(p, i)));
 write("about/index.html", aboutPage());
 // The 404 page is served at any broken URL, so it needs root-absolute links.
@@ -411,3 +588,6 @@ copyDir(path.join(SRC, "assets"), path.join(OUT, "assets"));
 fs.copyFileSync(path.join(SRC, "favicon.svg"), path.join(OUT, "favicon.svg"));
 
 console.log(`Built ${projects.length} projects into dist/${PREVIEW ? " (preview links)" : ""}`);
+
+// The arcade (claw machine) version is built into dist/arcade/ from the same content.
+require("./arcade");

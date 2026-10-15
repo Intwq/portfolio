@@ -1,4 +1,5 @@
-// Builds the ARCADE version of the portfolio (a claw machine) into dist-arcade/.
+// Builds the ARCADE version of the portfolio (a claw machine) into dist/arcade/.
+// build.js runs this automatically at the end, so the arcade ships inside the main site.
 // Same content as the main site: src/projects/*.json, src/site.json and src/images/.
 // Run with `node arcade.js` (after `python3 tools/resize.py` for responsive images).
 const fs = require("fs");
@@ -6,7 +7,8 @@ const path = require("path");
 const { caseStudy } = require("./casestudy");
 
 const SRC = path.join(__dirname, "src");
-const OUT = path.join(__dirname, "dist-arcade");
+const OUT = path.join(__dirname, "dist", "arcade");
+const UP = "../";   // the arcade lives one folder down; images are shared with the main site
 const SIZES = path.join(__dirname, ".sizes");
 const WIDTHS = [800, 1600, 2560];
 
@@ -44,13 +46,13 @@ function imageSize(file) {
 
 function srcset(p, sizes) {
   const d = imageSize(path.join(SRC, asset(p)));
-  if (!d) return ` src="${asset(p)}"`;
+  if (!d) return ` src="${UP}${asset(p)}"`;
   const base = asset(p).replace(/\.[a-z0-9]+$/i, "");
   const widths = [...new Set([...WIDTHS.filter((w) => w < d.w), ...(d.w <= 2560 ? [d.w] : [])])]
     .filter((w) => fs.existsSync(path.join(SIZES, `${base}-${w}.webp`)));
-  if (!widths.length) return ` src="${asset(p)}" width="${d.w}" height="${d.h}"`;
+  if (!widths.length) return ` src="${UP}${asset(p)}" width="${d.w}" height="${d.h}"`;
   const fb = `${base}-${widths.find((w) => w >= 1600) || widths[widths.length - 1]}.webp`;
-  return ` src="${fb}" srcset="${widths.map((w) => `${base}-${w}.webp ${w}w`).join(", ")}" sizes="${sizes}" width="${d.w}" height="${d.h}"`;
+  return ` src="${UP}${fb}" srcset="${widths.map((w) => `${UP}${base}-${w}.webp ${w}w`).join(", ")}" sizes="${sizes}" width="${d.w}" height="${d.h}"`;
 }
 
 // ---------- data (same rules as build.js) ----------
@@ -67,7 +69,7 @@ const projects = fs.readdirSync(path.join(SRC, "projects")).filter((f) => f.ends
   .sort((a, b) => a.order - b.order || (b.year || 0) - (a.year || 0) || a.title.localeCompare(b.title));
 
 const iconFor = (p) => {
-  if (p.icon) return asset(p.icon);                       // custom pixel art uploaded in the dashboard
+  if (p.icon) return UP + asset(p.icon);                       // custom pixel art uploaded in the dashboard
   if (fs.existsSync(path.join(SRC, "arcade", "px", `${p.slug}.png`))) return `px/${p.slug}.png`;
   return "";
 };
@@ -105,7 +107,7 @@ function fragment(p, i) {
   <section class="pj-info"><dl class="spec">${spec}</dl><div class="pj-desc">${paras(p.description || "")}</div></section>
   <div class="cs-wrap js">${caseStudy(p)}</div>
   ${gal.length ? `<section class="pj-gal"><h3 class="cs-title">Gallery</h3><div class="gal">${gal.map((im, k) =>
-    `<a href="${asset(im)}" target="_blank" rel="noopener"><img${srcset(im, "(max-width: 700px) 94vw, 540px")} alt="${esc(p.title)}, image ${k + 1}" loading="lazy" decoding="async"></a>`).join("")}</div></section>` : ""}
+    `<a href="${UP}${asset(im)}" target="_blank" rel="noopener"><img${srcset(im, "(max-width: 700px) 94vw, 540px")} alt="${esc(p.title)}, image ${k + 1}" loading="lazy" decoding="async"></a>`).join("")}</div></section>` : ""}
 </article>`;
 }
 
@@ -129,7 +131,7 @@ function indexPage() {
 <title>${esc(site.name)} | Arcade</title>
 <meta name="description" content="${esc(site.name)}, ${esc(site.role)}. The portfolio as a claw machine: grab a prize to open a project.">
 <meta name="theme-color" content="#eef0ff">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="${FONTS}">
@@ -155,7 +157,7 @@ function indexPage() {
   <dl>
     ${site.email ? `<div><dt>Mail</dt><dd><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></dd></div>` : ""}
     ${site.linkedin ? `<div><dt>In</dt><dd><a href="${esc(site.linkedin)}" rel="noopener" target="_blank">LinkedIn ↗</a></dd></div>` : ""}
-    ${site.main_url ? `<div><dt>Site</dt><dd><a href="${esc(site.main_url)}">Full portfolio ↗</a></dd></div>` : ""}
+    <div><dt>Site</dt><dd><a href="../portfolio/">Full portfolio</a> · <a href="../">Menu</a></dd></div>
     <div><dt>Prizes</dt><dd>${pad(projects.length)}</dd></div>
     <div><dt>Time</dt><dd data-clock>--:--:--</dd></div>
     <div><dt>Sound</dt><dd><button type="button" class="snd" data-sound aria-pressed="false">Off</button></dd></div>
@@ -196,8 +198,5 @@ fs.writeFileSync(path.join(OUT, "arcade.css"),
   fs.readFileSync(path.join(SRC, "arcade", "arcade.css"), "utf8") + "\n\n/* ---- case-study sections (generated from the main site's style.css) ---- */\n.win-body {\n" + caseCss() + "\n}\n");
 fs.copyFileSync(path.join(SRC, "arcade", "game.js"), path.join(OUT, "game.js"));
 copyDir(path.join(SRC, "arcade", "px"), path.join(OUT, "px"));
-copyDir(path.join(SRC, "images"), path.join(OUT, "images"));
-copyDir(path.join(SIZES, "images"), path.join(OUT, "images"));
-if (fs.existsSync(path.join(SRC, "favicon.svg"))) fs.copyFileSync(path.join(SRC, "favicon.svg"), path.join(OUT, "favicon.svg"));
-fs.writeFileSync(path.join(OUT, "404.html"), `<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=/"><title>Arcade</title>`);
-console.log(`Arcade: ${projects.length} prizes built into dist-arcade/`);
+
+console.log(`Arcade: ${projects.length} prizes built into dist/arcade/`);
