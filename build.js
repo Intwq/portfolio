@@ -626,7 +626,20 @@ function chooserPage() {
       return st;
     } },
   ].map((m) => {
-    const strokes = m.build(); let total = 0;
+    // abstraction pass: thin out fine detail, run a few edges out as construction lines, give each stroke its own seed
+    const hs = (i, k) => { const v = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return v - Math.floor(v); };
+    const raw = m.build(), strokes = [];
+    raw.forEach((s, i) => {
+      const h = hs(i, 1);
+      if (s.s === "f" && h > 0.42) return;
+      if (s.s === "h" && h > 0.6) return;
+      strokes.push({ ...s, h, h2: hs(i, 2) });
+      if (s.s === "o" && s.p.length === 2 && h < 0.22) {
+        const [a, b] = s.p, d = [0, 1, 2].map((j) => (b[j] - a[j]) * (0.6 + hs(i, 3) * 1.4));
+        strokes.push({ s: "c", h, h2: 0, p: [[a[0] - d[0], a[1] - d[1], a[2] - d[2]], [b[0] + d[0], b[1] + d[1], b[2] + d[2]]] });
+      }
+    });
+    let total = 0;
     strokes.forEach((s) => { s.len = 0; for (let i = 1; i < s.p.length; i++) s.len += Math.hypot(s.p[i][0] - s.p[i - 1][0], s.p[i][1] - s.p[i - 1][1], s.p[i][2] - s.p[i - 1][2]); total += s.len; });
     let lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
     strokes.forEach((s) => s.p.forEach((p) => p.forEach((v, i) => { lo[i] = Math.min(lo[i], v); hi[i] = Math.max(hi[i], v); })));
@@ -703,10 +716,14 @@ function chooserPage() {
         pts.push(proj([a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f])); left -= seg;
       }
       const depth = pts.reduce((v, p) => v + p[2], 0) / pts.length, near = Math.max(0.3, Math.min(1, 0.75 - depth / dz));
-      const base = { o: 0.95, f: 0.5, h: 0.45, a: 1 }[s.s] * near * fade;
+      const base = { o: 0.95, f: 0.42, h: 0.4, a: 1, c: 0.2 }[s.s] * near * fade;
       x.strokeStyle = s.s === "a" ? accent(base) : ink(base);
       x.lineWidth = s.s === "o" ? lw : s.s === "a" ? lw * 1.3 : 1;
-      x.setLineDash(s.s === "h" ? [5 * u + 2, 4 * u + 1] : []);
+      // edges break into fragments so the part reads as a drawing being thought through, not a finished model
+      x.setLineDash(s.s === "h" ? [5 * u + 2, 4 * u + 1]
+        : s.s === "o" || s.s === "a" ? [(30 + s.h * 150) * u + 2, (5 + s.h2 * 22) * u + 1, (6 + s.h2 * 40) * u + 1, (3 + s.h * 10) * u + 1]
+        : s.s === "f" && s.h2 < 0.5 ? [(12 + s.h * 30) * u + 1, (8 + s.h2 * 30) * u + 1] : []);
+      x.lineDashOffset = -s.h2 * 200 * u;
       x.beginPath(); x.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) x.lineTo(pts[i][0], pts[i][1]); x.stroke();
     }
     x.setLineDash([]);
