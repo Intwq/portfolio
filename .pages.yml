@@ -56,6 +56,10 @@ content:
         description: Used on the homepage grid and at the top of the project page. Landscape works best. Export as JPG, about 2000px wide.
         type: image
         required: true
+      - name: focus
+        label: Cover focal point (optional)
+        description: Where to aim when the cover is cropped, as "left% top%". For example "50% 15%" keeps the top of a tall product in view. Leave empty for centred.
+        type: string
       - name: description
         label: Description
         description: Leave a blank line between paragraphs. The first paragraph is shown larger.

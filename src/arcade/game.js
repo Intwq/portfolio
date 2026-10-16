@@ -127,9 +127,9 @@
       blobs.forEach(([dx, dy, r]) => disc(b, cx + dx * s, cy + dy * s, r * s, rgb("#ffffff")));
       rect(b, cx - 1.6 * s, cy + 0.6 * s, 3.2 * s, 1, rgb("#d9e6fb"));
     };
-    cloud(LW * 0.18, LH * 0.3, Math.max(6, LH * 0.028));
-    cloud(LW * 0.62, LH * 0.2, Math.max(5, LH * 0.022));
-    cloud(LW * 0.86, LH * 0.42, Math.max(4, LH * 0.018));
+    cloud(LW * 0.2, LH * 0.32, Math.max(14, LH * 0.07));
+    cloud(LW * 0.6, LH * 0.2, Math.max(11, LH * 0.055));
+    cloud(LW * 0.88, LH * 0.44, Math.max(9, LH * 0.045));
     // floor: a clean tiled ledge
     const floorTop = Math.round((H - FLOOR) / PX);
     rect(b, 0, floorTop, LW, LH - floorTop, rgb("#efe7fb"));

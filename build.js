@@ -65,6 +65,7 @@ const projects = fs.readdirSync(path.join(SRC, "projects"))
     p.slug = slugify(path.basename(f, ".json")) || slugify(p.title);
     p.images = (p.images || []).filter(Boolean);
     p.cover = p.cover || p.images[0] || "";
+    p.fp = p.focus ? `object-position:${String(p.focus).replace(/[^0-9.% a-z]/gi, "")};` : "";
     p.order = Number(p.order) || 0;
     if (p.hidden) return null;
     return p;
@@ -179,7 +180,7 @@ function homePage() {
   const u = make(1);
   const slides = featured.map((p, i) => `
     <figure class="slide${i === 0 ? " is-on" : ""}" data-slide data-title="${esc(p.title)}" data-year="${esc(p.year)}" data-href="${u.work(p.slug)}">
-      <img${srcset(p.cover, u, "100vw")} alt=""${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>
+      <img${srcset(p.cover, u, "100vw")} alt=""${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}${p.fp ? ` style="${p.fp}"` : ""}>
     </figure>`).join("");
 
   // Projects are grouped into sections (e.g. "Product launches", "Design work"), in order of first appearance.
@@ -207,7 +208,7 @@ function homePage() {
     const span = spansFor(arr.length)[i];
     return `
     <a class="tile s${span}" href="${u.work(p.slug)}" data-reveal data-cursor>
-      <div class="tile-media"><img${srcset(p.cover, u, `(max-width: 900px) 100vw, ${Math.round((span / 12) * 100)}vw`)} alt="${esc(p.title)}" loading="lazy" decoding="async" style="view-transition-name:v-${p.slug}"></div>
+      <div class="tile-media"><img${srcset(p.cover, u, `(max-width: 900px) 100vw, ${Math.round((span / 12) * 100)}vw`)} alt="${esc(p.title)}" loading="lazy" decoding="async" style="${p.fp}view-transition-name:v-${p.slug}"></div>
       <div class="tile-meta">
         <span class="tile-n">${pad(++n)}</span>
         <span class="tile-title">${esc(p.title)}</span>
@@ -291,7 +292,7 @@ function projectPage(p, i) {
   const body = `
 <article class="project">
   <section class="p-hero">
-    <div class="p-hero-media" data-parallax><img${srcset(p.cover, u, "100vw")} alt="" fetchpriority="high" style="view-transition-name:v-${p.slug}"></div>
+    <div class="p-hero-media" data-parallax><img${srcset(p.cover, u, "100vw")} alt="" fetchpriority="high" style="${p.fp}view-transition-name:v-${p.slug}"></div>
     <div class="hero-shade"></div>
     <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="p-hero-text">
@@ -307,7 +308,7 @@ function projectPage(p, i) {
   ${rows ? `<section class="p-gallery" aria-label="Images">${caseStudy(p) ? `<h2 class="cs-title gal-title">Gallery</h2>` : ""}${rows}
   </section>` : ""}
   <a class="p-next" href="${u.work(next.slug)}" data-cursor>
-    <span class="p-next-media"><img${srcset(next.cover, u, "100vw")} alt="" loading="lazy"></span>
+    <span class="p-next-media"><img${srcset(next.cover, u, "100vw")} alt="" loading="lazy"${next.fp ? ` style="${next.fp}"` : ""}></span>
     <span class="p-next-label">Next project</span>
     <span class="p-next-title">${esc(next.title)}</span>
   </a>
@@ -387,7 +388,7 @@ function aboutPage() {
   </div>
 
   <div class="about-strip" data-reveal>${picks.map((p) => `
-    <a class="strip-item" href="${u.work(p.slug)}" data-cursor><img${srcset(p.cover, u, "(max-width: 560px) 100vw, 33vw")} alt="${esc(p.title)}" loading="lazy"><span>${esc(p.title)}</span></a>`).join("")}
+    <a class="strip-item" href="${u.work(p.slug)}" data-cursor><img${srcset(p.cover, u, "(max-width: 560px) 100vw, 33vw")} alt="${esc(p.title)}" loading="lazy"${p.fp ? ` style="${p.fp}"` : ""}><span>${esc(p.title)}</span></a>`).join("")}
   </div>
 </section>`;
   return layout({ depth: 1, title: "About", desc: lines(site.about)[0], body, cls: "page-about" });

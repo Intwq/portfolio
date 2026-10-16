@@ -44,6 +44,10 @@ function imageSize(file) {
   return null;
 }
 
+let META = {};
+try { META = JSON.parse(fs.readFileSync(path.join(SIZES, "meta.json"), "utf8")); } catch (e) {}
+const edgeOf = (p) => { const m = META[asset(p).replace(/^images\//, "")]; return m && m.edge ? m.edge : "#ffffff"; };
+
 function srcset(p, sizes) {
   const d = imageSize(path.join(SRC, asset(p)));
   if (!d) return ` src="${UP}${asset(p)}"`;
@@ -99,7 +103,7 @@ function fragment(p, i) {
     .map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
   const gal = p.images.filter((im) => im !== p.cover || p.images.length === 1);
   return `<article class="pj">
-  ${p.cover ? `<figure class="pj-hero"><img${srcset(p.cover, "(max-width: 1100px) 94vw, 1100px")} alt="${esc(p.title)}"></figure>` : ""}
+  ${p.cover ? `<figure class="pj-hero" style="background:${edgeOf(p.cover)}"><img${srcset(p.cover, "(max-width: 1100px) 94vw, 1100px")} alt="${esc(p.title)}"></figure>` : ""}
   <header class="pj-head">
     <p class="pj-n">PRJ ${pad(i + 1)} / ${pad(projects.length)}${p.category ? ` · ${esc(p.category)}` : ""}</p>
     <h2 class="pj-title">${esc(p.title)}</h2>
@@ -141,10 +145,10 @@ function indexPage() {
 <main class="machine" id="machine">
   <canvas class="bg" id="bg" aria-hidden="true"></canvas>
   <canvas class="rig" id="rig" aria-hidden="true"></canvas>
-  <div class="pit" id="pit">${data.map(prize).join("")}</div>
+  <div class="pit" id="pit"><div class="fx" id="fx" aria-hidden="true"><div class="rays"></div><div class="rays rays-2"></div><div class="glow"></div></div>${data.map(prize).join("")}</div>
 </main>
 
-<div class="fx" id="fx" aria-hidden="true"><div class="rays"></div><div class="glow"></div></div>
+
 
 <a class="logo" href="./" aria-label="${esc(site.name)} arcade, reload">
   <span class="logo-dt" data-text="${esc(site.name.split(" ").map((w) => w[0]).join(""))}">${esc(site.name.split(" ").map((w) => w[0]).join(""))}</span>

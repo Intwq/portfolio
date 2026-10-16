@@ -67,8 +67,41 @@ def work(path):
     return made
 
 
+def edge(path):
+    """Average colour of an image's outer border, so a letterboxed photo can sit on a matching background."""
+    try:
+        with Image.open(path) as im:
+            im.draft("RGB", (256, 256))
+            im = flatten(ImageOps.exif_transpose(im))
+            im.thumbnail((128, 128))
+            w, h = im.size
+            px = im.load()
+            ring = [px[x, y] for x in range(w) for y in (0, 1, h - 2, h - 1)] + [px[x, y] for y in range(h) for x in (0, 1, w - 2, w - 1)]
+            # most common border colour (not the average, so a shadow or a product touching the edge doesn't tint it)
+            bins = {}
+            for c in ring:
+                k = tuple(v // 6 for v in c)
+                bins.setdefault(k, []).append(c)
+            top = max(bins.values(), key=len)
+            return "#%02x%02x%02x" % tuple(round(sum(c[i] for c in top) / len(top)) for i in range(3))
+    except Exception:
+        return None
+
+
 if __name__ == "__main__":
+    import json
     files = list(jobs())
     with ProcessPoolExecutor() as pool:
         total = sum(pool.map(work, files, chunksize=4))
+    meta_path = os.path.join(ROOT, ".sizes", "meta.json")
+    try:
+        meta = json.load(open(meta_path))
+    except Exception:
+        meta = {}
+    todo = [f for f in files if meta.get(os.path.relpath(f, SRC).replace(os.sep, "/"), {}).get("mtime") != os.path.getmtime(f) or meta.get(os.path.relpath(f, SRC).replace(os.sep, "/"), {}).get("v") != 2]
+    with ProcessPoolExecutor() as pool:
+        for f, e in zip(todo, pool.map(edge, todo, chunksize=4)):
+            meta[os.path.relpath(f, SRC).replace(os.sep, "/")] = {"mtime": os.path.getmtime(f), "edge": e, "v": 2}
+    os.makedirs(os.path.dirname(meta_path), exist_ok=True)
+    json.dump(meta, open(meta_path, "w"))
     print(f"resize.py: {len(files)} images checked, {total} sizes made")

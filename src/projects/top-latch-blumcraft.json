@@ -8,7 +8,7 @@
   "order": 12,
   "category": "Door hardware",
   "status": "Launched, February 2025",
-  "description": "Blumcraft is CRL's long-standing panic device brand, now facing new competition. Its top latch had a recurring field problem: a 3° angle on the strike let the roller pop out under enough pressure. The latch also wasn't as universal as it should be, and electric-strike compatibility was limited. A competitor's fix for the electric-strike issue added cost and narrowed door compatibility.\n\nThe new security latch adds a back plate that keeps the roller latch engaged under exterior pull force, fits more door configurations, and ships with every new Blumcraft panic device order for fast market penetration. It passed Gate 4 in February 2025.",
+  "description": "Blumcraft is CRL's long-standing panic device brand, now facing new competition. Its top latch had a recurring field problem: a 3° angle on the strike let the roller pop out under enough pressure. The latch also wasn't as universal as it should be, and electric-strike compatibility was limited. A competitor's fix for the electric-strike issue added cost and narrowed door compatibility.\n\nRather than buy an off-the-shelf part, our team at CRL designed a new security latch in-house. Its back plate keeps the roller engaged under exterior pull force, and it fits more door configurations. The design is patented, with CRL's VP of Engineering, Mirjana Komadina, named on the patent. It ships with every new Blumcraft panic device order for fast market penetration, and it passed Gate 4 in February 2025.",
   "metrics": [
     {
       "value": "$3.59B",
@@ -30,7 +30,7 @@
     },
     {
       "label": "Solution",
-      "text": "A security latch with a back plate that keeps the roller engaged, combining the best of our previous design and the competition's."
+      "text": "A CRL-designed, patented security latch with a back plate that keeps the roller engaged, combining the best of our previous design and the competition's."
     },
     {
       "label": "Customers",
@@ -41,8 +41,8 @@
       "text": "A more secure and more universal latch at a lower cost than competing options, simplifying inventory for customers and for CRL."
     },
     {
-      "label": "Sourcing",
-      "text": "Buy: from an existing hardware vendor."
+      "label": "Design",
+      "text": "Designed in-house by CRL's engineering and product team, and patented with Mirjana Komadina, VP of Engineering, as inventor."
     },
     {
       "label": "Competition",
@@ -109,10 +109,10 @@
     }
   ],
   "swot": {
-    "strengths": "Strong Blumcraft brand recognition\nIncluded with all new panic device orders for fast market penetration\nMuch less expensive than competing latches",
-    "weaknesses": "The latch itself is not patented",
-    "opportunities": "Keep and win back customers as new panic device competitors arrive",
-    "threats": "Can be copied by competitors"
+    "strengths": "Patented CRL design\nStrong Blumcraft brand recognition\nIncluded with all new panic device orders for fast market penetration\nMuch less expensive than competing latches",
+    "weaknesses": "Existing doors in the field still carry the older latch until they are serviced",
+    "opportunities": "Keep and win back customers as new panic device competitors arrive\nRetrofit sales through service centers and door repair shops",
+    "threats": "Competitors may try to design around the patent"
   },
   "images": [
     "/images/projects/top-latch-blumcraft/01.jpg",
@@ -124,11 +124,15 @@
   "cover": "/images/projects/top-latch-blumcraft/01.jpg",
   "featured": false,
   "hidden": false,
-  "my_role": "I co-led the Blumcraft security latch with the senior product manager through Gate 4: documenting the field failures, comparing our design with the competition's fix, and setting the plan to ship the new latch with every new panic device order.",
+  "my_role": "I co-led the Blumcraft security latch with the senior product manager through Gate 4. I documented the field failures, compared our design with the competition's fix, and worked with our engineering team as they designed and patented the new latch. I also set the plan to ship it with every new panic device order.",
   "stakeholders": [
     {
-      "group": "Supplier",
-      "members": "Existing hardware vendor"
+      "group": "Design and engineering",
+      "members": "CRL engineering team\nMirjana Komadina, VP of Engineering (patent inventor)\nProduct design & development"
+    },
+    {
+      "group": "Production",
+      "members": "Manufacturing supplier, building to CRL's design"
     },
     {
       "group": "Quality",
@@ -136,7 +140,7 @@
     },
     {
       "group": "Internal teams",
-      "members": "New product development\nProduct testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
+      "members": "Product testing\nMarketing\nSales and service centers\nSourcing and purchasing\nDemand planning\nMaster data"
     },
     {
       "group": "Gate committee",
@@ -145,8 +149,9 @@
   ],
   "challenges": [
     {
-      "challenge": "First articles for the new latch variants had to be approved before the production run, with the supplier waiting on our answer.",
+      "challenge": "First articles of our new latch design had to be approved before the production run, with the manufacturing supplier waiting on our answer.",
       "resolution": "Engineering inspected the first articles dimensionally the week they arrived, and all three variants were approved for production."
     }
-  ]
+  ],
+  "focus": "50% 12%"
 }

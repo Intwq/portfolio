@@ -72,20 +72,26 @@ button { font: inherit; color: inherit; }
   0% { translate: 0 0; } 25% { translate: -4px 2px; } 50% { translate: 4px -2px; } 75% { translate: -2px -4px; } 100% { translate: 2px 2px; }
 }
 
-/* golden reveal */
-.fx { position: fixed; z-index: 25; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.5s var(--ease); }
+/* golden reveal: lives inside the pit, one layer under the prize, so the rays pour out from behind it */
+.fx { position: fixed; z-index: 25; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
 .fx.on { opacity: 1; }
 .rays, .glow { position: absolute; left: 0; top: 0; translate: -50% -50%; border-radius: 50%; }
 .rays {
-  width: 160vmax; height: 160vmax;
-  background: repeating-conic-gradient(from 0deg, rgba(255, 194, 26, 0.85) 0deg 5deg, rgba(255, 194, 26, 0) 5deg 15deg);
-  -webkit-mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 12%, transparent 46%);
-          mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 12%, transparent 46%);
+  width: 170vmax; height: 170vmax;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 214, 40, 1) 0deg 6deg, rgba(255, 236, 140, 0.55) 6deg 8deg, rgba(255, 214, 40, 0) 8deg 15deg);
+  -webkit-mask: radial-gradient(circle, #000 0, #000 6%, rgba(0, 0, 0, 0.75) 18%, transparent 52%);
+          mask: radial-gradient(circle, #000 0, #000 6%, rgba(0, 0, 0, 0.75) 18%, transparent 52%);
   animation: spin 9s linear infinite;
   scale: 0.2; transition: scale 1.2s var(--ease);
 }
+.rays-2 {   /* a second, finer fan turning the other way so the light shimmers */
+  background: repeating-conic-gradient(from 4deg, rgba(255, 248, 200, 0.9) 0deg 2deg, rgba(255, 248, 200, 0) 2deg 11deg);
+  -webkit-mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 14%, transparent 38%);
+          mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 14%, transparent 38%);
+  animation: spin 14s linear infinite reverse;
+}
 .fx.on .rays { scale: 1; }
-.glow { width: 340px; height: 340px; background: radial-gradient(circle, rgba(255, 240, 170, 0.95), rgba(255, 194, 26, 0.55) 35%, rgba(255, 120, 0, 0) 70%); }
+.glow { width: 420px; height: 420px; background: radial-gradient(circle, rgba(255, 252, 225, 1), rgba(255, 216, 60, 0.85) 30%, rgba(255, 170, 0, 0.35) 52%, rgba(255, 140, 0, 0) 72%); }
 @keyframes spin { to { rotate: 360deg; } }
 
 /* ---------- logo, readout, hint ---------- */
@@ -175,7 +181,7 @@ button { font: inherit; color: inherit; }
 .win-load { padding: 60px; font: 400 12px var(--pixel); text-transform: uppercase; color: var(--muted); }
 
 .pj-hero { margin: 0; aspect-ratio: 16 / 8; overflow: hidden; background: #000; border-bottom: 2px solid #000; }
-.pj-hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pj-hero img { width: 100%; height: 100%; object-fit: contain; display: block; }   /* whole product, never cropped */
 .pj-hero img[src$=".svg"] { object-fit: contain; background: #0a0c0f; }
 .pj-head { padding: 26px var(--gutter) 0; }
 .pj-n { margin: 0 0 14px; font: 400 8px/1.6 var(--pixel); text-transform: uppercase; color: var(--cyan); }
