@@ -865,44 +865,108 @@ function chooserPage() {
 
   // 01: smooth, light ink on black
   const c1 = document.getElementById("art"), x1 = c1.getContext("2d");
-  // 02: drawn at 1/3 resolution in black on white, then snapped to a few hard tones
-  const PIX = 3, c2 = document.getElementById("art8"), x2 = c2.getContext("2d", { willReadFrequently: true });
-  const red = [215, 25, 33];
+  // 02: drawn straight into a 1/3-resolution pixel grid, like hand-placed pixel art (no smoothing, no thresholding).
+  // A tiny canvas-like context: 1px Bresenham lines, round pixel brushes for thick strokes, crisp circle and polygon
+  // fills, checker-dither for fades and shading, and a fixed set of tones chosen by stroke weight and depth.
+  const PIX = 3, c2 = document.getElementById("art8"), x2 = c2.getContext("2d");
   const BAY = [0, 8, 2, 10, 12, 4, 14, 6, 3, 11, 1, 9, 15, 7, 13, 5];
+  const TONE = [null, [11, 11, 13], [118, 118, 128], [196, 196, 204], [215, 25, 33], [242, 190, 40], [40, 80, 200], [150, 12, 22], [196, 136, 18], [22, 46, 140], [214, 214, 222]];
+  const PRI = [0, 5, 3, 2, 6, 3, 3, 3, 3, 3, 1];
+  const FILLS = [[4, 215, 25, 33], [5, 242, 190, 40], [6, 40, 80, 200], [1, 11, 11, 13]];
+  const parseC = (() => { const m = new Map(); return (s) => { let v = m.get(s); if (!v) { const n = (String(s).match(/[\\d.]+/g) || [0, 0, 0]).map(Number); v = [n[0], n[1], n[2], n.length > 3 ? n[3] : 1]; m.set(s, v); } return v; }; })();
+  function pixelCtx() {
+    let W = 0, H = 0, buf = null, pri = null, T = [1, 0, 0, 1, 0, 0], stack = [], subs = [], circles = [], dash = [];
+    const tp = (x, y) => [T[0] * x + T[2] * y + T[4], T[1] * x + T[3] * y + T[5]];
+    const put = (x, y, idx, alpha) => {
+      if (x < 0 || y < 0 || x >= W || y >= H) return;
+      if (alpha < 1 && (BAY[(y & 3) * 4 + (x & 3)] + 0.5) / 16 >= alpha) return;
+      const i = y * W + x; if (PRI[idx] >= pri[i]) { buf[i] = idx; pri[i] = PRI[idx]; }
+    };
+    const strokeTone = (s) => { const [r, g, , a] = parseC(s); if (r > 150 && g < 90) return a > 0.15 ? 4 : 0; return a > 0.55 ? 1 : a > 0.26 ? 2 : a > 0.13 ? 3 : a > 0.05 ? 10 : 0; };
+    const fillTone = (s) => { const [r, g, bb] = parseC(s); let best = 1, bd = Infinity; for (const [k, R, G, B] of FILLS) { const d = (R - r) ** 2 + (G - g) ** 2 + (B - bb) ** 2; if (d < bd) { bd = d; best = k; } } return best; };
+    const dark = (k) => (k >= 4 && k <= 6 ? k + 3 : k);
+    const ctx = {
+      fillStyle: "#000", strokeStyle: "#000", lineWidth: 1, globalAlpha: 1, lineCap: "butt", lineJoin: "miter", lineDashOffset: 0,
+      size(w, h) { if (w !== W || h !== H) { W = w; H = h; buf = new Uint8Array(W * H); pri = new Uint8Array(W * H); } },
+      clearRect() { buf.fill(0); pri.fill(0); },
+      setTransform(a, b, c, d, e, f) { T = [a, b, c, d, e, f]; },
+      save() { stack.push(T.slice()); }, restore() { T = stack.pop() || [1, 0, 0, 1, 0, 0]; },
+      translate(x, y) { T[4] += T[0] * x + T[2] * y; T[5] += T[1] * x + T[3] * y; },
+      rotate(a) { const c = Math.cos(a), s = Math.sin(a), [a0, b0, c0, d0] = T; T[0] = a0 * c + c0 * s; T[1] = b0 * c + d0 * s; T[2] = -a0 * s + c0 * c; T[3] = -b0 * s + d0 * c; },
+      setLineDash(d) { dash = d.map((v) => Math.max(1, Math.round(v))); },
+      beginPath() { subs = []; circles = []; },
+      moveTo(x, y) { subs.push([tp(x, y)]); },
+      lineTo(x, y) { if (!subs.length) subs.push([]); subs[subs.length - 1].push(tp(x, y)); },
+      arc(x, y, r) { const [cx, cy] = tp(x, y); circles.push([cx, cy, r * Math.hypot(T[0], T[1])]); },
+      fill() {
+        const k = fillTone(ctx.fillStyle), al = ctx.globalAlpha, kd = dark(k);
+        for (const [cx, cy, r] of circles) {                     // pixel circle with a dithered shadow crescent, lower right
+          for (let y = Math.floor(cy - r); y <= cy + r; y++) for (let x = Math.floor(cx - r); x <= cx + r; x++) {
+            const dx = x + 0.5 - cx, dy = y + 0.5 - cy; if (dx * dx + dy * dy > r * r) continue;
+            const sx = dx + r * 0.28, sy = dy + r * 0.28, sh = r > 6 && sx * sx + sy * sy > (r * 1.04) ** 2;
+            put(x, y, sh && ((x + y) & 1) ? kd : k, al);
+          }
+        }
+        for (const P of subs) {                                   // even-odd scanline polygon fill
+          if (P.length < 3) continue; const ys = P.map((p) => p[1]);
+          for (let y = Math.floor(Math.min(...ys)); y <= Math.max(...ys); y++) {
+            const yc = y + 0.5, xs = [];
+            for (let i = 0; i < P.length; i++) { const a = P[i], b = P[(i + 1) % P.length]; if ((a[1] <= yc) !== (b[1] <= yc)) xs.push(a[0] + (yc - a[1]) / (b[1] - a[1]) * (b[0] - a[0])); }
+            xs.sort((p, q) => p - q);
+            for (let i = 0; i + 1 < xs.length; i += 2) for (let x = Math.round(xs[i]); x < Math.round(xs[i + 1]); x++) put(x, y, k, al);
+          }
+        }
+      },
+      fillRect(x, y, w, h) {                                       // block with a dithered 2px shade down its right edge
+        const [x0, y0] = tp(x, y), [x1, y1] = tp(x + w, y + h), k = fillTone(ctx.fillStyle), kd = dark(k), al = ctx.globalAlpha;
+        const X0 = Math.round(Math.min(x0, x1)), X1 = Math.round(Math.max(x0, x1)), Y0 = Math.round(Math.min(y0, y1)), Y1 = Math.round(Math.max(y0, y1));
+        for (let yy = Y0; yy < Y1; yy++) for (let xx = X0; xx < X1; xx++) put(xx, yy, X1 - xx <= 2 && X1 - X0 > 8 && ((xx + yy) & 1) ? kd : k, al);
+      },
+      strokeRect(x, y, w, h) { ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + h); ctx.lineTo(x, y + h); ctx.lineTo(x, y); ctx.stroke(); },
+      stroke() {
+        const thick = ctx.lineWidth >= 1.8, k = thick ? fillTone(ctx.strokeStyle) : strokeTone(ctx.strokeStyle); if (!k) return;
+        const al = thick ? ctx.globalAlpha : 1, rr = Math.max(0.5, ctx.lineWidth / 2 * Math.hypot(T[0], T[1])), R = Math.ceil(rr);
+        let step = Math.round(-ctx.lineDashOffset), di = 0, left = dash.length ? dash[0] : Infinity;
+        const dot = (x, y) => {
+          if (dash.length) { const on = di % 2 === 0; if (--left <= 0) { di = (di + 1) % dash.length; left = dash[di]; } if (!on) return; }
+          if (k === 10) { if ((x + y) % 3 === 0) put(x, y, k, al); return; }   // faint guide lines: dotted, like a pixel artist's grid
+          if (!thick) return put(x, y, k, al);
+          for (let j = -R; j <= R; j++) for (let i = -R; i <= R; i++) if (i * i + j * j <= rr * rr + 0.3) put(x + i, y + j, k, al);
+        };
+        for (const P of subs) for (let s = 1; s < P.length; s++) {   // Bresenham, one clean pixel per step
+          let x0 = Math.round(P[s - 1][0]), y0 = Math.round(P[s - 1][1]); const x1 = Math.round(P[s][0]), y1 = Math.round(P[s][1]);
+          const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1; let err = dx + dy;
+          if (dx > 4000 || -dy > 4000) continue;
+          for (;;) { if (s === 1 || x0 !== Math.round(P[s - 1][0]) || y0 !== Math.round(P[s - 1][1])) dot(x0, y0); if (x0 === x1 && y0 === y1) break; const e2 = 2 * err; if (e2 >= dy) { err += dy; x0 += sx; } if (e2 <= dx) { err += dx; y0 += sy; } }
+        }
+        void step;
+      },
+      blit(target) {
+        const img = target.createImageData(W, H), p = img.data;
+        for (let i = 0; i < buf.length; i++) { const c = TONE[buf[i]]; if (c) { p[i * 4] = c[0]; p[i * 4 + 1] = c[1]; p[i * 4 + 2] = c[2]; p[i * 4 + 3] = 255; } }
+        target.putImageData(img, 0, 0);
+      },
+    };
+    return ctx;
+  }
+  const px2 = pixelCtx();
   const SET1 = [4, 0, 1], SET2 = [2, 3, 5];   // 01: sphere speaker, base shoe, ladder pull · 02: deadbolt, barn roller, door rail
   const PAL1 = ["#e0412f", "#f0b92c", "#2f5fd0", "#e9e3d3"];
   const PAL2 = [[215, 25, 33], [242, 190, 40], [40, 80, 200], [11, 11, 13]];
   const PAL2css = PAL2.map((c) => "rgb(" + c.join(",") + ")");
   function frame(now) {
-    const t = reduce ? 0 : (now - t0) / 1000;
+    const t = reduce ? 0 : Math.max(0, (now - t0) / 1000);
     // 01: smooth lines over the colour blocks, on blueprint navy
     const d = Math.min(2, devicePixelRatio || 1), W1 = c1.clientWidth, H1 = c1.clientHeight;
     if (c1.width !== Math.round(W1 * d) || c1.height !== Math.round(H1 * d)) { c1.width = Math.round(W1 * d); c1.height = Math.round(H1 * d); }
     x1.setTransform(d, 0, 0, d, 0, 0); x1.clearRect(0, 0, W1, H1);
     art(x1, W1, H1, t, 1, (a) => "rgba(240,242,246," + a + ")", (a) => "rgba(255,206,58," + a + ")", (a) => "rgba(120,170,255," + a + ")", PAL1, "all", SET1);
-    // 02: same frame at 1/3 resolution; colour blocks snapped to four flat colours, lines to hard tones
+    // 02: the same scene placed pixel by pixel at 1/3 resolution
     const W2 = Math.ceil(c2.clientWidth / PIX), H2 = Math.ceil(c2.clientHeight / PIX);
     if (c2.width !== W2 || c2.height !== H2) { c2.width = W2; c2.height = H2; }
-    x2.clearRect(0, 0, W2, H2);
-    art(x2, W2, H2, t, 1 / PIX, null, null, null, PAL2css, "shapes", SET2);
-    const A = x2.getImageData(0, 0, W2, H2).data;
-    x2.clearRect(0, 0, W2, H2);
-    art(x2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + Math.min(1, a * 1.15) + ")", (a) => "rgba(215,25,33," + Math.min(1, a * 1.4) + ")", (a) => "rgba(11,11,13,0.12)", PAL2css, "lines", SET2);
-    const img = x2.getImageData(0, 0, W2, H2), p = img.data;
-    for (let i = 0; i < p.length; i += 4) {
-      const a = p[i + 3], f = a / 255, isRed = a && p[i] > 120 && p[i + 1] < 90;
-      let c = null;
-      if (isRed && f > 0.25) c = red;
-      else if (f > 0.42) c = [11, 11, 13];
-      else if (f > 0.2) c = [150, 150, 160];
-      else if (A[i + 3] > ((BAY[((i >> 2) / W2 | 0) % 4 * 4 + ((i >> 2) % W2) % 4] + 0.5) / 16) * 255) {   // colour block: snap to the nearest of four (dithered as it fades)
-        let best = 0, bd = Infinity;
-        PAL2.forEach((q, j) => { const dd = (q[0] - A[i]) ** 2 + (q[1] - A[i + 1]) ** 2 + (q[2] - A[i + 2]) ** 2; if (dd < bd) { bd = dd; best = j; } });
-        c = PAL2[best];
-      } else if (f > 0.07) c = [226, 226, 232];
-      if (c) { p[i] = c[0]; p[i + 1] = c[1]; p[i + 2] = c[2]; p[i + 3] = 255; } else p[i + 3] = 0;
-    }
-    x2.putImageData(img, 0, 0);
+    px2.size(W2, H2); px2.clearRect();
+    art(px2, W2, H2, t, 1 / PIX, (a) => "rgba(11,11,13," + a + ")", (a) => "rgba(215,25,33," + a + ")", (a) => "rgba(11,11,13,0.1)", PAL2css, "all", SET2);
+    px2.blit(x2);
     if (!reduce) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
