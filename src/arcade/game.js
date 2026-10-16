@@ -12,7 +12,7 @@
   const rigC = $("#rig"), rigX = rigC.getContext("2d");
   const pit = $("#pit"), fx = $("#fx"), win = $("#win"), winBody = $("#win-body"), winTitle = $("#win-title");
   const hint = $("[data-hint]");
-  const DEFAULT_HINT = "Move to aim · Click a prize to grab it";
+  const DEFAULT_HINT = "Move to aim · Click a prize, or hit the red button";
 
   // ---------- colours (ABGR for the pixel buffers) ----------
   const rgb = (h) => { const n = parseInt(h.slice(1), 16); return (255 << 24 | (n & 255) << 16 | (n >> 8 & 255) << 8 | n >> 16) >>> 0; };
@@ -332,7 +332,8 @@
 
   // ---------- input ----------
   const machine = $("#machine");
-  const setPointer = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true; };
+  // the claw keeps its aim while the pointer is on the big red button, so "nearest" means nearest to where you aimed
+  const setPointer = (e) => { if (e.target && e.target.closest && e.target.closest(".big-red")) return; pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true; };
   addEventListener("pointermove", setPointer, { passive: true });
   addEventListener("pointerdown", setPointer, { passive: true });
   const say = (t) => { hint.textContent = t; };
@@ -413,6 +414,22 @@
   $("[data-close]", win).addEventListener("click", closeWindow);
   addEventListener("keydown", (e) => { if (e.key === "Escape") closeWindow(); });
 
+  // ---------- big red button: drop on the prize nearest the claw ----------
+  const bigRed = $("#big-red");
+  function grabNearest() {
+    if (mode !== "follow" || !win.hidden) return;
+    const g = grip(); let best = null, bd = Infinity;
+    for (const p of prizes) {
+      if (!p.dyn) continue;
+      const d = Math.hypot((p.x - g.x) * 1, (p.y - g.y) * 0.6);     // favour what's straight below the claw
+      if (d < bd) { bd = d; best = p; }
+    }
+    if (best) grab(best);
+  }
+  bigRed.addEventListener("click", (e) => { e.stopPropagation(); grabNearest(); });
+  bigRed.addEventListener("pointerdown", (e) => e.stopPropagation());
+  addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && document.activeElement === document.body) { e.preventDefault(); grabNearest(); } });
+
   // ---------- index drawer ----------
   const drawer = $("#drawer"), tab = $(".tab", drawer);
   const setDrawer = (o) => { drawer.classList.toggle("open", o); tab.setAttribute("aria-expanded", String(o)); };
@@ -462,24 +479,24 @@
     } else if (mode === "seek") {
       const p = current;
       trolley.tx = p.x;
-      const near = Math.abs(trolley.x - p.x) < 6 && Math.abs(trolley.v) < 60;
+      const near = Math.abs(trolley.x - p.x) < 26 && Math.abs(trolley.v) < 520;     // start dropping while the trolley settles
       lenT = near ? Math.max(minL, p.y - ay - gripOffset() + S * 0.04) : Math.min(len, minL + 40);
       const g = grip();
-      if (near && Math.abs(len - lenT) < 3 && Math.abs(g.x - p.x) < S * 0.25) { mode = "grab"; timer = 0; claw.openT = 0; beep(200, 0.12, "sawtooth", 0.04); }
-      if ((timer += dt) > 6) { mode = "grab"; timer = 0; claw.openT = 0; }
+      if (near && Math.abs(len - lenT) < 4 && Math.abs(g.x - p.x) < S * 0.4) { mode = "grab"; timer = 0; claw.openT = 0; beep(200, 0.12, "sawtooth", 0.04); }
+      if ((timer += dt) > 3) { mode = "grab"; timer = 0; claw.openT = 0; }
     } else if (mode === "grab") {
-      if ((timer += dt) > 0.3) { held = current; held.dyn = false; held.el.style.zIndex = "900"; held.el.classList.add("held"); mode = "lift"; timer = 0; beep(520, 0.05); prizes.forEach((q) => { q.sleep = 0; }); }
+      if ((timer += dt) > 0.14) { held = current; held.dyn = false; held.el.style.zIndex = "900"; held.el.classList.add("held"); mode = "lift"; timer = 0; beep(520, 0.05); prizes.forEach((q) => { q.sleep = 0; }); }
     } else if (mode === "lift") {
       lenT = minL + 20; timer += dt;
-      if (len - lenT < 40) trolley.tx = W / 2;
-      if ((timer > 0.6 && Math.abs(trolley.x - W / 2) < 10 && Math.abs(len - lenT) < 4) || timer > 5) { mode = "reveal"; timer = 0; startReveal(); }
+      if (len - lenT < 180) trolley.tx = W / 2;                                       // swing to centre while still lifting
+      if ((timer > 0.25 && Math.abs(trolley.x - W / 2) < 14 && Math.abs(len - lenT) < 8) || timer > 3) { mode = "reveal"; timer = 0; startReveal(); }
     } else if (mode === "reveal") {
       timer += dt;
       const cx = W / 2, cy = Math.max(anchorY() + S * 1.6, H * 0.42), k = Math.min(1, timer / 0.5), e = 1 - Math.pow(1 - k, 3);
       const g = grip();
       current.x = g.x + (cx - g.x) * e; current.y = g.y + (cy - g.y) * e; current.scale = 1 + e * (S < 100 ? 1.6 : 0.9);
       fx.style.transform = `translate(${current.x}px, ${current.y}px)`;
-      if (timer > (reduce ? 0.4 : 1.4) && win.hidden) { mode = "open"; openWindow(current.d, current.x, current.y); current.el.style.opacity = "0"; }
+      if (timer > (reduce ? 0.4 : 1.15) && win.hidden) { mode = "open"; openWindow(current.d, current.x, current.y); current.el.style.opacity = "0"; }
     } else if (mode === "open") {
       lenT = minL + 20; trolley.tx = W / 2;
     } else if (mode === "stow") {
@@ -491,7 +508,7 @@
     } else if (mode === "return") {
       const dropX = Math.max(S, Math.min(W - S, held.homeX));
       lenT = minL + 20; trolley.tx = dropX; timer += dt;
-      if ((Math.abs(trolley.x - dropX) < 6 && Math.abs(trolley.v) < 80) || timer > 5) { mode = "release"; timer = 0; claw.openT = 1; beep(300, 0.06); }
+      if ((Math.abs(trolley.x - dropX) < 10 && Math.abs(trolley.v) < 200) || timer > 3) { mode = "release"; timer = 0; claw.openT = 1; beep(300, 0.06); }
     } else if (mode === "release") {
       if ((timer += dt) > 0.2) {
         const p = held; held = null;
@@ -500,19 +517,22 @@
       }
     }
 
-    const stiff = mode === "follow" ? 95 : 55, damp = mode === "follow" ? 16 : 13;
+    // off the pointer the trolley runs on a stiff, near-critically damped spring, so a picked prize is reached fast with one small overshoot
+    const stiff = mode === "follow" ? 95 : 260, damp = mode === "follow" ? 16 : 29;
     trolley.v += ((trolley.tx - trolley.x) * stiff - trolley.v * damp) * dt;
-    trolley.v = Math.max(-2600, Math.min(2600, trolley.v));
+    trolley.v = Math.max(-3600, Math.min(3600, trolley.v));
     trolley.x += trolley.v * dt;
 
-    const speed = mode === "follow" ? 2200 : mode === "seek" ? 620 : 900, dl = lenT - len;
-    len += Math.sign(dl) * Math.min(Math.abs(dl), speed * dt, Math.abs(dl) * 12 * dt + 2);
+    const speed = mode === "follow" ? 2200 : mode === "seek" ? 1700 : 1500, dl = lenT - len;
+    len += Math.sign(dl) * Math.min(Math.abs(dl), speed * dt, Math.abs(dl) * 18 * dt + 3);
 
     const rest = len / (N - 1);
+    const auto = mode === "seek" || mode === "grab" || mode === "lift", keep = auto ? 0.97 : 0.985;
     pts[0].x = trolley.x; pts[0].y = ay;
     for (let i = 1; i < N; i++) {
-      const p = pts[i], vx = (p.x - p.px) * 0.985, vy = (p.y - p.py) * 0.985;
+      const p = pts[i], vx = (p.x - p.px) * keep, vy = (p.y - p.py) * keep;
       p.px = p.x; p.py = p.y; p.x += vx; p.y += vy + G * dt * dt;
+      if (auto) p.x += (trolley.x - p.x) * Math.min(1, 9 * dt) * (i / N);   // during an automatic grab the operator steadies the chain: it settles plumb fast
     }
     const wLast = held ? 0.12 : 0.22;
     for (let it = 0; it < 14; it++) {
@@ -541,8 +561,11 @@
     say(`★ Prize: ${current.d.title}`); fanfare();
   }
 
+  let busyShown = null;
   function draw() {
     drawRig();
+    const busy = mode !== "follow" || !win.hidden;
+    if (busy !== busyShown) { busyShown = busy; bigRed.classList.toggle("busy", busy); bigRed.setAttribute("aria-disabled", String(busy)); }
     for (const p of prizes) {
       const x = Math.round(p.x / PX) * PX - S / 2, y = Math.round(p.y / PX) * PX - S / 2;
       p.el.style.transform = `translate(${x}px, ${y}px)${p.rot ? ` rotate(${Math.round(p.rot)}deg)` : ""} scale(${p.scale})`;

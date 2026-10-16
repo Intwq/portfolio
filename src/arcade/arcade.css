@@ -120,6 +120,32 @@ button { font: inherit; color: inherit; }
 .led { flex: none; width: 8px; height: 8px; background: var(--signal); box-shadow: 0 0 8px var(--signal); animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0.2; } }
 
+/* ---------- big red button ---------- */
+.big-red {
+  position: fixed; z-index: 15; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); translate: -50% 0;
+  width: 108px; height: 108px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle, #2a2a33 0 62%, #111116 62% 66%, #e9e6f2 66% 72%, #111116 72% 100%);   /* bezel */
+  box-shadow: 0 6px 0 #111116, 0 10px 18px rgba(20, 10, 40, 0.25);
+  -webkit-tap-highlight-color: transparent;
+}
+.br-cap {
+  position: absolute; left: 50%; top: 46%; width: 66%; height: 66%; translate: -50% -50%; border-radius: 50%;
+  /* hard-stop gradients so the dome reads as pixel art, not a smooth render */
+  background: radial-gradient(circle at 36% 30%, #fff3f0 0 9%, #ff8f84 9% 18%, #ff3b30 18% 52%, #d7191f 52% 74%, #9c0c14 74% 100%);
+  box-shadow: 0 7px 0 #6d0710, 0 7px 0 2px #111116;
+  transition: translate 0.06s steps(2), box-shadow 0.06s steps(2);
+}
+.big-red:hover .br-cap { background: radial-gradient(circle at 36% 30%, #fff 0 10%, #ffa197 10% 20%, #ff4b3f 20% 54%, #e3222a 54% 76%, #a30f18 76% 100%); }
+.big-red:active .br-cap, .big-red.press .br-cap { translate: -50% calc(-50% + 6px); box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #111116; }
+.big-red:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
+.br-label { position: absolute; left: 0; right: 0; bottom: -18px; font: 400 8px/1 var(--pixel); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
+.big-red.busy { cursor: default; }
+.big-red.busy .br-cap { filter: saturate(0.35) brightness(0.92); }
+@media (max-width: 640px) {
+  .big-red { width: 84px; height: 84px; bottom: calc(22px + env(safe-area-inset-bottom)); }
+  .hint { right: calc(50% + 52px); }
+}
+
 /* ---------- index drawer ---------- */
 .drawer { position: fixed; z-index: 20; left: 0; top: 0; bottom: 0; display: flex; translate: calc(-1 * min(360px, 86vw)) 0; transition: translate 0.4s var(--ease); }
 .drawer.open { translate: 0 0; }

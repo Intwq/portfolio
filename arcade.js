@@ -168,7 +168,8 @@ function indexPage() {
   </dl>
 </aside>
 
-<p class="hint" id="hint" aria-live="polite"><span class="led"></span><span data-hint>Move to aim. Click a prize to grab it.</span></p>
+<p class="hint" id="hint" aria-live="polite"><span class="led"></span><span data-hint>Move to aim · Click a prize, or hit the red button</span></p>
+<button class="big-red" id="big-red" type="button" aria-label="Drop the claw on the nearest prize"><span class="br-cap" aria-hidden="true"></span><span class="br-label">Grab</span></button>
 
 <nav class="drawer" id="drawer" aria-label="All projects">
   <button class="tab" type="button" aria-expanded="false" aria-controls="ix"><span class="tab-arrow" aria-hidden="true">→</span><span class="tab-txt">Index</span></button>
