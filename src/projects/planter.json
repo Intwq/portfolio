@@ -10,5 +10,29 @@
   "images": [
     "/images/projects/planter/01.jpg",
     "/images/projects/planter/02.jpg"
+  ],
+  "metrics": [
+    {
+      "value": "$10.0B",
+      "label": "Global pots and planters market, 2025"
+    },
+    {
+      "value": "6.4%",
+      "label": "Indoor planter growth per year"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "An exercise combining photography, design and sculpture."
+    },
+    {
+      "label": "Composition",
+      "text": "Color moves the eye around the frame along the path of an X."
+    },
+    {
+      "label": "Market",
+      "text": "Indoor planters are the faster-growing part of a $10B global market (Global Market Insights)."
+    }
   ]
 }

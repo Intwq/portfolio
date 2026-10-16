@@ -46,5 +46,33 @@
     "/images/projects/motech-products/36.jpg",
     "/images/projects/motech-products/37.jpg"
   ],
-  "icon_from": "/images/projects/motech-products/12.jpg"
+  "icon_from": "/images/projects/motech-products/12.jpg",
+  "metrics": [
+    {
+      "value": "$19.0B",
+      "label": "Global bathroom vanities market, 2025"
+    },
+    {
+      "value": "5.6%",
+      "label": "Vanities market growth per year, 2026–2034"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Scope",
+      "text": "Product renders, listing imagery and seasonal ad banners for Motech's kitchen and bath lines, for products I rendered or developed from ideation through manufacturing and sale."
+    },
+    {
+      "label": "Channel",
+      "text": "Finished products sell online through kitchenbathcollection.com, and some were developed bespoke or for B2B customers."
+    },
+    {
+      "label": "Market",
+      "text": "Bathroom vanities alone were a $19.0B global category in 2025, growing about 5.6% a year (IMARC Group)."
+    },
+    {
+      "label": "Competition",
+      "text": "Online vanity brands such as Wyndham Collection, Virtu USA and Water Creation."
+    }
+  ]
 }

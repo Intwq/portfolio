@@ -16,5 +16,50 @@
     "/images/projects/coral-form-study/06.jpg",
     "/images/projects/coral-form-study/07.jpg"
   ],
-  "icon_from": "/images/projects/coral-form-study/06.jpg"
+  "icon_from": "/images/projects/coral-form-study/06.jpg",
+  "metrics": [
+    {
+      "value": "$12.4B",
+      "label": "Global acoustic panel market, 2023"
+    },
+    {
+      "value": "6.4%",
+      "label": "Market growth per year, 2024–2032"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Study",
+      "text": "Understanding the organic form of mushroom coral and how it can be applied elsewhere."
+    },
+    {
+      "label": "Applications",
+      "text": "CNC-routed panels, as concepts for sound dampening and large-scale coarse water filtration."
+    },
+    {
+      "label": "Competition",
+      "text": "Acoustic panel makers such as Armstrong World Industries, Ecophon and Hunter Douglas."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global acoustic panel market, projected",
+      "caption": "$ billions, projected from the 2023 estimate at a 6.4% CAGR.",
+      "labels": "2023\n2024\n2025\n2026\n2027\n2028\n2029",
+      "series": [
+        {
+          "name": "Market",
+          "values": "12.40, 13.19, 14.04, 14.94, 15.89, 16.91, 17.99",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: Global Market Insights, 2023.",
+      "wide": true
+    }
+  ]
 }

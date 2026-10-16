@@ -12,5 +12,54 @@
     "/images/projects/shop-thermostat/02.jpg",
     "/images/projects/shop-thermostat/03.jpg",
     "/images/projects/shop-thermostat/04.jpg"
+  ],
+  "metrics": [
+    {
+      "value": "$3.7B",
+      "label": "Global smart thermostat market, 2023"
+    },
+    {
+      "value": "21%",
+      "label": "Market growth per year, 2024–2032"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "A RenderWeekly project: a rugged thermostat for a shop that also acts as an assistant."
+    },
+    {
+      "label": "Users",
+      "text": "People working in a shop or garage who need to read and adjust the temperature from across the room."
+    },
+    {
+      "label": "Design response",
+      "text": "Large numerals and a big dial in a rugged housing, mounted to the shop wall."
+    },
+    {
+      "label": "Competition",
+      "text": "Smart thermostats from HVAC makers such as Carrier, Johnson Controls and Trane, and consumer brands like Google Nest and ecobee."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global smart thermostat market, projected",
+      "caption": "$ billions, projected from the 2023 estimate at a 21% CAGR.",
+      "labels": "2023\n2024\n2025\n2026\n2027\n2028\n2029",
+      "series": [
+        {
+          "name": "Market",
+          "values": "3.70, 4.48, 5.42, 6.55, 7.93, 9.60, 11.61",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: Global Market Insights, 2023.",
+      "wide": true
+    }
   ]
 }

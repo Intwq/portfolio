@@ -6,7 +6,7 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/roll-dispenser/05.jpg",
-  "description": "",
+  "description": "A wall-mounted kitchen roll dispenser. The project ran from sketch ideation through paper and cardboard prototypes, testing how a single folded form could hold the roll and present the next sheet, to a final rendered visualization in a kitchen.",
   "images": [
     "/images/projects/roll-dispenser/01.jpg",
     "/images/projects/roll-dispenser/02.jpg",
@@ -14,5 +14,29 @@
     "/images/projects/roll-dispenser/04.jpg",
     "/images/projects/roll-dispenser/05.jpg"
   ],
-  "icon_from": "/images/projects/roll-dispenser/05.jpg"
+  "icon_from": "/images/projects/roll-dispenser/05.jpg",
+  "metrics": [
+    {
+      "value": "$1.06B",
+      "label": "Projected growth of the paper towel dispenser market, 2020–2024"
+    },
+    {
+      "value": "~5%",
+      "label": "Market growth per year over that period"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "A wall-mounted holder for a kitchen roll."
+    },
+    {
+      "label": "Process",
+      "text": "Sketch ideation, then quick paper and cardboard prototypes to test the fold, then a final rendered visualization."
+    },
+    {
+      "label": "Competition",
+      "text": "Commercial dispensers from Kimberly-Clark, Bobrick and Franke, and simple residential holders from housewares brands."
+    }
+  ]
 }

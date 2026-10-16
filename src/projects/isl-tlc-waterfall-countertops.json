@@ -29,5 +29,59 @@
     "/images/projects/isl-tlc-waterfall-countertops/19.jpg",
     "/images/projects/isl-tlc-waterfall-countertops/20.jpg"
   ],
-  "icon_from": "/images/projects/isl-tlc-waterfall-countertops/12.jpg"
+  "icon_from": "/images/projects/isl-tlc-waterfall-countertops/12.jpg",
+  "metrics": [
+    {
+      "value": "$19.0B",
+      "label": "Global bathroom vanities market, 2025"
+    },
+    {
+      "value": "5.6%",
+      "label": "Vanities market growth per year, 2026–2034"
+    },
+    {
+      "value": "$1.7B",
+      "label": "Global quartz countertops market, 2024"
+    }
+  ],
+  "research_intro": "Public market data shows why a waterfall top was worth solving: vanities and kitchen islands are a large, steadily growing category, and the quartz look is what buyers ask for. Motech's own survey results stay out under NDA.",
+  "brief": [
+    {
+      "label": "Problem",
+      "text": "Customers' most-requested product was a waterfall countertop, but solid-surface waterfalls are heavy and expensive to make and ship."
+    },
+    {
+      "label": "Solution",
+      "text": "A cast resin waterfall top with a procedurally generated internal structure that takes weight out of the mold, refined through many rounds of prototyping."
+    },
+    {
+      "label": "Applies to",
+      "text": "Kitchen islands and bathroom vanities."
+    },
+    {
+      "label": "Competition",
+      "text": "Vanity brands such as Wyndham Collection, Virtu USA, Kohler and IKEA, with quartz surfaces from Caesarstone, Cambria and Silestone setting the look buyers expect."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global bathroom vanities market, projected",
+      "caption": "$ billions, projected from the 2025 estimate at a 5.58% CAGR.",
+      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
+      "series": [
+        {
+          "name": "Market",
+          "values": "19.00, 20.06, 21.18, 22.36, 23.61, 24.93, 26.32",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: IMARC Group, 2025.",
+      "wide": true
+    }
+  ]
 }

@@ -17,5 +17,27 @@
     "/images/projects/aga-t-mini-genesis/07.jpg",
     "/images/projects/aga-t-mini-genesis/08.jpg"
   ],
-  "icon_from": "/images/projects/aga-t-mini-genesis/08.jpg"
+  "icon_from": "/images/projects/aga-t-mini-genesis/08.jpg",
+  "brief": [
+    {
+      "label": "Context",
+      "text": "Early in the era of mods, when most e-cigarette hardware was turned from blanks in home garages."
+    },
+    {
+      "label": "Problem",
+      "text": "The genesis-style atomizers of the time weren't efficient."
+    },
+    {
+      "label": "Design response",
+      "text": "The first reduced-chamber mini-genesis atomizer, shaped by community feedback."
+    },
+    {
+      "label": "Process",
+      "text": "Drafting through manufacturing, guided by the designers at Captivape."
+    },
+    {
+      "label": "Manufacturing",
+      "text": "Made in the USA."
+    }
+  ]
 }

@@ -13,5 +13,54 @@
     "/images/projects/cbd-inhaler-social-media/03.jpg",
     "/images/projects/cbd-inhaler-social-media/04.jpg",
     "/images/projects/cbd-inhaler-social-media/05.jpg"
+  ],
+  "metrics": [
+    {
+      "value": "$22.8B",
+      "label": "Global CBD market, 2023"
+    },
+    {
+      "value": "17.9%",
+      "label": "Market growth per year, 2024–2032"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "Material experiments and social media graphics for the Well-Beings CBD inhaler."
+    },
+    {
+      "label": "Constraint",
+      "text": "Instagram's 1:1 format."
+    },
+    {
+      "label": "Approach",
+      "text": "Each square stages the inhaler in its own surreal set, with clouds, mountains and smoke."
+    },
+    {
+      "label": "Market",
+      "text": "CBD is a crowded, fast-growing category, where standing out in the feed matters."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global CBD market, projected",
+      "caption": "$ billions, projected from the 2023 estimate at a 17.9% CAGR.",
+      "labels": "2023\n2024\n2025\n2026\n2027\n2028\n2029",
+      "series": [
+        {
+          "name": "Market",
+          "values": "22.80, 26.88, 31.69, 37.37, 44.05, 51.94, 61.24",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: Global Market Insights, 2023.",
+      "wide": true
+    }
   ]
 }

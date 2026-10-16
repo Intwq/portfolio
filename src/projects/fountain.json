@@ -6,7 +6,7 @@
   "tools": "Blender",
   "featured": false,
   "cover": "/images/projects/fountain/02.jpg",
-  "description": "",
+  "description": "Hydrate: an outdoor drinking fountain and bottle filler for parks and trails. Speed-modeling ideation in Blender put dozens of quick forms side by side before one direction was taken to a final visualization in a park setting.",
   "images": [
     "/images/projects/fountain/01.jpg",
     "/images/projects/fountain/02.jpg",
@@ -15,5 +15,53 @@
     "/images/projects/fountain/05.jpg",
     "/images/projects/fountain/06.jpg"
   ],
-  "icon_from": "/images/projects/fountain/02.jpg"
+  "icon_from": "/images/projects/fountain/02.jpg",
+  "metrics": [
+    {
+      "value": "$1.55B",
+      "label": "Global drinking fountain market, 2025"
+    },
+    {
+      "value": "28%",
+      "label": "Share held by bottle filling stations, 2025"
+    },
+    {
+      "value": "8.5%",
+      "label": "Bottle filler growth per year, the fastest segment"
+    }
+  ],
+  "research_intro": "Bottle fillers are the fastest-growing part of the drinking fountain market, driven by reusable-bottle use in parks, campuses and offices.",
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "A public drinking fountain and bottle filler for outdoor paths."
+    },
+    {
+      "label": "Process",
+      "text": "Speed-modeling ideation in Blender, then refinement of one form."
+    },
+    {
+      "label": "Competition",
+      "text": "Elkay (Zurn Elkay), Haws, Oasis and Murdock lead public drinking fountains and bottle fillers."
+    }
+  ],
+  "charts": [
+    {
+      "type": "split",
+      "title": "Drinking fountain market by product, 2025",
+      "caption": "Bottle filling stations are expected to grow to about 38% of revenue by 2035.",
+      "labels": "Bottle filling stations\nOther fountains",
+      "series": [
+        {
+          "name": "Share",
+          "values": "28, 72",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Bottle filling stations",
+      "suffix": "%",
+      "note": "Global Market Insights, 2025"
+    }
+  ]
 }

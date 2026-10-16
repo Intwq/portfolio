@@ -6,7 +6,7 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/facial-scrubber/06.jpg",
-  "description": "",
+  "description": "A handheld facial scrubber. Ideation started from natural forms, with the curves of a peacock on the first boards, and narrowed through rounds of ergonomic studies to a palm-sized form that sits on the vanity between uses.",
   "images": [
     "/images/projects/facial-scrubber/01.jpg",
     "/images/projects/facial-scrubber/02.jpg",
@@ -15,5 +15,50 @@
     "/images/projects/facial-scrubber/05.jpg",
     "/images/projects/facial-scrubber/06.jpg"
   ],
-  "icon_from": "/images/projects/facial-scrubber/06.jpg"
+  "icon_from": "/images/projects/facial-scrubber/06.jpg",
+  "metrics": [
+    {
+      "value": "$7.7B",
+      "label": "Global facial cleansing devices market, 2025"
+    },
+    {
+      "value": "5.1%",
+      "label": "Market growth per year, 2026–2034"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Process",
+      "text": "Natural-form ideation (Ideation 1), then hand-held ergonomic studies (Ideation 2), then a final visualization."
+    },
+    {
+      "label": "Design response",
+      "text": "A rounded, palm-sized form that fits the hand during use and rests upright on the counter."
+    },
+    {
+      "label": "Competition",
+      "text": "Cleansing devices from FOREO, Philips and Panasonic."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global facial cleansing devices market, projected",
+      "caption": "$ billions, projected from the 2025 estimate at a 5.06% CAGR.",
+      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
+      "series": [
+        {
+          "name": "Market",
+          "values": "7.66, 8.05, 8.45, 8.88, 9.33, 9.80, 10.30",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: Value Market Research, 2025.",
+      "wide": true
+    }
+  ]
 }

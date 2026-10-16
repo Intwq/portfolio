@@ -6,10 +6,57 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/flowerpot-d-x-oa/03.jpg",
-  "description": "",
+  "description": "A plant stand that pairs a bent wood base with a cast pot. It was developed from dimensioned drawings into a built piece, photographed in place.",
   "images": [
     "/images/projects/flowerpot-d-x-oa/01.jpg",
     "/images/projects/flowerpot-d-x-oa/02.jpg",
     "/images/projects/flowerpot-d-x-oa/03.jpg"
+  ],
+  "metrics": [
+    {
+      "value": "$10.0B",
+      "label": "Global pots and planters market, 2025"
+    },
+    {
+      "value": "5.4%",
+      "label": "Market growth per year, 2026–2035"
+    },
+    {
+      "value": "6.4%",
+      "label": "Indoor planter growth per year"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Design response",
+      "text": "A bent wood base that lifts and cradles the pot, turning a houseplant into a piece of furniture."
+    },
+    {
+      "label": "Market",
+      "text": "Indoor planters are the faster-growing side of a $10B market."
+    },
+    {
+      "label": "Competition",
+      "text": "Planter makers such as Elho, Scheurich and HC Companies."
+    }
+  ],
+  "charts": [
+    {
+      "type": "split",
+      "title": "Pots and planters market by setting, 2025",
+      "caption": "Indoor planters are growing faster and are expected to reach about 42% of revenue by 2035.",
+      "labels": "Outdoor\nIndoor",
+      "series": [
+        {
+          "name": "Share",
+          "values": "62, 38",
+          "highlight": false,
+          "dashed": false
+        }
+      ],
+      "highlight": "Indoor",
+      "suffix": "%",
+      "note": "Global Market Insights, 2025"
+    }
   ]
 }

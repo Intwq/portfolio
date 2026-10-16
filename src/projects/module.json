@@ -14,5 +14,50 @@
     "/images/projects/module/04.jpg",
     "/images/projects/module/05.jpg",
     "/images/projects/module/06.jpg"
+  ],
+  "metrics": [
+    {
+      "value": "$44.0B",
+      "label": "Global decorative lighting market, 2025"
+    },
+    {
+      "value": "2.8%",
+      "label": "Market growth per year, 2026–2034"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "A RenderWeekly project: an open platform for a modular lighting system."
+    },
+    {
+      "label": "Design response",
+      "text": "One light module that works as a floor lamp, a wall light or a spotlight, among many other uses, using reflection to change the light."
+    },
+    {
+      "label": "Competition",
+      "text": "Lighting makers such as Signify, Acuity and WAC Group."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global decorative lighting market, projected",
+      "caption": "$ billions, projected from the 2025 estimate at a 2.82% CAGR.",
+      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
+      "series": [
+        {
+          "name": "Market",
+          "values": "43.95, 45.19, 46.46, 47.77, 49.12, 50.51, 51.93",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: IMARC Group, 2025.",
+      "wide": true
+    }
   ]
 }

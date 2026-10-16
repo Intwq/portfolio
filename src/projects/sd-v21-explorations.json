@@ -27,5 +27,29 @@
     "/images/projects/sd-v21-explorations/17.jpg",
     "/images/projects/sd-v21-explorations/18.jpg",
     "/images/projects/sd-v21-explorations/19.jpg"
+  ],
+  "metrics": [
+    {
+      "value": "$214M",
+      "label": "Global AI image generator market, 2022"
+    },
+    {
+      "value": "16.5%",
+      "label": "Market growth per year, 2023–2032"
+    }
+  ],
+  "brief": [
+    {
+      "label": "Workflow",
+      "text": "Stable Diffusion 2.1 driven through Blender, as an entry into the tools available for SD."
+    },
+    {
+      "label": "Inspiration",
+      "text": "The worlds of Laputa, Evangelion and Akira."
+    },
+    {
+      "label": "Hardware",
+      "text": "A test of what local hardware could handle."
+    }
   ]
 }

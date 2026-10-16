@@ -6,7 +6,7 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/dispenser/08.jpg",
-  "description": "",
+  "description": "A shower dispenser designed around people living with disabilities. The project began with interviews, and a rose, thorn, bud synthesis that kept coming back to independence. The result is a set of wall-mounted units that hold soap and shampoo bottles in the shower wall, so dispensing doesn't depend on lifting and squeezing a bottle.",
   "images": [
     "/images/projects/dispenser/01.jpg",
     "/images/projects/dispenser/02.jpg",
@@ -17,5 +17,55 @@
     "/images/projects/dispenser/07.jpg",
     "/images/projects/dispenser/08.jpg"
   ],
-  "icon_from": "/images/projects/dispenser/08.jpg"
+  "icon_from": "/images/projects/dispenser/08.jpg",
+  "metrics": [
+    {
+      "value": "$5.5B",
+      "label": "Global bathroom and toilet assist devices market, 2024"
+    },
+    {
+      "value": "$7.7B",
+      "label": "Projected market by 2030"
+    },
+    {
+      "value": "5.7%",
+      "label": "Market growth per year, 2024–2030"
+    }
+  ],
+  "research_intro": "Assistive bathroom products are a growing market as populations age, and the interviews showed that independence matters as much as safety.",
+  "brief": [
+    {
+      "label": "Users",
+      "text": "People living with disabilities, interviewed at the start of the project about daily routines and the issues they run into."
+    },
+    {
+      "label": "Insight",
+      "text": "Being looked after came up as the rose, losing independence as the thorn, and time alone as the bud. Independence became the need to design for."
+    },
+    {
+      "label": "Design response",
+      "text": "Wall-mounted units set into the shower wall that hold the bottles, aiming to let users dispense without help."
+    }
+  ],
+  "charts": [
+    {
+      "type": "line",
+      "title": "Global bathroom and toilet assist devices market, projected",
+      "caption": "$ billions, projected from the 2024 estimate at a 5.7% CAGR.",
+      "labels": "2024\n2025\n2026\n2027\n2028\n2029\n2030",
+      "series": [
+        {
+          "name": "Market",
+          "values": "5.50, 5.81, 6.14, 6.50, 6.87, 7.26, 7.67",
+          "highlight": true,
+          "dashed": false
+        }
+      ],
+      "prefix": "$",
+      "suffix": "B",
+      "decimals": 2,
+      "note": "Projection from published estimates: Global Industry Analysts, via GII Research.",
+      "wide": true
+    }
+  ]
 }

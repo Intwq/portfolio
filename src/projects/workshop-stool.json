@@ -17,5 +17,27 @@
     "/images/projects/workshop-stool/07.jpg",
     "/images/projects/workshop-stool/08.jpg"
   ],
-  "icon_from": "/images/projects/workshop-stool/08.jpg"
+  "icon_from": "/images/projects/workshop-stool/08.jpg",
+  "brief": [
+    {
+      "label": "Brief",
+      "text": "A stool designed in the University of Tennessee industrial design program, in a studio led by Herman Miller designers."
+    },
+    {
+      "label": "Research",
+      "text": "Observation of how people in Hong Kong and Singapore use simple stools in many different ways."
+    },
+    {
+      "label": "Design response",
+      "text": "A rugged frame that can be flipped and turned, with each orientation giving a new way to sit or work."
+    },
+    {
+      "label": "Materials",
+      "text": "Recycled materials, designed to pack small and assemble easily."
+    },
+    {
+      "label": "Precedent",
+      "text": "Konstantin Grcic's Stool-Tool for Vitra, another multi-position stool."
+    }
+  ]
 }
