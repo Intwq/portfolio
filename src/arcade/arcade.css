@@ -120,30 +120,39 @@ button { font: inherit; color: inherit; }
 .led { flex: none; width: 8px; height: 8px; background: var(--signal); box-shadow: 0 0 8px var(--signal); animation: blink 1s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0.2; } }
 
-/* ---------- big red button ---------- */
+/* ---------- big red button: a big arcade dome, half sunk below the bottom edge ---------- */
 .big-red {
-  position: fixed; z-index: 15; left: 50%; bottom: calc(16px + env(safe-area-inset-bottom)); translate: -50% 0;
-  width: 108px; height: 108px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
-  background: radial-gradient(circle, #2a2a33 0 62%, #111116 62% 66%, #e9e6f2 66% 72%, #111116 72% 100%);   /* bezel */
-  box-shadow: 0 6px 0 #111116, 0 10px 18px rgba(20, 10, 40, 0.25);
+  --d: 260px;
+  position: fixed; z-index: 15; left: 50%; bottom: calc(var(--d) * -0.5); translate: -50% 0;
+  width: var(--d); height: var(--d); padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle, #2a2a33 0 64%, #111116 64% 67%, #e9e6f2 67% 73%, #111116 73% 100%);   /* bezel */
+  box-shadow: 0 -4px 0 #111116, 0 -10px 24px rgba(20, 10, 40, 0.18);
   -webkit-tap-highlight-color: transparent;
 }
 .br-cap {
-  position: absolute; left: 50%; top: 46%; width: 66%; height: 66%; translate: -50% -50%; border-radius: 50%;
-  /* hard-stop gradients so the dome reads as pixel art, not a smooth render */
-  background: radial-gradient(circle at 36% 30%, #fff3f0 0 9%, #ff8f84 9% 18%, #ff3b30 18% 52%, #d7191f 52% 74%, #9c0c14 74% 100%);
-  box-shadow: 0 7px 0 #6d0710, 0 7px 0 2px #111116;
+  position: absolute; left: 50%; top: 47%; width: 70%; height: 70%; translate: -50% -50%; border-radius: 50%;
+  /* hard-stop rings so the dome reads as pixel art, not a smooth render */
+  background: radial-gradient(circle at 17% 34%, #fff3f0 0 5%, #ff9a8f 5% 11%, #ff3b30 15% 50%, #d7191f 50% 72%, #9c0c14 72% 100%);
+  box-shadow: 0 10px 0 #6d0710, 0 10px 0 3px #111116;
   transition: translate 0.06s steps(2), box-shadow 0.06s steps(2);
 }
-.big-red:hover .br-cap { background: radial-gradient(circle at 36% 30%, #fff 0 10%, #ffa197 10% 20%, #ff4b3f 20% 54%, #e3222a 54% 76%, #a30f18 76% 100%); }
-.big-red:active .br-cap, .big-red.press .br-cap { translate: -50% calc(-50% + 6px); box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #111116; }
-.big-red:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
-.br-label { position: absolute; left: 0; right: 0; bottom: -18px; font: 400 8px/1 var(--pixel); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text); }
+.br-label {
+  position: absolute; left: 0; right: 0; top: 19%; text-align: center; pointer-events: none;
+  font: 400 15px/1.55 var(--pixel); letter-spacing: 0.06em; text-transform: uppercase; color: #fff;
+  text-shadow: 3px 3px 0 #6d0710, -2px 0 0 #111116, 2px 0 0 #111116, 0 -2px 0 #111116, 0 2px 0 #111116;
+  transition: translate 0.06s steps(2);
+}
+.big-red:hover .br-cap { background: radial-gradient(circle at 17% 34%, #fff 0 6%, #ffa79d 6% 12%, #ff4b3f 17% 52%, #e3222a 52% 74%, #a30f18 74% 100%); }
+.big-red:active .br-cap { translate: -50% calc(-50% + 8px); box-shadow: 0 2px 0 #6d0710, 0 2px 0 3px #111116; }
+.big-red:active .br-label { translate: 0 8px; }
+.big-red:focus-visible { outline: 4px solid var(--signal); outline-offset: 4px; }
 .big-red.busy { cursor: default; }
 .big-red.busy .br-cap { filter: saturate(0.35) brightness(0.92); }
+.big-red.busy .br-label { opacity: 0.6; }
 @media (max-width: 640px) {
-  .big-red { width: 84px; height: 84px; bottom: calc(22px + env(safe-area-inset-bottom)); }
-  .hint { right: calc(50% + 52px); }
+  .big-red { --d: 190px; }
+  .br-label { font-size: 10px; top: 20%; }
+  .hint { right: calc(50% + 92px); }
 }
 
 /* ---------- index drawer ---------- */

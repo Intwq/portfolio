@@ -12,7 +12,7 @@
   const rigC = $("#rig"), rigX = rigC.getContext("2d");
   const pit = $("#pit"), fx = $("#fx"), win = $("#win"), winBody = $("#win-body"), winTitle = $("#win-title");
   const hint = $("[data-hint]");
-  const DEFAULT_HINT = "Move to aim · Click a prize, or hit the red button";
+  const DEFAULT_HINT = "Click a prize, or click anywhere to grab the nearest";
 
   // ---------- colours (ABGR for the pixel buffers) ----------
   const rgb = (h) => { const n = parseInt(h.slice(1), 16); return (255 << 24 | (n & 255) << 16 | (n >> 8 & 255) << 8 | n >> 16) >>> 0; };
@@ -416,17 +416,25 @@
 
   // ---------- big red button: drop on the prize nearest the claw ----------
   const bigRed = $("#big-red");
-  function grabNearest() {
+  function grabNearest(ax, ay) {
     if (mode !== "follow" || !win.hidden) return;
-    const g = grip(); let best = null, bd = Infinity;
+    const g = ax === undefined ? grip() : { x: ax, y: ay }; let best = null, bd = Infinity;
     for (const p of prizes) {
       if (!p.dyn) continue;
-      const d = Math.hypot((p.x - g.x) * 1, (p.y - g.y) * 0.6);     // favour what's straight below the claw
+      const d = Math.hypot((p.x - g.x) * 1, (p.y - g.y) * 0.6);     // favour what's straight below
       if (d < bd) { bd = d; best = p; }
     }
     if (best) grab(best);
   }
-  bigRed.addEventListener("click", (e) => { e.stopPropagation(); grabNearest(); });
+  bigRed.addEventListener("click", (e) => { e.stopPropagation(); grabNearest(); });   // the button: nearest to where the claw is aimed
+  // "click anywhere": a click on empty machine space drops on the prize nearest that spot.
+  // A click that only closes the open index drawer doesn't count.
+  let drawerWasOpen = false;
+  machine.addEventListener("pointerdown", () => { drawerWasOpen = $("#drawer").classList.contains("open"); });
+  machine.addEventListener("click", (e) => {
+    if (drawerWasOpen || e.target.closest(".prize, a, button, .drawer, .readout, .win")) return;
+    grabNearest(e.clientX, e.clientY);
+  });
   bigRed.addEventListener("pointerdown", (e) => e.stopPropagation());
   addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && document.activeElement === document.body) { e.preventDefault(); grabNearest(); } });
 
