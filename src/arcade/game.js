@@ -490,7 +490,8 @@
       const near = Math.abs(trolley.x - p.x) < 26 && Math.abs(trolley.v) < 520;     // start dropping while the trolley settles
       lenT = near ? Math.max(minL, p.y - ay - gripOffset() + S * 0.04) : Math.min(len, minL + 40);
       const g = grip();
-      if (near && Math.abs(len - lenT) < 4 && Math.abs(g.x - p.x) < S * 0.4) { mode = "grab"; timer = 0; claw.openT = 0; beep(200, 0.12, "sawtooth", 0.04); }
+      const gyT = p.y + S * 0.04;                                       // where the grip should end up: down in the prize
+      if (near && Math.abs(len - lenT) < 4 && Math.abs(g.y - gyT) < S * 0.12 && Math.abs(g.x - p.x) < S * 0.4) { mode = "grab"; timer = 0; claw.openT = 0; beep(200, 0.12, "sawtooth", 0.04); }
       if ((timer += dt) > 3) { mode = "grab"; timer = 0; claw.openT = 0; }
     } else if (mode === "grab") {
       if ((timer += dt) > 0.14) { held = current; held.dyn = false; held.el.style.zIndex = "900"; held.el.classList.add("held"); mode = "lift"; timer = 0; beep(520, 0.05); prizes.forEach((q) => { q.sleep = 0; }); }
@@ -540,7 +541,11 @@
     for (let i = 1; i < N; i++) {
       const p = pts[i], vx = (p.x - p.px) * keep, vy = (p.y - p.py) * keep;
       p.px = p.x; p.py = p.y; p.x += vx; p.y += vy + G * dt * dt;
-      if (auto) p.x += (trolley.x - p.x) * Math.min(1, 9 * dt) * (i / N);   // during an automatic grab the operator steadies the chain: it settles plumb fast
+      if (auto) {   // during an automatic grab the chain is driven plumb: steadied sideways and paid out straight down
+        p.x += (trolley.x - p.x) * Math.min(1, 9 * dt) * (i / N);
+        const yT = ay + rest * i;
+        if (p.y < yT) p.y += (yT - p.y) * Math.min(1, 16 * dt);
+      }
     }
     const wLast = held ? 0.12 : 0.22;
     for (let it = 0; it < 14; it++) {
