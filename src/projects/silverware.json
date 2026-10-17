@@ -15,16 +15,6 @@
     "/images/projects/silverware/05.jpg"
   ],
   "icon_from": "/images/projects/silverware/04.jpg",
-  "metrics": [
-    {
-      "value": "$6.8B",
-      "label": "Global stainless steel flatware market, 2024"
-    },
-    {
-      "value": "4.1%",
-      "label": "Market growth per year, 2024–2032"
-    }
-  ],
   "brief": [
     {
       "label": "Brief",
@@ -33,31 +23,21 @@
     {
       "label": "Design response",
       "text": "The knife, fork and spoon each read as one folded, twisting surface of steel."
-    },
-    {
-      "label": "Competition",
-      "text": "Flatware from Oneida, Zwilling, Mepra and Christofle."
     }
   ],
-  "charts": [
+  "study_intro": "Elegance from simple manufacture: each piece is one surface, folded and twisted.",
+  "study": [
     {
-      "type": "line",
-      "title": "Global stainless steel flatware market, projected",
-      "caption": "$ billions, projected from the 2024 estimate at a 4.05% CAGR.",
-      "labels": "2024\n2025\n2026\n2027\n2028\n2029\n2030",
-      "series": [
-        {
-          "name": "Market",
-          "values": "6.79, 7.06, 7.35, 7.64, 7.95, 8.27, 8.61",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "B",
-      "decimals": 2,
-      "note": "Projection from published estimates: Credence Research, 2024.",
-      "wide": true
+      "label": "Form",
+      "text": "Knife, fork and spoon each read as a single ribbon of steel that twists from handle to head, with no separate handle."
+    },
+    {
+      "label": "Finish",
+      "text": "Mirror chrome that picks up color from the table, set on a bold patterned cloth in the hero image."
+    },
+    {
+      "label": "Proportion",
+      "text": "Long, tapering silhouettes, so the set reads as one family."
     }
   ]
 }

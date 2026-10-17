@@ -209,6 +209,22 @@ content:
       - name: icon_from
         label: Arcade icon source photo (optional; which image to pixelate)
         type: image
+      - name: study_intro
+        label: Design language intro
+        description: A short paragraph on the design language the project explores.
+        type: text
+      - name: study
+        label: Design language study
+        description: Short labeled observations, for example Form, Proportion, Material, Color, Detail, References.
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: Label
+            type: string
+          - name: text
+            label: Text
+            type: text
       - name: my_role
         label: My role (paragraphs)
         type: text

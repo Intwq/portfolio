@@ -34,10 +34,25 @@
     {
       "label": "Materials",
       "text": "Recycled materials, designed to pack small and assemble easily."
+    }
+  ],
+  "study_intro": "Rugged and playful at once: a frame that invites you to flip it.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "A square ring with generous radii, so every face is a seat, a step or a surface depending on how it lands."
+    },
+    {
+      "label": "Color",
+      "text": "Primary red, blue and white, like a tool, so it reads as equipment in a workshop rather than furniture."
+    },
+    {
+      "label": "Use",
+      "text": "Shaped by watching people in Hong Kong and Singapore sit, stand and work on simple stools in endless ways."
     },
     {
       "label": "Precedent",
-      "text": "Konstantin Grcic's Stool-Tool for Vitra, another multi-position stool."
+      "text": "Konstantin Grcic's Stool-Tool for Vitra, another stool that does many jobs."
     }
   ]
 }

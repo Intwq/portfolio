@@ -6,59 +6,54 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/facial-scrubber/06.jpg",
-  "description": "A handheld facial scrubber. Ideation started from natural forms, with the curves of a peacock on the first boards, and narrowed through rounds of ergonomic studies to a palm-sized form that sits on the vanity between uses.",
+  "description": "A facial scrubber that started from a diagnosis of Dove's scrubber and others like it: the grips weren't made to be held at the angles our faces need, and neither were the round pads. Taking the peacock as inspiration, the shapes in its feathers became both the pad and the grip, around a spherical, tapered body that can be twisted and turned while still holding firm.",
   "images": [
     "/images/projects/facial-scrubber/01.jpg",
     "/images/projects/facial-scrubber/02.jpg",
     "/images/projects/facial-scrubber/03.jpg",
     "/images/projects/facial-scrubber/04.jpg",
-    "/images/projects/facial-scrubber/05.jpg",
     "/images/projects/facial-scrubber/06.jpg"
   ],
   "icon_from": "/images/projects/facial-scrubber/06.jpg",
-  "metrics": [
-    {
-      "value": "$7.7B",
-      "label": "Global facial cleansing devices market, 2025"
-    },
-    {
-      "value": "5.1%",
-      "label": "Market growth per year, 2026–2034"
-    }
-  ],
   "brief": [
     {
-      "label": "Process",
-      "text": "Natural-form ideation (Ideation 1), then hand-held ergonomic studies (Ideation 2), then a final visualization."
+      "label": "Objective",
+      "text": "Diagnose the issues in an existing product, then bring an abstracted feature from an animal into it in an innovative way."
     },
     {
       "label": "Design response",
-      "text": "A rounded, palm-sized form that fits the hand during use and rests upright on the counter."
+      "text": "A spherical shape with a tapered grip that's easy to twist or turn yet stays gripped, since the motor vibrates. Pads take their shape from peacock feathers."
     },
     {
-      "label": "Competition",
-      "text": "Cleansing devices from FOREO, Philips and Panasonic."
+      "label": "Key features",
+      "text": "Ergonomic, non-slip grip. Magnetic interchangeable pads. USB-C universal plug and quick charging."
+    },
+    {
+      "label": "Materials",
+      "text": "The body is casein-clay-glyceraldehyde plastic, made from milk protein, clay and a reactive molecule: strong, water-resistant and sustainable. Three curved sections make it easy to injection mold and assemble, and the flat base keeps the pad off the sink. Packaging is EPS: 100% recyclable, 98% air, compression-resistant and moldable into almost any shape."
+    },
+    {
+      "label": "Process",
+      "text": "Natural-form ideation, then rounds of ergonomic studies in the hand, then a final visualization."
     }
   ],
-  "charts": [
+  "study_intro": "Biomimicry as a starting point: the peacock's feather shapes, abstracted until they become a grip and a pad.",
+  "study": [
     {
-      "type": "line",
-      "title": "Global facial cleansing devices market, projected",
-      "caption": "$ billions, projected from the 2025 estimate at a 5.06% CAGR.",
-      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
-      "series": [
-        {
-          "name": "Market",
-          "values": "7.66, 8.05, 8.45, 8.88, 9.33, 9.80, 10.30",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "B",
-      "decimals": 2,
-      "note": "Projection from published estimates: Value Market Research, 2025.",
-      "wide": true
+      "label": "Form",
+      "text": "A sphere tapering into a grip, so it can be rolled and turned in the fingers at the angles a face needs."
+    },
+    {
+      "label": "Reference",
+      "text": "The curve and eye of a peacock feather, reinterpreted twice: once in the pad outline and once in the hand-hold."
+    },
+    {
+      "label": "Color",
+      "text": "Gloss white with a single band of red marking the seam between body and cap: clinical, with one warm accent."
+    },
+    {
+      "label": "Detail",
+      "text": "A flat base so it sits upright and keeps the pad off the counter between uses."
     }
   ]
 }

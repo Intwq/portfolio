@@ -13,5 +13,20 @@
     "/images/projects/pendulus/03.jpg",
     "/images/projects/pendulus/04.jpg",
     "/images/projects/pendulus/05.jpg"
+  ],
+  "study_intro": "Dieter Rams' compartmentalization, given the motion of a pendulum's swing.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "A compact, ordered box that anchors a sweeping arm and a large translucent disc."
+    },
+    {
+      "label": "Gesture",
+      "text": "The arm and disc freeze the arc of a swing in mid-motion, against the stillness of the box."
+    },
+    {
+      "label": "Material",
+      "text": "A white, ordered body and a slim metal arm carrying a translucent disc, shown on black so the silhouette carries it."
+    }
   ]
 }

@@ -16,17 +16,6 @@
     "/images/projects/sputnik-speaker/06.jpg"
   ],
   "icon_from": "/images/projects/sputnik-speaker/03.jpg",
-  "metrics": [
-    {
-      "value": "$19.5B",
-      "label": "Global Bluetooth speaker market, 2025"
-    },
-    {
-      "value": "14.1%",
-      "label": "Market growth per year, 2026–2034"
-    }
-  ],
-  "research_intro": "Wireless speakers are a fast-growing category where form is a selling point, which is what made it a good test bed for additive manufacturing.",
   "brief": [
     {
       "label": "Brief",
@@ -35,31 +24,25 @@
     {
       "label": "Design response",
       "text": "A spherical driver pod carried on a lattice stand, a form that only additive manufacturing could produce in one piece."
-    },
-    {
-      "label": "Competition",
-      "text": "Speakers from Bose, Marshall and Sony, where styling is a large part of the purchase."
     }
   ],
-  "charts": [
+  "study_intro": "Machined precision meets grown structure: a perfect sphere carried by something that looks like it was grown rather than built.",
+  "study": [
     {
-      "type": "line",
-      "title": "Global Bluetooth speaker market, projected",
-      "caption": "$ billions, projected from the 2025 estimate at a 14.1% CAGR.",
-      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
-      "series": [
-        {
-          "name": "Market",
-          "values": "19.50, 22.25, 25.39, 28.97, 33.05, 37.71, 43.03",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "B",
-      "decimals": 2,
-      "note": "Projection from published estimates: IMARC Group, 2025.",
-      "wide": true
+      "label": "Form",
+      "text": "A spherical driver pod held in a lattice stand, whose open cells could only come from additive manufacturing."
+    },
+    {
+      "label": "Contrast",
+      "text": "Smooth, exact geometry at the head against an organic, branching body below. The tension between the two is the design."
+    },
+    {
+      "label": "Reference",
+      "text": "Its namesake satellite: a polished sphere with a trailing antenna, echoed in the cable spike at the back of the pod."
+    },
+    {
+      "label": "Color",
+      "text": "A white driver face in a dark gloss shell, presented on saturated orange and deep blue grounds like a space-age poster."
     }
   ]
 }

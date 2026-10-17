@@ -28,16 +28,6 @@
     "/images/projects/sd-v21-explorations/18.jpg",
     "/images/projects/sd-v21-explorations/19.jpg"
   ],
-  "metrics": [
-    {
-      "value": "$214M",
-      "label": "Global AI image generator market, 2022"
-    },
-    {
-      "value": "16.5%",
-      "label": "Market growth per year, 2023–2032"
-    }
-  ],
   "brief": [
     {
       "label": "Workflow",
@@ -50,6 +40,21 @@
     {
       "label": "Hardware",
       "text": "A test of what local hardware could handle."
+    }
+  ],
+  "study_intro": "Worlds remembered from childhood cartoons, rebuilt with an early diffusion model.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "Organic towers, mushroom-like structures and floating megaforms."
+    },
+    {
+      "label": "Reference",
+      "text": "The worlds of Laputa, Evangelion and Akira."
+    },
+    {
+      "label": "Color",
+      "text": "Saturated, painterly palettes of teal skies and warm stone."
     }
   ]
 }

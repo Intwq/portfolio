@@ -12,20 +12,6 @@
     "/images/projects/candle-holder/02.jpg",
     "/images/projects/candle-holder/03.jpg"
   ],
-  "metrics": [
-    {
-      "value": "$21.3B",
-      "label": "Global candle market, 2025"
-    },
-    {
-      "value": "4.5%",
-      "label": "Market growth per year, 2026–2035"
-    },
-    {
-      "value": "6.7%",
-      "label": "Combined share of the top five candle makers"
-    }
-  ],
   "brief": [
     {
       "label": "Inspiration",
@@ -34,31 +20,21 @@
     {
       "label": "Design response",
       "text": "A folded metal sheet with a slotted face that holds a pillar candle, documented from technical drawing to finished renders."
-    },
-    {
-      "label": "Market",
-      "text": "Candles are a large, fragmented market, which leaves room for design-led accessories."
     }
   ],
-  "charts": [
+  "study_intro": "A study of how a material feels: the slick finish in the hand and the sound it makes against itself, after objects from the likes of Claustrum.",
+  "study": [
     {
-      "type": "line",
-      "title": "Global candle market, projected",
-      "caption": "$ billions, projected from the 2025 estimate at a 4.5% CAGR.",
-      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
-      "series": [
-        {
-          "name": "Market",
-          "values": "21.30, 22.26, 23.26, 24.31, 25.40, 26.54, 27.74",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "B",
-      "decimals": 2,
-      "note": "Projection from published estimates: Global Market Insights, 2025.",
-      "wide": true
+      "label": "Form",
+      "text": "A folded sheet that becomes a stand, with a slotted face that throws patterned light."
+    },
+    {
+      "label": "Material",
+      "text": "Mirror-polished gold metal on terrazzo: reflection against speckle."
+    },
+    {
+      "label": "Detail",
+      "text": "Documented first as a technical drawing (CH001), so the fold lines and slots read as precisely as the renders."
     }
   ]
 }

@@ -6,66 +6,82 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/dispenser/08.jpg",
-  "description": "A shower dispenser designed around people living with disabilities. The project began with interviews, and a rose, thorn, bud synthesis that kept coming back to independence. The result is a set of wall-mounted units that hold soap and shampoo bottles in the shower wall, so dispensing doesn't depend on lifting and squeezing a bottle.",
+  "description": "A dispenser for people living with restricted use of an upper limb. The project started with interviews about everyday routines, and a rose, thorn, bud synthesis that kept coming back to independence. The result is easy to use, with motion and voice activation, a plunger that dispenses liquids of any viscosity, and the option of a delivery service for refills.",
   "images": [
     "/images/projects/dispenser/01.jpg",
-    "/images/projects/dispenser/02.jpg",
-    "/images/projects/dispenser/03.jpg",
-    "/images/projects/dispenser/04.jpg",
     "/images/projects/dispenser/05.jpg",
     "/images/projects/dispenser/06.jpg",
-    "/images/projects/dispenser/07.jpg",
     "/images/projects/dispenser/08.jpg"
   ],
   "icon_from": "/images/projects/dispenser/08.jpg",
-  "metrics": [
-    {
-      "value": "$5.5B",
-      "label": "Global bathroom and toilet assist devices market, 2024"
-    },
-    {
-      "value": "$7.7B",
-      "label": "Projected market by 2030"
-    },
-    {
-      "value": "5.7%",
-      "label": "Market growth per year, 2024–2030"
-    }
-  ],
-  "research_intro": "Assistive bathroom products are a growing market as populations age, and the interviews showed that independence matters as much as safety.",
   "brief": [
     {
-      "label": "Users",
-      "text": "People living with disabilities, interviewed at the start of the project about daily routines and the issues they run into."
-    },
-    {
-      "label": "Insight",
-      "text": "Being looked after came up as the rose, losing independence as the thorn, and time alone as the bud. Independence became the need to design for."
+      "label": "Objective",
+      "text": "Understand the everyday problems of people with a restricted upper limb, and find a solution for them."
     },
     {
       "label": "Design response",
-      "text": "Wall-mounted units set into the shower wall that hold the bottles, aiming to let users dispense without help."
+      "text": "A plunger dispenses liquids of any viscosity with ease, then retracts at the end of a reservoir's life so it can be swapped quickly."
+    },
+    {
+      "label": "Compact storage",
+      "text": "Disassembly is as easy as pulling apart the o-rings that hold it together. For travel, users bring just the body and buy reservoirs locally, combining a whole host of soaps in one dispenser."
+    },
+    {
+      "label": "Key features",
+      "text": "Motion sensor. Voice activation. Convenient refills, with an optional delivery service."
+    },
+    {
+      "label": "Materials",
+      "text": "PLA (polylactic acid) for the dispenser: derived from renewable resources like sugar cane, biodegradable, low-shrinkage and insoluble in water, and best recycled at end of life. EPS (expanded polystyrene) for the packaging: cost-effective, recyclable, strong, and doesn't decay or harbor bacteria."
     }
   ],
+  "research_intro": "Four interviews with people living with limited use of one arm mapped where the day gets hard. The morning routine came up again and again. A rose, thorn, bud synthesis then sorted what they valued, what hurt and what could grow, and pointed at independence as the need to design for. Names are withheld.",
   "charts": [
     {
-      "type": "line",
-      "title": "Global bathroom and toilet assist devices market, projected",
-      "caption": "$ billions, projected from the 2024 estimate at a 5.7% CAGR.",
-      "labels": "2024\n2025\n2026\n2027\n2028\n2029\n2030",
-      "series": [
-        {
-          "name": "Market",
-          "values": "5.50, 5.81, 6.14, 6.50, 6.87, 7.26, 7.67",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "B",
-      "decimals": 2,
-      "note": "Projection from published estimates: Global Industry Analysts, via GII Research.",
+      "type": "table",
+      "title": "Interviews",
+      "caption": "What each participant lives with, and where daily life gets hard.",
+      "columns": "Participant|Limitation|Daily challenges",
+      "rows": "1|Loss of right lower-arm mobility|Operating a computer, sports, preparing food, carrying laundry, the morning routine (showering, brushing teeth)\n2|Loss of left lower-arm mobility|Repeated breaks over time, severe pain, couldn't work, bathe for long periods or exercise; brushing teeth\n3|No left-hand mobility|Opening doors and packages; the morning routine (brushing teeth, washing hair)\n4|Loss of mobility in dominant arm|Getting changed, writing, seatbelts, relearning to brush teeth with the other hand, needing help with hair; the morning routine is exhausting",
       "wide": true
+    },
+    {
+      "type": "table",
+      "title": "Rose, thorn, bud",
+      "caption": "The last column is what stood out most in each row.",
+      "columns": "|Observations|Strongest signal",
+      "rows": "Rose|New ways of doing things, a new community, closer to those who help, more attention|Constantly looked after\nThorn|Relearning with help, being labeled, less privacy, less time alone|Less independence\nBud|Expanded creativity, a new sense of purpose, building relationships, new chances to be recognized|Appreciates time alone",
+      "wide": true
+    }
+  ],
+  "study_intro": "Accessible design without looking like assistive equipment: soft, friendly forms that anyone would want in their bathroom.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "Rounded, egg-like modules that stack apart at o-rings, with nothing to grip or squeeze."
+    },
+    {
+      "label": "Interaction",
+      "text": "Hands-free by default, with motion and voice, so the object asks nothing of the hand that's limited."
+    },
+    {
+      "label": "Color",
+      "text": "Clean white bodies with bright blue packaging and accents: hygienic, calm and legible."
+    },
+    {
+      "label": "Packaging",
+      "text": "A family of blue boxes, with a reservoir pack sized like a consumable, so refilling feels like restocking toothpaste, not servicing a device."
+    }
+  ],
+  "stakeholders": [
+    {
+      "group": "Who helps",
+      "members": "Parents, with every daily task\nSiblings\nRoommates\nFriends\nStrangers, only with opening packages"
+    },
+    {
+      "group": "Where help is needed",
+      "members": "Cooking\nChores\nOpening packaging\nBathroom routines\nGetting dressed"
     }
   ]
 }

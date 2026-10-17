@@ -39,5 +39,20 @@
       "label": "Manufacturing",
       "text": "Made in the USA."
     }
+  ],
+  "study_intro": "Machined, functional, community-built: hardware designed the way the early mod scene made things.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "Stacked turned rings and a reduced chamber, every part shaped on a lathe."
+    },
+    {
+      "label": "Detail",
+      "text": "Vent holes and a compact deck, shown exploded to reveal how it goes together."
+    },
+    {
+      "label": "Presentation",
+      "text": "Shown in neon pink and teal light, so the turned edges and threads read as graphics."
+    }
   ]
 }

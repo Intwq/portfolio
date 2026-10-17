@@ -6,7 +6,7 @@
   "tools": "Blender",
   "featured": false,
   "cover": "/images/projects/fountain/02.jpg",
-  "description": "Hydrate: an outdoor drinking fountain and bottle filler for parks and trails. Speed-modeling ideation in Blender put dozens of quick forms side by side before one direction was taken to a final visualization in a park setting.",
+  "description": "A drinking fountain for Knoxville, with P&C as the client. It began as something sculptural, to reflect the city's streets lined with fabrication shops showing off their work. It ended up looking ahead to where the city's design language was going, as World's Fair Park was renovated with modern facilities and handrails in steel and glass.",
   "images": [
     "/images/projects/fountain/01.jpg",
     "/images/projects/fountain/02.jpg",
@@ -16,52 +16,45 @@
     "/images/projects/fountain/06.jpg"
   ],
   "icon_from": "/images/projects/fountain/02.jpg",
-  "metrics": [
-    {
-      "value": "$1.55B",
-      "label": "Global drinking fountain market, 2025"
-    },
-    {
-      "value": "28%",
-      "label": "Share held by bottle filling stations, 2025"
-    },
-    {
-      "value": "8.5%",
-      "label": "Bottle filler growth per year, the fastest segment"
-    }
-  ],
-  "research_intro": "Bottle fillers are the fastest-growing part of the drinking fountain market, driven by reusable-bottle use in parks, campuses and offices.",
   "brief": [
     {
-      "label": "Brief",
-      "text": "A public drinking fountain and bottle filler for outdoor paths."
+      "label": "Client",
+      "text": "P&C, to replace existing water fountains in Knoxville."
+    },
+    {
+      "label": "Requirements",
+      "text": "Contracted during lockdown: ADA-compliant dimensions, no-touch operation, free-standing for simple, low-cost installation, and concrete as the primary material, since that's what the studio was known for."
+    },
+    {
+      "label": "Site-specific",
+      "text": "Each fountain is unique to its location: the topography is an abstraction of the place it stands, with water flowing down it into a dog bowl underneath."
+    },
+    {
+      "label": "Manufacturing",
+      "text": "The concrete is molded in two parts, the topography sits in a steel tray that swaps out for quick assembly, and an inset splash guard limits contamination, unlike a conventional fountain."
     },
     {
       "label": "Process",
-      "text": "Speed-modeling ideation in Blender, then refinement of one form."
-    },
-    {
-      "label": "Competition",
-      "text": "Elkay (Zurn Elkay), Haws, Oasis and Murdock lead public drinking fountains and bottle fillers."
+      "text": "Speed-modeling ideation in Blender, then one form that checked every box."
     }
   ],
-  "charts": [
+  "study_intro": "Civic furniture that borrows its language from the city around it: the steel and glass of a renovated World's Fair Park, cast in concrete.",
+  "study": [
     {
-      "type": "split",
-      "title": "Drinking fountain market by product, 2025",
-      "caption": "Bottle filling stations are expected to grow to about 38% of revenue by 2035.",
-      "labels": "Bottle filling stations\nOther fountains",
-      "series": [
-        {
-          "name": "Share",
-          "values": "28, 72",
-          "highlight": false,
-          "dashed": false
-        }
-      ],
-      "highlight": "Bottle filling stations",
-      "suffix": "%",
-      "note": "Global Market Insights, 2025"
+      "label": "Form",
+      "text": "One bent ribbon rising from the path and folding over into the spout: a single gesture from ground to water."
+    },
+    {
+      "label": "Material",
+      "text": "Concrete for the body, with a steel tray holding the topography: heavy and permanent, with one swappable, site-specific piece."
+    },
+    {
+      "label": "Site",
+      "text": "The topography on top is an abstraction of the place it stands, so no two fountains are the same."
+    },
+    {
+      "label": "Detail",
+      "text": "Water runs over the topography into a dog bowl underneath, with an inset splash guard to keep it clean."
     }
   ]
 }

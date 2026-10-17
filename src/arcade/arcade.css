@@ -31,11 +31,6 @@ body {
   -webkit-tap-highlight-color: transparent;
   overscroll-behavior: none;
 }
-/* CRT scanlines over everything, very faint */
-body::after {
-  content: ""; position: fixed; inset: 0; z-index: 90; pointer-events: none;
-  background: repeating-linear-gradient(0deg, rgba(26, 20, 48, 0.035) 0 1px, transparent 1px 3px);
-}
 a { color: inherit; }
 button { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }

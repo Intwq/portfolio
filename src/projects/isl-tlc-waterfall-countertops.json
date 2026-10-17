@@ -30,21 +30,6 @@
     "/images/projects/isl-tlc-waterfall-countertops/20.jpg"
   ],
   "icon_from": "/images/projects/isl-tlc-waterfall-countertops/12.jpg",
-  "metrics": [
-    {
-      "value": "$19.0B",
-      "label": "Global bathroom vanities market, 2025"
-    },
-    {
-      "value": "5.6%",
-      "label": "Vanities market growth per year, 2026–2034"
-    },
-    {
-      "value": "$1.7B",
-      "label": "Global quartz countertops market, 2024"
-    }
-  ],
-  "research_intro": "Public market data shows why a waterfall top was worth solving: vanities and kitchen islands are a large, steadily growing category, and the quartz look is what buyers ask for. Motech's own survey results stay out under NDA.",
   "brief": [
     {
       "label": "Problem",
@@ -57,31 +42,25 @@
     {
       "label": "Applies to",
       "text": "Kitchen islands and bathroom vanities."
-    },
-    {
-      "label": "Competition",
-      "text": "Vanity brands such as Wyndham Collection, Virtu USA, Kohler and IKEA, with quartz surfaces from Caesarstone, Cambria and Silestone setting the look buyers expect."
     }
   ],
-  "charts": [
+  "study_intro": "The waterfall is a gesture borrowed from high-end stone work: one surface that refuses to stop at the edge.",
+  "study": [
     {
-      "type": "line",
-      "title": "Global bathroom vanities market, projected",
-      "caption": "$ billions, projected from the 2025 estimate at a 5.58% CAGR.",
-      "labels": "2025\n2026\n2027\n2028\n2029\n2030\n2031",
-      "series": [
-        {
-          "name": "Market",
-          "values": "19.00, 20.06, 21.18, 22.36, 23.61, 24.93, 26.32",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "B",
-      "decimals": 2,
-      "note": "Projection from published estimates: IMARC Group, 2025.",
-      "wide": true
+      "label": "Form",
+      "text": "The top folds over the cabinet and runs to the floor as one continuous plane, so an island or vanity reads as a single, solid block."
+    },
+    {
+      "label": "Material",
+      "text": "A veined, quartz-look surface against painted shaker-style cabinetry and matte black pulls: soft veining against crisp, dark hardware."
+    },
+    {
+      "label": "Proportion",
+      "text": "The waterfall end gives the furniture visual weight at the floor. The hidden internal structure keeps that weight visual rather than literal."
+    },
+    {
+      "label": "Presentation",
+      "text": "Staged in warm, daylit kitchens and baths, so the piece reads as part of a room, not as a part."
     }
   ]
 }

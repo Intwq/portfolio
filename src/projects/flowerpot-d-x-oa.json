@@ -6,57 +6,35 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/flowerpot-d-x-oa/03.jpg",
-  "description": "A plant stand that pairs a bent wood base with a cast pot. It was developed from dimensioned drawings into a built piece, photographed in place.",
+  "description": "DTAN x Outback Arthouse: a flowerpot that could be easily fabricated for the community. The form is minimal, so it works as a centerpiece or as a series in whatever setting it's placed, and it was taken from dimensioned drawings to a built piece.",
   "images": [
     "/images/projects/flowerpot-d-x-oa/01.jpg",
     "/images/projects/flowerpot-d-x-oa/02.jpg",
     "/images/projects/flowerpot-d-x-oa/03.jpg"
   ],
-  "metrics": [
-    {
-      "value": "$10.0B",
-      "label": "Global pots and planters market, 2025"
-    },
-    {
-      "value": "5.4%",
-      "label": "Market growth per year, 2026–2035"
-    },
-    {
-      "value": "6.4%",
-      "label": "Indoor planter growth per year"
-    }
-  ],
   "brief": [
     {
+      "label": "Brief",
+      "text": "A flowerpot that's easy to fabricate for the community, in collaboration with Outback Arthouse."
+    },
+    {
       "label": "Design response",
-      "text": "A bent wood base that lifts and cradles the pot, turning a houseplant into a piece of furniture."
-    },
-    {
-      "label": "Market",
-      "text": "Indoor planters are the faster-growing side of a $10B market."
-    },
-    {
-      "label": "Competition",
-      "text": "Planter makers such as Elho, Scheurich and HC Companies."
+      "text": "A minimal form that can stand alone as a centerpiece or repeat as a series."
     }
   ],
-  "charts": [
+  "study_intro": "Minimal by design: few parts and simple cuts, so the community can build it and it can live alone or in a row.",
+  "study": [
     {
-      "type": "split",
-      "title": "Pots and planters market by setting, 2025",
-      "caption": "Indoor planters are growing faster and are expected to reach about 42% of revenue by 2035.",
-      "labels": "Outdoor\nIndoor",
-      "series": [
-        {
-          "name": "Share",
-          "values": "62, 38",
-          "highlight": false,
-          "dashed": false
-        }
-      ],
-      "highlight": "Indoor",
-      "suffix": "%",
-      "note": "Global Market Insights, 2025"
+      "label": "Form",
+      "text": "A bent plane that lifts and cradles a cast pot, turning a houseplant into a small piece of furniture."
+    },
+    {
+      "label": "Material",
+      "text": "Warm wood against a mottled blue cast pot: craft and texture in one object."
+    },
+    {
+      "label": "Proportion",
+      "text": "Dimensioned to repeat cleanly, so several read as a series as easily as one reads as a centerpiece."
     }
   ]
 }

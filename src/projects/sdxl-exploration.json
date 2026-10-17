@@ -29,20 +29,6 @@
     "/images/projects/sdxl-exploration/19.jpg",
     "/images/projects/sdxl-exploration/20.jpg"
   ],
-  "metrics": [
-    {
-      "value": "$214M",
-      "label": "Global AI image generator market, 2022"
-    },
-    {
-      "value": "16.5%",
-      "label": "Market growth per year, 2023–2032"
-    },
-    {
-      "value": "$944M",
-      "label": "Projected market by 2032"
-    }
-  ],
   "brief": [
     {
       "label": "Workflow",
@@ -53,25 +39,19 @@
       "text": "Generative tools are moving into early concept work, where fast exploration of many directions pays off."
     }
   ],
-  "charts": [
+  "study_intro": "Architecture sketched as pure volume, then handed to AI to finish.",
+  "study": [
     {
-      "type": "line",
-      "title": "Global AI image generator market, projected",
-      "caption": "$ millions, projected from the 2022 estimate at a 16.5% CAGR.",
-      "labels": "2022\n2023\n2024\n2025\n2026\n2027\n2028",
-      "series": [
-        {
-          "name": "Market",
-          "values": "214, 249, 290, 338, 394, 459, 535",
-          "highlight": true,
-          "dashed": false
-        }
-      ],
-      "prefix": "$",
-      "suffix": "M",
-      "decimals": 0,
-      "note": "Projection from published estimates: Global Market Insights, 2022.",
-      "wide": true
+      "label": "Form",
+      "text": "Stacked, cantilevered white boxes stepping down slopes and through forest."
+    },
+    {
+      "label": "Reference",
+      "text": "Modernist and brutalist hillside architecture: heavy volumes that seem to float."
+    },
+    {
+      "label": "Process",
+      "text": "Massing modeled in Blender as simple volumes, then developed into finished scenes with Stable Diffusion XL."
     }
   ]
 }

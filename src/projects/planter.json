@@ -11,16 +11,6 @@
     "/images/projects/planter/01.jpg",
     "/images/projects/planter/02.jpg"
   ],
-  "metrics": [
-    {
-      "value": "$10.0B",
-      "label": "Global pots and planters market, 2025"
-    },
-    {
-      "value": "6.4%",
-      "label": "Indoor planter growth per year"
-    }
-  ],
   "brief": [
     {
       "label": "Brief",
@@ -29,10 +19,21 @@
     {
       "label": "Composition",
       "text": "Color moves the eye around the frame along the path of an X."
+    }
+  ],
+  "study_intro": "A composition study as much as an object: photography, design and sculpture in one frame.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "Soft, pebble- and fruit-like vessels with a cut opening, so each pot looks picked rather than manufactured."
     },
     {
-      "label": "Market",
-      "text": "Indoor planters are the faster-growing part of a $10B global market (Global Market Insights)."
+      "label": "Color",
+      "text": "Red, white and a bold blue drape: color is used to move the eye around the frame along an X."
+    },
+    {
+      "label": "Setting",
+      "text": "A dark, reflective, cave-like set that makes the forms glow."
     }
   ]
 }

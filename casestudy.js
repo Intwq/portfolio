@@ -222,11 +222,12 @@ function caseStudy(p) {
   const metrics = (p.metrics || []).filter((m) => m && m.value);
   const brief = (p.brief || []).filter((b) => b && b.text);
   const charts = (p.charts || []).filter((c) => c && c.type);
+  const study = (p.study || []).filter((s) => s && s.text);
   const quotes = (p.quotes || []).filter((q) => q && q.quote);
   const swot = p.swot || {};
   const swotKeys = [["strengths", "Strengths"], ["weaknesses", "Weaknesses"], ["opportunities", "Opportunities"], ["threats", "Threats"]]
     .filter(([k]) => lines(swot[k]).length);
-  if (!metrics.length && !brief.length && !charts.length && !quotes.length && !swotKeys.length && !(p.gates || []).length
+  if (!metrics.length && !brief.length && !study.length && !charts.length && !quotes.length && !swotKeys.length && !(p.gates || []).length
     && !p.my_role && !(p.challenges || []).length && !(p.recovery || []).length) return "";
 
   return `
@@ -239,6 +240,14 @@ function caseStudy(p) {
     <h2 class="cs-title" id="o-${p.slug}">Overview</h2>
     <dl class="brief" data-reveal>${brief.map((b) => `
       <div><dt>${esc(b.label || "")}</dt><dd>${paras(b.text)}</dd></div>`).join("")}
+    </dl>
+  </section>` : ""}
+
+  ${study.length ? `<section class="cs-block" aria-labelledby="d-${p.slug}">
+    <h2 class="cs-title" id="d-${p.slug}">Design language</h2>
+    ${p.study_intro ? `<div class="cs-intro">${paras(p.study_intro)}</div>` : ""}
+    <dl class="brief" data-reveal>${study.map((s) => `
+      <div><dt>${esc(s.label || "")}</dt><dd>${paras(s.text)}</dd></div>`).join("")}
     </dl>
   </section>` : ""}
 

@@ -11,20 +11,6 @@
     "/images/projects/jar/01.jpg",
     "/images/projects/jar/02.jpg"
   ],
-  "metrics": [
-    {
-      "value": "$170.1B",
-      "label": "Global food storage container market, 2025"
-    },
-    {
-      "value": "$51.3B",
-      "label": "Glass containers, 2025"
-    },
-    {
-      "value": "5.9%",
-      "label": "Glass segment growth per year, to 2035"
-    }
-  ],
   "brief": [
     {
       "label": "Brief",
@@ -33,29 +19,25 @@
     {
       "label": "Design response",
       "text": "A clear, rounded body with a tapered edge meant to fit any hand shape."
-    },
-    {
-      "label": "Competition",
-      "text": "Storage brands such as OXO, LocknLock and Tupperware."
     }
   ],
-  "charts": [
+  "study_intro": "A study in carrying one object's ergonomics into another: the scrubber's hold, reshaped as a jar.",
+  "study": [
     {
-      "type": "split",
-      "title": "Food storage containers by material, 2025",
-      "caption": "Glass is about 30% of the market and its fastest-growing material.",
-      "labels": "Glass\nOther materials",
-      "series": [
-        {
-          "name": "Share",
-          "values": "30.2, 69.8",
-          "highlight": false,
-          "dashed": false
-        }
-      ],
-      "highlight": "Glass",
-      "suffix": "%",
-      "note": "Global Market Insights, 2025"
+      "label": "Form",
+      "text": "A rounded, frosted body with a tapered edge, so any hand finds a grip."
+    },
+    {
+      "label": "Material",
+      "text": "Frosted, translucent glass that shows the contents softly, so the food becomes part of the object."
+    },
+    {
+      "label": "Lid",
+      "text": "A flat disc with printed rings, reading almost like a dial on top of the sphere."
+    },
+    {
+      "label": "Presentation",
+      "text": "Coffee beans orbiting the jar in the renders: the contents are part of the composition."
     }
   ]
 }

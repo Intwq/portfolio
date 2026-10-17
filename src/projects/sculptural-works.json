@@ -6,7 +6,7 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/sculptural-works/08.jpg",
-  "description": "Large-scale sculpture in steel and tension: curved sheet planes held in space by taut lines, exploring balance and how a form changes as you move around it.",
+  "description": "Sculpture in steel, timber and line: curved steel planes held in space by taut cord, rusted sheet forms pinned by red lines, and frames suspended across a room in thread, each exploring balance, tension and how a form changes as you move around it.",
   "images": [
     "/images/projects/sculptural-works/01.jpg",
     "/images/projects/sculptural-works/02.jpg",
@@ -20,11 +20,22 @@
     "/images/projects/sculptural-works/10.jpg",
     "/images/projects/sculptural-works/11.jpg",
     "/images/projects/sculptural-works/12.jpg",
-    "/images/projects/sculptural-works/13.jpg",
-    "/images/projects/sculptural-works/14.jpg",
-    "/images/projects/sculptural-works/15.jpg",
-    "/images/projects/sculptural-works/16.jpg",
-    "/images/projects/sculptural-works/17.jpg"
+    "/images/projects/sculptural-works/13.jpg"
   ],
-  "icon_from": "/images/projects/sculptural-works/08.jpg"
+  "icon_from": "/images/projects/sculptural-works/08.jpg",
+  "study_intro": "Balance, tension and line: steel and timber made to look weightless.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "Curved steel planes and long timber members held at improbable angles."
+    },
+    {
+      "label": "Line",
+      "text": "Taut cord and thread pin the forms in space and draw across the whole room."
+    },
+    {
+      "label": "Material",
+      "text": "Raw and rusted steel, set against clean white walls."
+    }
+  ]
 }

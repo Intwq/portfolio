@@ -52,6 +52,10 @@
     {
       "label": "Competition",
       "text": "FHC, Assa Abloy, dormakaba."
+    },
+    {
+      "label": "The system",
+      "text": "DRX (patent US 10,871,026 B1) deconstructs a standard door rail into independent parts. Rail bodies are stocked and secured to the glass as soon as it's cut, the lead-end body slides along the glass to fit a standard 36\" or larger 48\" door, and side covers and end caps go on during or after installation, so custom rails have no lead time."
     }
   ],
   "gates": [
@@ -157,6 +161,13 @@
       ],
       "highlight": "439 smaller accounts (under 100)",
       "note": "Source: CRL sales research. Percent of revenue; account counts rounded to the source data."
+    },
+    {
+      "type": "table",
+      "title": "DRS vs DRX",
+      "caption": "How the modular DRX rail differs from the solid DRS rail it builds on.",
+      "columns": "|DRS|DRX",
+      "rows": "Construction|One solid extrusion|Rail body with removable covers\nGlass clamping|Wedge Lock|Enhanced Wedge Lock\nLead time on custom sizes|Factory-built to order|None: stocked parts, cut and assembled locally"
     }
   ],
   "quotes": [

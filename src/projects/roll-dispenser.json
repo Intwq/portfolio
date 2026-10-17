@@ -6,37 +6,57 @@
   "tools": "",
   "featured": false,
   "cover": "/images/projects/roll-dispenser/05.jpg",
-  "description": "A wall-mounted kitchen roll dispenser. The project ran from sketch ideation through paper and cardboard prototypes, testing how a single folded form could hold the roll and present the next sheet, to a final rendered visualization in a kitchen.",
+  "description": "A roll dispenser born from curiosity about everyday objects that feel forgotten as technology moves on. The goal was to streamline the whole act of using it while cutting waste, and to make something that fits a modern home. It isn't limited to the kitchen or restroom: it adjusts to anything that comes on a roll, and taken further it could do away with the cardboard core altogether.",
   "images": [
     "/images/projects/roll-dispenser/01.jpg",
     "/images/projects/roll-dispenser/02.jpg",
     "/images/projects/roll-dispenser/03.jpg",
-    "/images/projects/roll-dispenser/04.jpg",
     "/images/projects/roll-dispenser/05.jpg"
   ],
   "icon_from": "/images/projects/roll-dispenser/05.jpg",
-  "metrics": [
-    {
-      "value": "$1.06B",
-      "label": "Projected growth of the paper towel dispenser market, 2020–2024"
-    },
-    {
-      "value": "~5%",
-      "label": "Market growth per year over that period"
-    }
-  ],
   "brief": [
     {
-      "label": "Brief",
-      "text": "A wall-mounted holder for a kitchen roll."
+      "label": "Objective",
+      "text": "Streamline using the object, reduce waste and make it more sustainable, while fitting modern homes."
+    },
+    {
+      "label": "Mounting",
+      "text": "Simple enough to screw-mount, or to pressure-fit through slots in a cabinet thanks to the plastic's flexibility."
+    },
+    {
+      "label": "Packaging",
+      "text": "None. The arms let it hang on store shelves, and it's durable enough to ship with minimal support, saving cost and material."
+    },
+    {
+      "label": "Material",
+      "text": "Bio-on PHA bioplastic: strong, 100% biodegradable and fully natural, water-resistant, with a porous surface that takes paint."
+    },
+    {
+      "label": "Key features",
+      "text": "Operational simplicity. Sustainable packaging and make-up. Form flexibility."
     },
     {
       "label": "Process",
-      "text": "Sketch ideation, then quick paper and cardboard prototypes to test the fold, then a final rendered visualization."
+      "text": "Sketch ideation, then paper and cardboard prototypes to test the fold, then kitchen and restroom versions in a final visualization."
+    }
+  ],
+  "study_intro": "Reduction as the design language: one folded form does the whole job.",
+  "study": [
+    {
+      "label": "Form",
+      "text": "A single folded sheet, where one bend makes the arm and another the cradle, so the roll and the next sheet are always presented."
     },
     {
-      "label": "Competition",
-      "text": "Commercial dispensers from Kimberly-Clark, Bobrick and Franke, and simple residential holders from housewares brands."
+      "label": "Gesture",
+      "text": "Prototyped in paper and card, so the object keeps the honesty of a fold: nothing is added that the material couldn't do on its own."
+    },
+    {
+      "label": "Color",
+      "text": "Coral red and deep green over a pale ground: bright enough to be a deliberate object on the wall, not hidden hardware."
+    },
+    {
+      "label": "Flexibility",
+      "text": "The same profile reads as a kitchen piece or a restroom piece, and adapts to anything that comes on a roll."
     }
   ]
 }

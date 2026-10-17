@@ -10,5 +10,20 @@
   "images": [
     "/images/projects/fictional-mafia-movie-posters/01.jpg",
     "/images/projects/fictional-mafia-movie-posters/02.jpg"
+  ],
+  "study_intro": "Telling a whole film with one object.",
+  "study": [
+    {
+      "label": "Composition",
+      "text": "A single central object carries the story, with the title set small and quiet around it."
+    },
+    {
+      "label": "Type",
+      "text": "Bilingual titles in Italian and English, set in a restrained serif."
+    },
+    {
+      "label": "Color",
+      "text": "Flat, flag-like fields of red, green and white, with blood red as the only accent."
+    }
   ]
 }

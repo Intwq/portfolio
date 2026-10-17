@@ -36,13 +36,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .skip { position: absolute; left: -999px; top: 8px; z-index: 100; background: var(--text); color: var(--bg); padding: 8px 12px; }
 .skip:focus { left: 8px; }
 
-/* faint scanline + grain over everything: the sci-fi texture, kept very quiet */
-body::after {
-  content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 90;
-  background:
-    repeating-linear-gradient(0deg, rgba(255,255,255,0.018) 0 1px, transparent 1px 3px);
-  mix-blend-mode: overlay;
-}
 
 /* page transitions (Chrome, Edge, Safari 18+): the clicked image morphs into the next page */
 @view-transition { navigation: auto; }
