@@ -94,16 +94,14 @@ button { font: inherit; color: inherit; }
 .glow { width: 420px; height: 420px; background: radial-gradient(circle, rgba(255, 252, 225, 1), rgba(255, 216, 60, 0.85) 30%, rgba(255, 170, 0, 0.35) 52%, rgba(255, 140, 0, 0) 72%); }
 @keyframes spin { to { rotate: 360deg; } }
 
-/* ---------- logo, readout, hint ---------- */
-.logo { position: fixed; z-index: 10; left: var(--gutter); top: 10px; display: flex; gap: 12px; align-items: center; text-decoration: none; }
-.logo-dt { font: 400 22px/1 var(--pixel); color: var(--text); text-shadow: 2px 2px 0 var(--signal); }
-.logo-sub { font: 400 8px/1.6 var(--pixel); letter-spacing: 0.04em; color: var(--muted); }
+/* ---------- readout, hint ---------- */
 
 .readout {
   position: fixed; z-index: 10; right: var(--gutter); top: calc(var(--rail) + 22px);
   width: 236px; padding: 12px 14px; font-size: 11px; line-height: 1.55;
 }
 .readout p { margin: 0 0 8px; color: var(--muted); }
+.rd-name { display: inline-block; margin-bottom: 6px; font: 400 13px/1.3 var(--pixel); letter-spacing: 0.02em; color: var(--text); text-shadow: 2px 2px 0 var(--signal); }
 .readout b { font: 400 11px/1.4 var(--pixel); color: var(--text); display: block; margin-bottom: 6px; letter-spacing: 0.02em; }
 .readout dl { margin: 0; border-top: 2px dotted var(--line-strong); padding-top: 8px; }
 .readout dl div { display: grid; grid-template-columns: 56px 1fr; gap: 6px; }
@@ -111,8 +109,6 @@ button { font: inherit; color: inherit; }
 .readout dd { margin: 0; overflow-wrap: anywhere; }
 .readout a { text-decoration: none; border-bottom: 1px solid var(--line-strong); }
 .readout a:hover { color: var(--signal); border-color: var(--signal); }
-.snd { border: 2px solid var(--text); background: none; padding: 2px 6px; font: 400 8px var(--pixel); cursor: pointer; }
-.snd[aria-pressed="true"] { background: var(--signal); border-color: var(--signal); color: #fff; }
 
 .hint { position: fixed; z-index: 10; left: var(--gutter); right: var(--gutter); bottom: 10px; margin: 0;
   font: 400 9px/1 var(--pixel); letter-spacing: 0.04em; text-transform: uppercase;
@@ -215,9 +211,7 @@ button { font: inherit; color: inherit; }
 /* ---------- small screens ---------- */
 @media (max-width: 700px) {
   :root { --rail: 52px; }
-  .logo-dt { font-size: 16px; }
-  .logo-sub { display: none; }
-  .readout { top: calc(var(--rail) + 14px); width: auto; max-width: 64vw; padding: 8px 10px; font-size: 10px; }
+      .readout { top: calc(var(--rail) + 14px); width: auto; max-width: 64vw; padding: 8px 10px; font-size: 10px; }
   .readout > p:not(:first-child), .readout dl div:nth-child(n+3) { display: none; }
   .readout b { font-size: 9px; }
   .hint { font-size: 7px; }

@@ -150,21 +150,15 @@ function indexPage() {
 
 
 
-<a class="logo" href="./" aria-label="${esc(site.name)} arcade, reload">
-  <span class="logo-dt" data-text="${esc(site.name.split(" ").map((w) => w[0]).join(""))}">${esc(site.name.split(" ").map((w) => w[0]).join(""))}</span>
-  <span class="logo-sub">${esc(site.name.toUpperCase())}<br>CLAW / ARCADE-01</span>
-</a>
 
 <aside class="readout px-panel" aria-label="Contact and details">
-  <p><b>${esc(site.name)}</b><br>${esc(site.role)}</p>
+  <p><b class="rd-name">${esc(site.name)}</b><br>${esc(site.role)}</p>
   <p>${esc(site.location || "")}</p>
   <dl>
     ${site.email ? `<div><dt>Mail</dt><dd><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></dd></div>` : ""}
     ${site.linkedin ? `<div><dt>In</dt><dd><a href="${esc(site.linkedin)}" rel="noopener" target="_blank">LinkedIn ↗</a></dd></div>` : ""}
     <div><dt>Site</dt><dd><a href="../portfolio/">Full portfolio</a> · <a href="../">Menu</a></dd></div>
     <div><dt>Prizes</dt><dd>${pad(projects.length)}</dd></div>
-    <div><dt>Time</dt><dd data-clock>--:--:--</dd></div>
-    <div><dt>Sound</dt><dd><button type="button" class="snd" data-sound aria-pressed="false">Off</button></dd></div>
   </dl>
 </aside>
 

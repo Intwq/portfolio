@@ -348,31 +348,12 @@
     p.el.addEventListener("pointerleave", () => { if (mode === "follow") say(DEFAULT_HINT); });
   });
 
-  // ---------- sound (tiny square-wave synth, off by default) ----------
-  let AC = null, sound = false;
-  try { sound = localStorage.getItem("arcade-sound") === "1"; } catch (e) {}
-  const sndBtn = $("[data-sound]");
-  const paintSnd = () => { sndBtn.textContent = sound ? "On" : "Off"; sndBtn.setAttribute("aria-pressed", String(sound)); };
-  paintSnd();
-  sndBtn.addEventListener("click", () => { sound = !sound; paintSnd(); try { localStorage.setItem("arcade-sound", sound ? "1" : "0"); } catch (e) {} beep(880, 0.06); });
-  function beep(f, dur = 0.08, type = "square", vol = 0.05, when = 0) {
-    if (!sound) return;
-    try {
-      AC = AC || new (window.AudioContext || window.webkitAudioContext)();
-      const o = AC.createOscillator(), g = AC.createGain(), t = AC.currentTime + when;
-      o.type = type; o.frequency.setValueAtTime(f, t);
-      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      o.connect(g).connect(AC.destination); o.start(t); o.stop(t + dur + 0.02);
-    } catch (e) {}
-  }
-  const fanfare = () => [523, 659, 784, 1047, 784, 1047].forEach((f, i) => beep(f, 0.12, "square", 0.045, i * 0.08));
 
   // ---------- grab sequence ----------
   function grab(p) {
     if (mode !== "follow" || !win.hidden) return;
     current = p; p.homeX = p.x; mode = "seek"; timer = 0; claw.openT = 1;
     say(`Grabbing ${p.d.title}…`);
-    beep(440, 0.05); beep(660, 0.05, "square", 0.04, 0.06);
   }
   const gripOffset = () => 19 * U * PX;
   function grip() {
@@ -406,7 +387,6 @@
     if (win.hidden || win.classList.contains("closed")) return;
     win.classList.add("closed");
     fx.classList.remove("on");
-    beep(330, 0.08); beep(220, 0.1, "square", 0.04, 0.08);
     setTimeout(() => { win.hidden = true; winBody.innerHTML = ""; delete win.dataset.slug; }, 420);
     if (fromIndex) { fromIndex = false; say(DEFAULT_HINT); return; }
     if (current) { current.el.classList.remove("shake"); mode = "stow"; timer = 0; say("Returning prize…"); }
@@ -443,14 +423,10 @@
   $$("[data-open]", drawer).forEach((b) => b.addEventListener("click", () => {
     if (mode !== "follow" || !win.hidden) return;
     const d = DATA.find((x) => x.slug === b.dataset.open), r = b.getBoundingClientRect();
-    setDrawer(false); fromIndex = true; beep(660, 0.06);
+    setDrawer(false); fromIndex = true;
     openWindow(d, r.left + 26, r.top + r.height / 2);
   }));
 
-  // ---------- clock ----------
-  const clk = $("[data-clock]");
-  const tickClock = () => { clk.textContent = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }); };
-  tickClock(); setInterval(tickClock, 1000);
 
   // ---------- simulation ----------
   let shakeCool = 0;
@@ -488,10 +464,10 @@
       lenT = near ? Math.max(minL, p.y - ay - gripOffset() + S * 0.04) : Math.min(len, minL + 40);
       const g = grip();
       const gyT = p.y + S * 0.04;                                       // where the grip should end up: down in the prize
-      if (near && Math.abs(len - lenT) < 4 && Math.abs(g.y - gyT) < S * 0.12 && Math.abs(g.x - p.x) < S * 0.4) { mode = "grab"; timer = 0; claw.openT = 0; beep(200, 0.12, "sawtooth", 0.04); }
+      if (near && Math.abs(len - lenT) < 4 && Math.abs(g.y - gyT) < S * 0.12 && Math.abs(g.x - p.x) < S * 0.4) { mode = "grab"; timer = 0; claw.openT = 0; }
       if ((timer += dt) > 3) { mode = "grab"; timer = 0; claw.openT = 0; }
     } else if (mode === "grab") {
-      if ((timer += dt) > 0.14) { held = current; held.dyn = false; held.el.style.zIndex = "900"; held.el.classList.add("held"); mode = "lift"; timer = 0; beep(520, 0.05); prizes.forEach((q) => { q.sleep = 0; }); }
+      if ((timer += dt) > 0.14) { held = current; held.dyn = false; held.el.style.zIndex = "900"; held.el.classList.add("held"); mode = "lift"; timer = 0; prizes.forEach((q) => { q.sleep = 0; }); }
     } else if (mode === "lift") {
       lenT = minL + 20; timer += dt;
       if (len - lenT < 180) trolley.tx = W / 2;                                       // swing to centre while still lifting
@@ -514,7 +490,7 @@
     } else if (mode === "return") {
       const dropX = Math.max(S, Math.min(W - S, held.homeX));
       lenT = minL + 20; trolley.tx = dropX; timer += dt;
-      if ((Math.abs(trolley.x - dropX) < 10 && Math.abs(trolley.v) < 200) || timer > 3) { mode = "release"; timer = 0; claw.openT = 1; beep(300, 0.06); }
+      if ((Math.abs(trolley.x - dropX) < 10 && Math.abs(trolley.v) < 200) || timer > 3) { mode = "release"; timer = 0; claw.openT = 1; }
     } else if (mode === "release") {
       if ((timer += dt) > 0.2) {
         const p = held; held = null;
@@ -568,7 +544,7 @@
     held = null;
     fx.style.transform = `translate(${current.x}px, ${current.y}px)`;
     fx.classList.add("on");
-    say(`★ Prize: ${current.d.title}`); fanfare();
+    say(`★ Prize: ${current.d.title}`);
   }
 
   function draw() {
