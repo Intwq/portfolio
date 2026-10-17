@@ -333,7 +333,7 @@
   // ---------- input ----------
   const machine = $("#machine");
   // the claw keeps its aim while the pointer is on the big red button, so "nearest" means nearest to where you aimed
-  const setPointer = (e) => { if (e.target && e.target.closest && e.target.closest(".big-red")) return; pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true; };
+  const setPointer = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true; };
   addEventListener("pointermove", setPointer, { passive: true });
   addEventListener("pointerdown", setPointer, { passive: true });
   const say = (t) => { hint.textContent = t; };
@@ -414,8 +414,7 @@
   $("[data-close]", win).addEventListener("click", closeWindow);
   addEventListener("keydown", (e) => { if (e.key === "Escape") closeWindow(); });
 
-  // ---------- big red button: drop on the prize nearest the claw ----------
-  const bigRed = $("#big-red");
+  // ---------- click anywhere: drop on the prize nearest the click ----------
   function grabNearest(ax, ay) {
     if (mode !== "follow" || !win.hidden) return;
     const g = ax === undefined ? grip() : { x: ax, y: ay }; let best = null, bd = Infinity;
@@ -426,7 +425,6 @@
     }
     if (best) grab(best);
   }
-  bigRed.addEventListener("click", (e) => { e.stopPropagation(); grabNearest(); });   // the button: nearest to where the claw is aimed
   // "click anywhere": a click on empty machine space drops on the prize nearest that spot.
   // A click that only closes the open index drawer doesn't count.
   let drawerWasOpen = false;
@@ -435,7 +433,6 @@
     if (drawerWasOpen || e.target.closest(".prize, a, button, .drawer, .readout, .win")) return;
     grabNearest(e.clientX, e.clientY);
   });
-  bigRed.addEventListener("pointerdown", (e) => e.stopPropagation());
   addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && document.activeElement === document.body) { e.preventDefault(); grabNearest(); } });
 
   // ---------- index drawer ----------
@@ -574,11 +571,8 @@
     say(`★ Prize: ${current.d.title}`); fanfare();
   }
 
-  let busyShown = null;
   function draw() {
     drawRig();
-    const busy = mode !== "follow" || !win.hidden;
-    if (busy !== busyShown) { busyShown = busy; bigRed.classList.toggle("busy", busy); bigRed.setAttribute("aria-disabled", String(busy)); }
     for (const p of prizes) {
       const x = Math.round(p.x / PX) * PX - S / 2, y = Math.round(p.y / PX) * PX - S / 2;
       p.el.style.transform = `translate(${x}px, ${y}px)${p.rot ? ` rotate(${Math.round(p.rot)}deg)` : ""} scale(${p.scale})`;
