@@ -63,6 +63,7 @@ const projects = fs.readdirSync(path.join(SRC, "projects"))
   .map((f) => {
     const p = JSON.parse(fs.readFileSync(path.join(SRC, "projects", f), "utf8"));
     p.slug = slugify(path.basename(f, ".json")) || slugify(p.title);
+    p._file = `src/projects/${f}`;
     p.images = (p.images || []).filter(Boolean);
     p.cover = p.cover || p.images[0] || "";
     p.fp = p.focus ? `object-position:${String(p.focus).replace(/[^0-9.% a-z]/gi, "")};` : "";
@@ -111,6 +112,21 @@ function srcset(p, u, sizes) {
   return ` src="${fallback}" srcset="${set.join(", ")}" sizes="${sizes}" width="${d.w}" height="${d.h}"`;
 }
 
+// ---------- on-page editor ----------
+// Text that can be edited from the page is marked with data-ed="<file>#<json pointer>", and the raw
+// source value is shipped in a JSON block, so the editor shows exactly what's in the file (paragraph
+// breaks and list lines included). Saving goes through functions/api/edit.js, which commits to GitHub.
+let EDV = {};
+const ED = (file) => (ptr, raw) => {
+  if (raw === undefined || raw === null || (typeof raw === "object" && !Array.isArray(raw))) return "";
+  const key = `${file}#${ptr}`;
+  EDV[key] = Array.isArray(raw) ? raw.join("\n") : String(raw);
+  return ` data-ed="${esc(key)}"`;
+};
+const SITE = ED("src/site.json");
+const edBlock = () => Object.keys(EDV).length
+  ? `<script type="application/json" id="ed-src">${JSON.stringify(EDV).replace(/</g, "\\u003c")}</script>` : "";
+
 // ---------- layout ----------
 const FONTS = "https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Unbounded:wght@300;400;500;600&display=swap";
 
@@ -152,7 +168,7 @@ ${body}
 </main>
 <footer class="foot">
   <div class="foot-big">
-    <p class="foot-line">${esc(site.contact_line || "Have a product to bring to market?")}</p>
+    <p class="foot-line"${site.contact_line ? SITE("/contact_line", site.contact_line) : ""}>${esc(site.contact_line || "Have a product to bring to market?")}</p>
     ${site.email ? `<a class="foot-mail" href="mailto:${esc(site.email)}">${esc(site.email)}</a>` : ""}
   </div>
   <div class="foot-row">
@@ -161,6 +177,7 @@ ${body}
       ${site.instagram ? `<a href="${esc(site.instagram)}" rel="noopener">Instagram</a>` : ""}
       ${site.linkedin ? `<a href="${esc(site.linkedin)}" rel="noopener">LinkedIn</a>` : ""}
       <a href="#main" data-top>Back to top</a>
+      <button class="ed-lock" type="button" data-ed-lock aria-label="Edit site text" title="Edit"><svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></button>
     </span>
     <span class="readout" aria-hidden="true"><span data-pct>000</span>%</span>
   </div>
@@ -168,6 +185,8 @@ ${body}
 <div class="cursor" aria-hidden="true"><span class="cursor-ring"><span class="cursor-label">View</span></span><span class="cursor-dot"></span></div>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 <script src="${u.asset("assets/site.js")}" defer></script>
+${edBlock()}
+<script src="${u.asset("assets/edit.js")}" defer></script>
 </body>
 </html>
 `;
@@ -177,6 +196,7 @@ ${body}
 const SPANS = [7, 5, 4, 4, 4, 5, 7, 6, 6]; // repeating grid rhythm on a 12-column grid
 
 function homePage() {
+  EDV = {};
   const u = make(1);
   const slides = featured.map((p, i) => `
     <figure class="slide${i === 0 ? " is-on" : ""}" data-slide data-title="${esc(p.title)}" data-year="${esc(p.year)}" data-href="${u.work(p.slug)}">
@@ -240,7 +260,7 @@ function homePage() {
   <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <div class="hero-text">
     <h1 class="hero-title" data-split>${esc(site.name)}</h1>
-    <p class="hero-tag">${esc(site.tagline)}</p>
+    <p class="hero-tag"${SITE("/tagline", site.tagline)}>${esc(site.tagline)}</p>
   </div>
   <a class="readout-card" href="${u.work(featured[0].slug)}" data-readout>
     <span class="rc-idx"><span data-ro-i>01</span> / ${pad(featured.length)}</span>
@@ -269,6 +289,8 @@ function galleryRows(images) {
 }
 
 function projectPage(p, i) {
+  EDV = {};
+  const E = ED(p._file);
   const u = make(2);
   const next = projects[(i + 1) % projects.length];
   let n = 0;
@@ -285,9 +307,9 @@ function projectPage(p, i) {
     }).join("")}
     </div>`).join("");
 
-  const spec = [["Company", p.company], ["Role", p.role], ["Year", p.year], ["Discipline", p.category], ["Status", p.status], ["Tools", p.tools], ["Images", p.images.length || ""]]
+  const spec = [["Company", p.company, "company"], ["Role", p.role, "role"], ["Year", p.year, "year"], ["Discipline", p.category, "category"], ["Status", p.status, "status"], ["Tools", p.tools, "tools"], ["Images", p.images.length || ""]]
     .filter(([, v]) => v !== undefined && v !== null && String(v).trim() !== "")
-    .map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join("");
+    .map(([k, v, f]) => `<div><dt>${k}</dt><dd${f ? E(`/${f}`, v) : ""}>${esc(v)}</dd></div>`).join("");
 
   const body = `
 <article class="project">
@@ -297,14 +319,14 @@ function projectPage(p, i) {
     <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
     <div class="p-hero-text">
       <p class="p-index">Project ${pad(i + 1)} of ${pad(projects.length)}</p>
-      <h1 class="p-title" data-split>${esc(p.title)}</h1>
+      <h1 class="p-title" data-split${E("/title", p.title)}>${esc(p.title)}</h1>
     </div>
   </section>
   <section class="p-info" data-reveal>
     <dl class="spec">${spec}</dl>
-    <div class="p-desc">${p.description ? paras(p.description) : ""}</div>
+    <div class="p-desc"${p.description ? E("/description", p.description) : ""}>${p.description ? paras(p.description) : ""}</div>
   </section>
-  ${caseStudy(p)}
+  ${caseStudy(p, E)}
   ${rows ? `<section class="p-gallery" aria-label="Images">${caseStudy(p) ? `<h2 class="cs-title gal-title">Gallery</h2>` : ""}${rows}
   </section>` : ""}
   <a class="p-next" href="${u.work(next.slug)}" data-cursor>
@@ -324,22 +346,24 @@ function projectPage(p, i) {
 }
 
 function aboutPage() {
+  EDV = {};
   const u = make(1);
   const picks = projects.filter((p) => p.featured).slice(0, 3);
   const list = (t) => lines(t).map((c) => `<li>${esc(c)}</li>`).join("");
+  const capPtr = Array.isArray(site.capabilities) ? (i) => `/capabilities/${i}/items` : () => "/capabilities";
   const capGroups = Array.isArray(site.capabilities)
     ? site.capabilities
     : [{ title: "Capabilities", items: site.capabilities || "" }];
 
-  const stats = (site.stats || []).filter((s) => s && s.value).map((s) => `
-      <div class="stat"><dt>${esc(s.label || "")}</dt><dd>${esc(s.value)}</dd></div>`).join("");
+  const stats = (site.stats || []).map((s, i) => s && s.value ? `
+      <div class="stat"><dt${SITE(`/stats/${i}/label`, s.label)}>${esc(s.label || "")}</dt><dd${SITE(`/stats/${i}/value`, s.value)}>${esc(s.value)}</dd></div>` : "").join("");
 
-  const jobs = (site.experience || []).filter((j) => j && (j.company || j.role)).map((j) => `
+  const jobs = (site.experience || []).map((j, i) => j && (j.company || j.role) ? `
       <li class="job" data-reveal>
-        <span class="job-dates">${esc(j.dates || "")}</span>
-        <div class="job-head"><h3 class="job-co">${esc(j.company || "")}</h3><p class="job-role">${esc(j.role || "")}</p></div>
-        <p class="job-sum">${esc(j.summary || "")}</p>
-      </li>`).join("");
+        <span class="job-dates"${SITE(`/experience/${i}/dates`, j.dates)}>${esc(j.dates || "")}</span>
+        <div class="job-head"><h3 class="job-co"${SITE(`/experience/${i}/company`, j.company)}>${esc(j.company || "")}</h3><p class="job-role"${SITE(`/experience/${i}/role`, j.role)}>${esc(j.role || "")}</p></div>
+        <p class="job-sum"${SITE(`/experience/${i}/summary`, j.summary)}>${esc(j.summary || "")}</p>
+      </li>` : "").join("");
 
   const collabs = lines(site.collaborations).map((c) => `<li>${esc(c)}</li>`).join("");
 
@@ -347,17 +371,17 @@ function aboutPage() {
 <section class="about">
   <div class="about-head">
     <p class="p-index">About${site.location ? ` / ${esc(site.location)}` : ""}</p>
-    <h1 class="about-title" data-split>${esc(site.role)}</h1>
-    <p class="about-tag">${esc(site.tagline)}</p>
+    <h1 class="about-title" data-split${SITE("/role", site.role)}>${esc(site.role)}</h1>
+    <p class="about-tag"${SITE("/tagline", site.tagline)}>${esc(site.tagline)}</p>
   </div>
 
   ${stats ? `<dl class="stats" data-reveal>${stats}
   </dl>` : ""}
 
   <div class="about-body" data-reveal>
-    <div class="about-bio">${paras(site.about)}</div>
+    <div class="about-bio"${SITE("/about", site.about)}>${paras(site.about)}</div>
     <div class="about-side">
-      ${capGroups.map((g) => `<h2 class="mini">${esc(g.title || "")}</h2><ul class="caps">${list(g.items)}</ul>`).join("\n      ")}
+      ${capGroups.map((g, i) => `<h2 class="mini"${Array.isArray(site.capabilities) ? SITE(`/capabilities/${i}/title`, g.title) : ""}>${esc(g.title || "")}</h2><ul class="caps"${SITE(capPtr(i), g.items)}>${list(g.items)}</ul>`).join("\n      ")}
     </div>
   </div>
 
@@ -368,14 +392,14 @@ function aboutPage() {
   </div>` : ""}
 
   <div class="block facts" data-reveal>
-    ${site.education ? `<div><h2 class="mini">Education</h2><p class="fact-main">${lines(site.education).map(esc).join("<br>")}</p></div>` : ""}
-    ${site.recognition ? `<div><h2 class="mini">Recognition and teaching</h2><ul class="caps">${list(site.recognition)}</ul></div>` : ""}
-    ${site.languages ? `<div><h2 class="mini">Languages</h2><ul class="caps">${list(site.languages)}</ul></div>` : ""}
+    ${site.education ? `<div><h2 class="mini">Education</h2><p class="fact-main"${SITE("/education", site.education)}>${lines(site.education).map(esc).join("<br>")}</p></div>` : ""}
+    ${site.recognition ? `<div><h2 class="mini">Recognition and teaching</h2><ul class="caps"${SITE("/recognition", site.recognition)}>${list(site.recognition)}</ul></div>` : ""}
+    ${site.languages ? `<div><h2 class="mini">Languages</h2><ul class="caps"${SITE("/languages", site.languages)}>${list(site.languages)}</ul></div>` : ""}
   </div>
 
   ${collabs ? `<div class="block" data-reveal>
     <h2 class="mini">Brands and collaborations</h2>
-    <ul class="collabs">${collabs}</ul>
+    <ul class="collabs"${SITE("/collaborations", site.collaborations)}>${collabs}</ul>
   </div>` : ""}
 
   <div class="block contact" data-reveal>
@@ -395,6 +419,7 @@ function aboutPage() {
 }
 
 function notFound() {
+  EDV = {};
   const body = `<section class="nf"><p class="p-index">Error 404</p><h1 class="about-title">Signal lost</h1><p class="about-tag">This page doesn't exist. <a class="link" href="/">Go to the homepage</a></p></section>`;
   return layout({ depth: 0, title: "Page not found", body, cls: "page-about" });
 }

@@ -3,47 +3,55 @@
   "role": "Product manager, stage-gate lead",
   "section": "Product launches",
   "tools": "",
-  "title": "DRX Kits",
+  "title": "DRX Kits & Modular Header",
   "year": 2025,
   "order": 1,
   "category": "Door hardware",
   "status": "Launched, April 2025",
   "featured": false,
-  "description": "DRX is CRL's patented modular door rail. Glass temperers and glaziers stock the components and cut rails to length in their own shop instead of waiting on a factory-built custom rail. But it was only sold in packs of ten, which made the first purchase hard to justify. DRX Kits put everything for one rail in a single box, so an installer can try the system on one door.\n\nWe repurposed existing DRX inventory into 16 kit SKUs (square and tapered profiles, four finishes, with and without locks), positioned pricing against the custom rails buyers already ordered, and took the kits through five gates in six months with engineering, marketing, sales, planning and production.",
+  "description": "DRX is CRL's patented modular door rail. Glass temperers and glaziers stock the components and cut rails to length in their own shop instead of waiting on a factory-built custom rail. But it was only sold in packs of ten, which made the first purchase hard to justify, and a custom opening still needed a custom header from the factory. A modular rail only works if the whole opening is modular.\n\nSo we launched the two together. DRX Kits put everything for one rail in a single box, so an installer can try the system on one door. The Modular Header comes in 48\" lengths that installers cut to size and splice for pairs of doors, so an entire opening can be built from stock with no factory lead time.\n\nWe repurposed existing DRX inventory into 16 kit SKUs (square and tapered profiles, four finishes, with and without locks), reused existing header extrusion for 11 header SKUs with a splice and drilling jig from an outside vendor, positioned pricing against the custom rails buyers already ordered, and took both through five gates in six months with engineering, marketing, sales, planning and production.",
   "metrics": [
     {
-      "value": "16",
-      "label": "Kit SKUs built from existing inventory"
+      "value": "27",
+      "label": "SKUs from existing inventory: 16 rail kits, 11 header parts"
     },
     {
       "value": "10 → 1",
       "label": "Minimum order, in door rails"
     },
     {
-      "value": "6 mo.",
-      "label": "Gate 0 to launch"
+      "value": "0 days",
+      "label": "Factory lead time for a custom opening"
     },
     {
-      "value": "7–8%",
-      "label": "Glass office market CAGR through 2028"
+      "value": "6 mo.",
+      "label": "Gate 0 to launch"
     }
   ],
   "brief": [
     {
       "label": "Problem",
-      "text": "DRX had been on the market for two and a half years, but buyers had to purchase at least ten of every component to finish a single door."
+      "text": "DRX had been on the market for two and a half years, but buyers had to purchase at least ten of every component to finish a single door, and still had to order a custom header or fabricate one themselves."
     },
     {
       "label": "Customers",
       "text": "Glass temperers, large and small glazing contractors and door repair shops, working on commercial offices, government buildings, retail and hospitality."
     },
     {
-      "label": "Solution",
+      "label": "Rail kits",
       "text": "A complete single-rail kit: two rail bodies, a slide block, two 48\" side covers, gasket and end caps. The covers are cut from existing 110\" stock, so kits ship immediately with no manufacturing lead time."
     },
     {
+      "label": "Modular header",
+      "text": "Cut-to-length header channels in 4\" and 4-1/2\" sizes, with a splice for pairs of doors and a jig that locates closer and pivot preparation, so the header matches any custom DRX rail length."
+    },
+    {
       "label": "Value",
-      "text": "Installers get a modular, adjustable system that installs faster. Temperers stop waiting on factory fabrication. Owners can change finishes after installation."
+      "text": "Installers get a modular, adjustable system for the whole opening that installs faster. Temperers stop waiting on factory fabrication. Owners can change finishes after installation."
+    },
+    {
+      "label": "Sourcing",
+      "text": "Kits and headers built from existing inventory; the header splice and drilling jig bought from an outside vendor."
     },
     {
       "label": "Market",
@@ -168,6 +176,14 @@
       "caption": "How the modular DRX rail differs from the solid DRS rail it builds on.",
       "columns": "|DRS|DRX",
       "rows": "Construction|One solid extrusion|Rail body with removable covers\nGlass clamping|Wedge Lock|Enhanced Wedge Lock\nLead time on custom sizes|Factory-built to order|None: stocked parts, cut and assembled locally"
+    },
+    {
+      "type": "table",
+      "title": "System lineup",
+      "caption": "Everything an installer needs to build a custom single or double door opening on site.",
+      "columns": "Component | Purpose | Variants",
+      "rows": "Header channel, 48\" | Cut to length for the opening | 4\" and 4-1/2\"; clear anodized, dark bronze, matte black, brushed stainless\nSplice | Joins two channels for pairs of doors | 4\" and 4-1/2\"\nDrilling jig | Locates closer and pivot preparation | One jig for both sizes",
+      "wide": true
     }
   ],
   "quotes": [
@@ -185,9 +201,9 @@
     }
   ],
   "swot": {
-    "strengths": "Everything for one door rail in one box, so ordering and installing is simpler\nInstallers' inventory gets easier to manage",
+    "strengths": "Everything for one door rail in one box, so ordering and installing is simpler\nInstallers' inventory gets easier to manage\nThe modular header completes the package: a whole custom opening built from stock",
     "weaknesses": "DRX costs more than the standard DRS rail\nInternal teams needed training and buy-in on a newer system",
-    "opportunities": "Reach buyers frustrated with custom-rail lead times\nGive glaziers and temperers control over their own schedules\nBuild loyalty with customers who adopt the system",
+    "opportunities": "Reach buyers frustrated with custom-rail lead times\nGive glaziers and temperers control over their own schedules\nBuild loyalty with customers who adopt the system\nSell the complete opening, rails and header, as one system",
     "threats": "Competitors could copy the kit approach\nFor some buyers the cost may outweigh the benefit"
   },
   "images": [
@@ -199,15 +215,26 @@
     "/images/projects/drx-kits/06.jpg",
     "/images/projects/drx-kits/07.jpg",
     "/images/projects/drx-kits/08.jpg",
-    "/images/projects/drx-kits/09.jpg"
+    "/images/projects/drx-kits/09.jpg",
+    "/images/projects/modular-header/01.jpg",
+    "/images/projects/modular-header/02.jpg",
+    "/images/projects/modular-header/03.jpg",
+    "/images/projects/modular-header/04.jpg",
+    "/images/projects/modular-header/05.jpg",
+    "/images/projects/modular-header/06.jpg",
+    "/images/projects/modular-header/07.jpg"
   ],
   "cover": "/images/projects/drx-kits/01.jpg",
   "hidden": false,
-  "my_role": "I co-led DRX Kits with the senior product manager and ran it through all five gates in six months. I built the business case from custom-rail sales, defined the 16 SKUs and their pricing and discount rules, wrote the inventory plan, and coordinated manufacturing to repackage existing stock into kits instead of tooling anything new.",
+  "my_role": "I co-led DRX Kits with the senior product manager and ran the kits and the modular header through all five gates on one schedule, in six months. I built the business case from custom-rail sales, defined the 16 SKUs and their pricing and discount rules, wrote the inventory plan, and coordinated manufacturing to repackage existing stock into kits instead of tooling anything new. For the header I defined the SKU set, sourced the splice and drilling jig from an outside vendor, and aligned the marketing plan so both launched together in April 2025.",
   "stakeholders": [
     {
       "group": "Manufacturing",
       "members": "Los Angeles plant: kit assembly from existing stock"
+    },
+    {
+      "group": "Supplier",
+      "members": "Outside vendor for header splices and drilling jig"
     },
     {
       "group": "Customers",
@@ -250,6 +277,10 @@
     {
       "challenge": "The kits had to be cheaper to build than the custom rail they replaced, using parts that were already made.",
       "resolution": "Engineering ran a cost comparison of DRX against the equivalent custom rail before we committed; the kit came in lower, which set our pricing floor."
+    },
+    {
+      "challenge": "Without a header, DRX customers still had to wait on a custom factory part or fabricate one themselves, which undercut the point of the kits.",
+      "resolution": "We reused existing header extrusion in 48\" lengths and added a splice and a jig that locates closer and pivot preparation, so a full opening can be built from stock."
     }
   ]
 }

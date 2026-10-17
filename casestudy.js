@@ -131,14 +131,15 @@ function words(c) {
 
 const TYPES = { hbar, bar, line, split, stack, table, words };
 
-function chart(c, k) {
+function chart(c, k, E = NOE) {
   const fn = TYPES[c.type] || hbar;
+  const at = (f) => E(`/charts/${c._i}/${f}`, c[f]);
   return `
     <figure class="chart${c.wide ? " wide" : ""} t-${esc(c.type || "hbar")}" data-reveal>
       <figcaption class="chart-head">
         <span class="chart-n">Fig. R${String(k + 1).padStart(2, "0")}</span>
-        <h3>${esc(c.title || "")}</h3>
-        ${c.caption ? `<p>${esc(c.caption)}</p>` : ""}
+        <h3${at("title")}>${esc(c.title || "")}</h3>
+        ${c.caption ? `<p${at("caption")}>${esc(c.caption)}</p>` : ""}
       </figcaption>
       <div class="chart-body">${fn(c)}</div>
       ${c.note ? `<p class="chart-note">${esc(c.note)}</p>` : ""}
@@ -146,6 +147,10 @@ function chart(c, k) {
 }
 
 // ---------- sections ----------
+// E(pointer, raw) returns the attribute that marks text as editable in the on-page editor
+// (a JSON pointer into this project's file). The arcade build passes nothing, so it's a no-op there.
+const NOE = () => "";
+const keep = (arr, ok) => (arr || []).map((x, i) => (x && typeof x === "object" ? { ...x, _i: i } : x)).filter(ok);
 const GATES = ["G0", "G1", "G2", "G3", "G4", "G5"];
 const GATE_NAMES = { G0: "Concept", G1: "Define", G2: "Develop", G3: "Validate", G4: "Launch", G5: "Post-launch" };
 
@@ -172,38 +177,38 @@ function gatesHtml(p) {
   </section>`;
 }
 
-function roleHtml(p) {
-  const groups = (p.stakeholders || []).filter((g) => g && (g.group || g.members));
+function roleHtml(p, E = NOE) {
+  const groups = keep(p.stakeholders, (g) => g && (g.group || g.members));
   if (!p.my_role && !groups.length) return "";
   return `
   <section class="cs-block" aria-labelledby="m-${p.slug}">
     <h2 class="cs-title" id="m-${p.slug}">My role</h2>
     <div class="role" data-reveal>
-      ${p.my_role ? `<div class="role-text">${paras(p.my_role)}</div>` : ""}
+      ${p.my_role ? `<div class="role-text"${E("/my_role", p.my_role)}>${paras(p.my_role)}</div>` : ""}
       ${groups.length ? `<div class="sh">
         <p class="sh-head">Stakeholders I coordinated</p>
         <dl class="sh-list">${groups.map((g, i) => `
-          <div style="--i:${i}"><dt>${esc(g.group || "")}</dt><dd>${esc(lines(g.members).join(" · "))}</dd></div>`).join("")}
+          <div style="--i:${i}"><dt${E(`/stakeholders/${g._i}/group`, g.group)}>${esc(g.group || "")}</dt><dd${E(`/stakeholders/${g._i}/members`, g.members)}>${esc(lines(g.members).join(" · "))}</dd></div>`).join("")}
         </dl></div>` : ""}
     </div>
   </section>`;
 }
 
-function recoveryHtml(p) {
-  const steps = (p.recovery || []).filter((r) => r && r.text);
+function recoveryHtml(p, E = NOE) {
+  const steps = keep(p.recovery, (r) => r && r.text);
   if (!steps.length) return "";
   return `
   <section class="cs-block" aria-labelledby="w-${p.slug}">
-    <h2 class="cs-title" id="w-${p.slug}">${esc(p.recovery_title || "Plan to win back the market")}</h2>
-    ${p.recovery_intro ? `<div class="cs-intro">${paras(p.recovery_intro)}</div>` : ""}
+    <h2 class="cs-title" id="w-${p.slug}"${p.recovery_title ? E("/recovery_title", p.recovery_title) : ""}>${esc(p.recovery_title || "Plan to win back the market")}</h2>
+    ${p.recovery_intro ? `<div class="cs-intro"${E("/recovery_intro", p.recovery_intro)}>${paras(p.recovery_intro)}</div>` : ""}
     <ol class="plan" data-reveal>${steps.map((r, i) => `
-      <li style="--i:${i}"><span class="plan-n">${String(i + 1).padStart(2, "0")}</span><div><h3>${esc(r.label || "")}</h3>${paras(r.text)}</div></li>`).join("")}
+      <li style="--i:${i}"><span class="plan-n">${String(i + 1).padStart(2, "0")}</span><div><h3${E(`/recovery/${r._i}/label`, r.label)}>${esc(r.label || "")}</h3><div${E(`/recovery/${r._i}/text`, r.text)}>${paras(r.text)}</div></div></li>`).join("")}
     </ol>
   </section>`;
 }
 
-function challengesHtml(p) {
-  const list = (p.challenges || []).filter((c) => c && (c.challenge || c.resolution));
+function challengesHtml(p, E = NOE) {
+  const list = keep(p.challenges, (c) => c && (c.challenge || c.resolution));
   if (!list.length) return "";
   return `
   <section class="cs-block" aria-labelledby="c-${p.slug}">
@@ -211,72 +216,72 @@ function challengesHtml(p) {
     <ol class="cr">${list.map((c, i) => `
       <li data-reveal>
         <span class="cr-n">${String(i + 1).padStart(2, "0")}</span>
-        <div class="cr-c"><span class="cr-k">Challenge</span>${paras(c.challenge)}</div>
-        <div class="cr-r"><span class="cr-k">Resolution</span>${paras(c.resolution)}</div>
+        <div class="cr-c"><span class="cr-k">Challenge</span><div${E(`/challenges/${c._i}/challenge`, c.challenge)}>${paras(c.challenge)}</div></div>
+        <div class="cr-r"><span class="cr-k">Resolution</span><div${E(`/challenges/${c._i}/resolution`, c.resolution)}>${paras(c.resolution)}</div></div>
       </li>`).join("")}
     </ol>
   </section>`;
 }
 
-function caseStudy(p) {
-  const metrics = (p.metrics || []).filter((m) => m && m.value);
-  const brief = (p.brief || []).filter((b) => b && b.text);
-  const charts = (p.charts || []).filter((c) => c && c.type);
-  const study = (p.study || []).filter((s) => s && s.text);
-  const quotes = (p.quotes || []).filter((q) => q && q.quote);
+function caseStudy(p, E = NOE) {
+  const metrics = keep(p.metrics, (m) => m && m.value);
+  const brief = keep(p.brief, (b) => b && b.text);
+  const charts = keep(p.charts, (c) => c && c.type);
+  const study = keep(p.study, (s) => s && s.text);
+  const quotes = keep(p.quotes, (q) => q && q.quote);
   const swot = p.swot || {};
   const swotKeys = [["strengths", "Strengths"], ["weaknesses", "Weaknesses"], ["opportunities", "Opportunities"], ["threats", "Threats"]]
     .filter(([k]) => lines(swot[k]).length);
   if (!metrics.length && !brief.length && !study.length && !charts.length && !quotes.length && !swotKeys.length && !(p.gates || []).length
     && !p.my_role && !(p.challenges || []).length && !(p.recovery || []).length) return "";
+  const pair = (list, key, b) => `
+      <div><dt${E(`/${key}/${b._i}/label`, b.label)}>${esc(b.label || "")}</dt><dd${E(`/${key}/${b._i}/text`, b.text)}>${paras(b.text)}</dd></div>`;
 
   return `
 <div class="cs">
   ${metrics.length ? `<dl class="stats cs-stats" data-reveal>${metrics.map((m) => `
-    <div class="stat"><dt>${esc(m.label || "")}</dt><dd>${esc(m.value)}</dd></div>`).join("")}
+    <div class="stat"><dt${E(`/metrics/${m._i}/label`, m.label)}>${esc(m.label || "")}</dt><dd${E(`/metrics/${m._i}/value`, m.value)}>${esc(m.value)}</dd></div>`).join("")}
   </dl>` : ""}
 
   ${brief.length ? `<section class="cs-block" aria-labelledby="o-${p.slug}">
     <h2 class="cs-title" id="o-${p.slug}">Overview</h2>
-    <dl class="brief" data-reveal>${brief.map((b) => `
-      <div><dt>${esc(b.label || "")}</dt><dd>${paras(b.text)}</dd></div>`).join("")}
+    <dl class="brief" data-reveal>${brief.map((b) => pair(brief, "brief", b)).join("")}
     </dl>
   </section>` : ""}
 
   ${study.length ? `<section class="cs-block" aria-labelledby="d-${p.slug}">
     <h2 class="cs-title" id="d-${p.slug}">Design language</h2>
-    ${p.study_intro ? `<div class="cs-intro">${paras(p.study_intro)}</div>` : ""}
-    <dl class="brief" data-reveal>${study.map((s) => `
-      <div><dt>${esc(s.label || "")}</dt><dd>${paras(s.text)}</dd></div>`).join("")}
+    ${p.study_intro ? `<div class="cs-intro"${E("/study_intro", p.study_intro)}>${paras(p.study_intro)}</div>` : ""}
+    <dl class="brief" data-reveal>${study.map((s) => pair(study, "study", s)).join("")}
     </dl>
   </section>` : ""}
 
-  ${roleHtml(p)}
+  ${roleHtml(p, E)}
 
   ${gatesHtml(p)}
 
-  ${recoveryHtml(p)}
+  ${recoveryHtml(p, E)}
 
   ${charts.length ? `<section class="cs-block" aria-labelledby="r-${p.slug}">
     <h2 class="cs-title" id="r-${p.slug}">Research</h2>
-    ${p.research_intro ? `<div class="cs-intro">${paras(p.research_intro)}</div>` : ""}
-    <div class="charts">${charts.map(chart).join("")}
+    ${p.research_intro ? `<div class="cs-intro"${E("/research_intro", p.research_intro)}>${paras(p.research_intro)}</div>` : ""}
+    <div class="charts">${charts.map((c, k) => chart(c, k, E)).join("")}
     </div>
   </section>` : ""}
 
-  ${challengesHtml(p)}
+  ${challengesHtml(p, E)}
 
   ${quotes.length ? `<section class="cs-block" aria-labelledby="q-${p.slug}">
     <h2 class="cs-title" id="q-${p.slug}">Voice of the customer</h2>
     <div class="quotes">${quotes.map((q) => `
-      <blockquote class="quote" data-reveal><p>${esc(q.quote)}</p>${q.source ? `<footer>${esc(q.source)}</footer>` : ""}</blockquote>`).join("")}
+      <blockquote class="quote" data-reveal><p${E(`/quotes/${q._i}/quote`, q.quote)}>${esc(q.quote)}</p>${q.source ? `<footer${E(`/quotes/${q._i}/source`, q.source)}>${esc(q.source)}</footer>` : ""}</blockquote>`).join("")}
     </div>
   </section>` : ""}
 
   ${swotKeys.length ? `<section class="cs-block" aria-labelledby="s-${p.slug}">
     <h2 class="cs-title" id="s-${p.slug}">Situational analysis</h2>
     <div class="swot" data-reveal>${swotKeys.map(([k, name]) => `
-      <div class="sw sw-${k}"><h3><span>${name[0]}</span>${name}</h3><ul>${lines(swot[k]).map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`).join("")}
+      <div class="sw sw-${k}"><h3><span>${name[0]}</span>${name}</h3><ul${E(`/swot/${k}`, swot[k])}>${lines(swot[k]).map((l) => `<li>${esc(l)}</li>`).join("")}</ul></div>`).join("")}
     </div>
   </section>` : ""}
 </div>`;

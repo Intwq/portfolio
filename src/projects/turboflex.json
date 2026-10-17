@@ -8,7 +8,7 @@
   "order": 0,
   "category": "Life-safety glass railing system",
   "status": "Launched April 2026 (U.S. and Canada); Miami-Dade approval in progress",
-  "description": "TurboFlex was my last and largest program at CRL: a dry-glazed glass railing system brought from OnLevel in Europe to the U.S. and Canadian markets under the CRL name, in about six months from first gate to launch.\n\nA glass railing is a guard. It keeps people from falling off balconies, terraces and mezzanines, so every part of it answers to building codes, structural engineers and certification bodies before it can be sold. The system had been engineered and tested to German DIN standards; my job was to prove it under U.S. codes, put it through Miami-Dade's hurricane impact testing, set up a three-country supply chain, and get product, packaging, pricing and training ready for 23 service centers on a fixed launch date.\n\nIt replaced CRL's Taper-Loc system, which had been losing share for three years. TurboFlex cuts the parts an installer has to stock from 178 to 10, swaps a large, expensive installation tool for a torque-limited bit that runs on a standard drill, and adds height adjustment on top of tilt, which the market was starting to expect.",
+  "description": "TurboFlex was my last and largest program at CRL, a year from start to launch. On paper it was meant to be simple: OnLevel's dry-glazed glass railing system was already selling in Europe, and with CRL considering buying the company, the plan was to import it as-is and sell it in the U.S. and Canada under the CRL name.\n\nIt didn't stay simple, and it cost me a lot of sleepless nights. A glass railing is a guard: it keeps people from falling off balconies, terraces and mezzanines, so every part of it answers to building codes, structural engineers and certification bodies before it can be sold. The system had been tested to German DIN standards, and testing in the U.S. works very differently. As we dug in, we also found that tolerances and some of the materials that were accepted in Europe weren't good enough to uphold CRL's reputation on a life-safety product. What started as an import became round after round of prototyping and revisions with OnLevel and our engineers: tighter tolerances, material changes, and re-testing against U.S. requirements and Miami-Dade's hurricane impact standard, while a three-country supply chain, packaging, pricing and training came together for 23 service centers on a fixed launch date.\n\nIt replaced CRL's Taper-Loc system, which had been losing share for three years. TurboFlex cuts the parts an installer has to stock from 178 to 10, swaps a large, expensive installation tool for a torque-limited bit that runs on a standard drill, and adds height adjustment on top of tilt, which the market was starting to expect.",
   "metrics": [
     {
       "value": "178 → 10",
@@ -19,8 +19,8 @@
       "label": "Passed Miami-Dade HVHZ impact testing, top and fascia mount"
     },
     {
-      "value": "6 mo.",
-      "label": "Partnership kickoff to U.S. and Canadian launch"
+      "value": "1 yr",
+      "label": "From an import plan to a re-engineered U.S. and Canadian launch"
     },
     {
       "value": "2×",
@@ -33,8 +33,12 @@
       "text": "CRL's Taper-Loc dry-glaze system had been largely unchanged for over 12 years. Competitors offered lower entry cost, more adjustment and wider glass compatibility, and some large Miami installers wouldn't carry it without High-Velocity Hurricane Zone approval. Sales fell 17.5% from 2022 to 2024."
     },
     {
+      "label": "Starting point",
+      "text": "Import OnLevel's European system as-is under the CRL name, while CRL considered acquiring the company."
+    },
+    {
       "label": "Strategy",
-      "text": "Bring in a proven European system as CRL's premium dry-set railing and keep Taper-Loc as the entry-level option, so existing customers aren't stranded and new ones enter through TurboFlex."
+      "text": "Re-engineer the European system until it met U.S. codes and CRL's own bar, launch it as CRL's premium dry-set railing, and keep Taper-Loc as the entry-level option, so existing customers aren't stranded and new ones enter through TurboFlex."
     },
     {
       "label": "Solution",
@@ -53,7 +57,7 @@
       "text": "FHC Achieve, Q-Railing, Wagner and VIVA Railings."
     }
   ],
-  "my_role": "I led the program day to day, from the business case at Gate 0 through launch, alongside the senior product manager for the category. I ran the gate reviews, the weekly cadence with marketing, sourcing and leadership, a daily stand-up with the engineering team, and a bi-weekly call with OnLevel's leadership in Europe.\n\nBecause a railing is life-safety equipment, the work was as much about evidence as product. I coordinated the engineering report that translated OnLevel's German test results into U.S. load requirements, the update to CRL's ICC-ES evaluation report, the Miami-Dade test samples and approval package, and the supplier quality controls that approval requires. In parallel I built the forecast and inventory plan, set pricing with revenue operations, created the SKUs and drove the packaging, labeling, freight and training plans that put the system in 23 service centers.",
+  "my_role": "I led the program day to day for a year, from the business case at Gate 0 through launch, alongside the senior product manager for the category. It began as an import and became a re-engineering effort, and I kept it on schedule through every round of prototypes and revisions. I ran the gate reviews, the weekly cadence with marketing, sourcing and leadership, a daily stand-up with the engineering team, and a bi-weekly call with OnLevel's leadership in Europe.\n\nBecause a railing is life-safety equipment, the work was as much about evidence as product. I coordinated the engineering report that translated OnLevel's German test results into U.S. load requirements, the update to CRL's ICC-ES evaluation report, the Miami-Dade test samples and approval package, and the supplier quality controls that approval requires. In parallel I built the forecast and inventory plan, set pricing with revenue operations, created the SKUs and drove the packaging, labeling, freight and training plans that put the system in 23 service centers.",
   "stakeholders": [
     {
       "group": "Certification",
@@ -230,6 +234,10 @@
     {
       "challenge": "The system was engineered to German DIN standards. U.S. codes load a guard differently, and certification bodies needed U.S. evidence before we could sell it as a life-safety product.",
       "resolution": "I commissioned an independent engineering report that translated the DIN test results into U.S. load requirements and anchorage tables for steel, concrete and wood. In parallel, the clamp kits were re-tuned for U.S. glass thicknesses and tolerances, and the system was added to CRL's ICC-ES evaluation report."
+    },
+    {
+      "challenge": "Once samples were in our hands, tolerances and some materials that were accepted in Europe weren't good enough for a CRL life-safety product. An import we expected to simply relabel needed real engineering.",
+      "resolution": "We ran round after round of prototypes and revisions with OnLevel and CRL engineering, tightening tolerances, changing materials and re-testing each change, until every part met the standard CRL puts its name on. It turned a six-month import plan into a year-long program, and a much better product."
     },
     {
       "challenge": "Miami-Dade testing needed custom base shoes sized to the test chamber, short enough to air-freight. The supplier had no undrilled stock, so the samples would have waited until late January while the test plan went back and forth on anchor spacing.",
