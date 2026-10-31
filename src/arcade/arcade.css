@@ -203,77 +203,85 @@ button { font: inherit; color: inherit; }
 .win .win-body .chart { background: var(--panel); border-color: var(--line-strong); }
 .win .win-body .chart-body { --g1: #ece9ff; --c1: #8f89b8; --c2: #5b5690; --c3: #3a3570; }
 
-/* ---------- controls: a little console with a stick and a drop button ---------- */
+/* ---------- controls: a stick and a drop button set into the sloped console ---------- */
+/* Both share one look: a dark bezel set into the panel and the same red dome (stick ball and button cap). */
 .ctl {
-  position: fixed; z-index: 14; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom)); translate: -50% 0;
-  display: flex; align-items: flex-end; gap: 26px; padding: 12px 20px 10px;
-  background: var(--panel); border: 2px solid #1a1430;
-  box-shadow: inset 0 0 0 2px #ffd6e6, 4px 4px 0 #1a1430;
-  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+  --red: radial-gradient(ellipse at 34% 28%, #fff 0 8%, #ff9a8f 8% 18%, #ff3b30 18% 58%, #d7191f 58% 78%, #9c0c14 78% 100%);
+  --bezel: radial-gradient(ellipse, rgba(255, 255, 255, 0.16) 0 1px, transparent 1.6px) 0 0 / 7px 5px, radial-gradient(ellipse at 50% 30%, #3a3160, #1a1430 70%);
+  position: fixed; z-index: 14; left: 50%; bottom: var(--ctl-cy, 56px); translate: -50% 50%;   /* centred on the sloped face */
+  display: flex; align-items: flex-end; gap: 64px;
   user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
 }
-.ctl-unit { display: flex; flex-direction: column; align-items: center; gap: 7px; }
-.ctl-lab { font: 400 7px/1 var(--pixel); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.ctl-unit { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.ctl-lab { font: 400 7px/1 var(--pixel); letter-spacing: 0.04em; text-transform: uppercase; color: #6f6496; white-space: nowrap; }
 .ctl-lab i { font-style: normal; color: var(--text); margin-left: 4px; }
 
-.ctl-stick { --d: 68px; position: relative; width: var(--d); height: var(--d); touch-action: none; cursor: grab; outline: none; }
+.ctl-stick { --d: 80px; position: relative; width: var(--d); height: var(--d); touch-action: none; cursor: grab; outline: none; }
 .ctl-stick.held { cursor: grabbing; }
-.stk-base {   /* a dot-grid well, Nothing style */
-  position: absolute; inset: 0; border-radius: 50%;
-  background: radial-gradient(circle, rgba(26, 20, 48, 0.28) 0 1px, transparent 1.6px) 0 0 / 7px 7px, #f3efff;
-  border: 2px solid #1a1430; box-shadow: inset 0 4px 0 rgba(26, 20, 48, 0.1), inset 0 0 0 5px #fff;
+.stk-base {   /* the bezel, seen at an angle: an ellipse */
+  position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--d) * 0.5); border-radius: 50%;
+  background: var(--bezel); border: 2px solid #1a1430;
+  box-shadow: 0 3px 0 rgba(26, 20, 48, 0.25), inset 0 -3px 0 rgba(0, 0, 0, 0.25);
 }
-.stk-shaft {   /* rotated and stretched toward the knob from the centre */
-  position: absolute; left: 50%; top: 50%; width: 8px; height: 30px; margin-left: -4px;
-  transform-origin: 50% 0; transform: scaleY(0); border-radius: 4px;
-  background: linear-gradient(90deg, #3a3060 0 30%, #1a1430 30% 100%);
+.stk-base::after {   /* rubber boot where the stem enters */
+  content: ""; position: absolute; left: 50%; top: 50%; width: 34%; height: 30%; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 35%, #4a4170, #0e0a1c 75%);
+}
+.stk-shaft {   /* from the boot up to the knob; rotated and stretched in game.js */
+  position: absolute; left: 50%; top: calc(100% - var(--d) * 0.25); width: 8px; height: 30px; margin-left: -4px;
+  transform-origin: 50% 0; transform: rotate(180deg) scaleY(0.9); border-radius: 4px;
+  background: linear-gradient(90deg, #d9d4ea 0 22%, #9a93b8 22% 55%, #5e5682 55% 100%);   /* brushed metal */
   will-change: transform;
 }
 .stk-knob {
-  --k: 34px; position: absolute; left: 50%; top: 50%; width: var(--k); height: var(--k); margin: calc(var(--k) / -2) 0 0 calc(var(--k) / -2);
-  border-radius: 50%; border: 2px solid #1a1430;
-  background: radial-gradient(circle at 34% 30%, #fff 0 9%, #ffb3cd 9% 20%, var(--signal) 20% 64%, #c81d63 64% 100%);   /* hard stops: reads as pixel art */
-  box-shadow: 0 4px 0 rgba(26, 20, 48, 0.22);
+  --k: 38px; position: absolute; left: 50%; top: calc(100% - var(--d) * 0.25); width: var(--k); height: var(--k); margin: calc(var(--k) / -2) 0 0 calc(var(--k) / -2);
+  border-radius: 50%; border: 2px solid #1a1430; background: var(--red);
+  box-shadow: 0 4px 0 #6d0710, 0 4px 0 2px #1a1430;
   will-change: transform; transition: scale 0.12s var(--ease);
 }
-.ctl-stick:hover .stk-knob { scale: 1.04; }
-.ctl-stick.held .stk-knob { scale: 0.94; box-shadow: 0 2px 0 rgba(26, 20, 48, 0.22); }
+.ctl-stick:hover .stk-knob { scale: 1.05; }
+.ctl-stick.held .stk-knob { scale: 0.95; }
 
 .ctl-drop {
-  --d: 62px; position: relative; width: var(--d); height: var(--d); padding: 0; border: 2px solid #1a1430; border-radius: 50%; cursor: pointer;
-  background: radial-gradient(circle, #2a2440 0 66%, #1a1430 66% 100%);   /* bezel */
-  box-shadow: 0 4px 0 rgba(26, 20, 48, 0.22); touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  --d: 80px; position: relative; width: var(--d); height: var(--d); padding: 0; border: 0; background: none; cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
-.drop-cap {
-  position: absolute; left: 50%; top: 50%; width: 74%; height: 74%; translate: -50% -58%; border-radius: 50%;
-  background: radial-gradient(circle at 34% 28%, #fff 0 8%, #ff9a8f 8% 18%, #ff3b30 18% 58%, #d7191f 58% 78%, #9c0c14 78% 100%);
-  box-shadow: 0 5px 0 #6d0710, 0 5px 0 2px #1a1430;
+.ctl-drop::before {   /* the bezel, matching the stick's */
+  content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: calc(var(--d) * 0.5); border-radius: 50%;
+  background: var(--bezel); border: 2px solid #1a1430;
+  box-shadow: 0 3px 0 rgba(26, 20, 48, 0.25), inset 0 -3px 0 rgba(0, 0, 0, 0.25);
+}
+.drop-cap {   /* the same red dome, seen at the same angle */
+  position: absolute; left: 50%; bottom: calc(var(--d) * 0.25); width: 72%; height: calc(var(--d) * 0.56); translate: -50% 0;
+  border-radius: 50% 50% 46% 46% / 58% 58% 42% 42%; border: 2px solid #1a1430; background: var(--red);
+  box-shadow: 0 6px 0 #6d0710, 0 6px 0 2px #1a1430;
   transition: translate 0.07s cubic-bezier(0.3, 0, 0.6, 1), box-shadow 0.07s cubic-bezier(0.3, 0, 0.6, 1);
 }
 .ctl-drop:hover .drop-cap { filter: brightness(1.06); }
-.ctl-drop:active .drop-cap { translate: -50% -42%; box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #1a1430; transition-duration: 0.04s; }
+.ctl-drop:active .drop-cap { translate: -50% 5px; box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #1a1430; transition-duration: 0.04s; }
 .ctl-drop.hit .drop-cap { animation: press 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.4); }   /* plunge, then spring back */
 @keyframes press {
-  0% { translate: -50% -58%; box-shadow: 0 5px 0 #6d0710, 0 5px 0 2px #1a1430; }
-  22% { translate: -50% -42%; box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #1a1430; }
-  100% { translate: -50% -58%; box-shadow: 0 5px 0 #6d0710, 0 5px 0 2px #1a1430; }
+  0% { translate: -50% 0; box-shadow: 0 6px 0 #6d0710, 0 6px 0 2px #1a1430; }
+  22% { translate: -50% 5px; box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #1a1430; }
+  100% { translate: -50% 0; box-shadow: 0 6px 0 #6d0710, 0 6px 0 2px #1a1430; }
 }
 .ctl-drop.busy { cursor: default; }
 .ctl-drop.busy .drop-cap { filter: saturate(0.4) brightness(0.92); }
 .ctl-drop:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
 
+/* the info panel steps back while the claw passes behind it */
+.readout { transition: opacity 0.22s var(--ease); }
+.readout.ghost { opacity: 0.16; }
+
 /* phones and tablets: two-handed. Stick under the left thumb, drop button under the right */
 @media (pointer: coarse), (max-width: 700px) {
-  :root { --floor: 168px; }
-  .ctl {
-    left: 0; right: 0; translate: none; bottom: 0; padding: 0 max(18px, env(safe-area-inset-left)) calc(18px + env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
-    justify-content: space-between; align-items: flex-end; background: none; border: 0; box-shadow: none; clip-path: none; pointer-events: none;
-  }
+  :root { --floor: 176px; }
+  .ctl { left: 0; right: 0; translate: 0 50%; padding: 0 max(22px, env(safe-area-inset-left)) 0 max(22px, env(safe-area-inset-right)); justify-content: space-between; pointer-events: none; }
   .ctl-unit { pointer-events: auto; }
-  .ctl-stick { --d: 116px; }
+  .ctl-stick { --d: 112px; }
   .stk-knob { --k: 54px; }
   .stk-shaft { width: 12px; margin-left: -6px; }
-  .ctl-drop { --d: 96px; }
+  .ctl-drop { --d: 104px; }
   .ctl-lab i { display: none; }
   .hint { display: none; }
 }

@@ -134,19 +134,47 @@
     cloud(LW * 0.2, LH * 0.32, Math.max(14, LH * 0.07));
     cloud(LW * 0.6, LH * 0.2, Math.max(11, LH * 0.055));
     cloud(LW * 0.88, LH * 0.44, Math.max(9, LH * 0.045));
-    // floor: a clean tiled ledge
+    // floor: a clean tiled ledge the prizes rest on
     const floorTop = Math.round((H - FLOOR) / PX);
-    rect(b, 0, floorTop, LW, LH - floorTop, rgb("#efe7fb"));
-    for (let x = 0; x < LW; x += 12) rect(b, x, floorTop + 3, 1, LH - floorTop, rgb("#e2d8f5"));
+    const lip = floorTop + Math.max(7, Math.round(12 / PX));
+    rect(b, 0, floorTop, LW, lip - floorTop, rgb("#efe7fb"));
+    for (let x = 0; x < LW; x += 12) rect(b, x, floorTop + 3, 1, lip - floorTop - 3, rgb("#e2d8f5"));
     rect(b, 0, floorTop, LW, 1, P.out);
     rect(b, 0, floorTop + 1, LW, 2, P.k2);
-    // console face below the ledge lip: a soft panel with a dot grid, where the controls live
-    const lip = floorTop + Math.max(8, Math.round(12 / PX));
-    if (LH - lip > 10) {
-      rect(b, 0, lip, LW, LH - lip, rgb("#e7e0f8"));
-      rect(b, 0, lip, LW, 1, P.out); rect(b, 0, lip + 1, LW, 1, rgb("#f7f3ff"));
-      for (let y = lip + 6; y < LH; y += 6) for (let x = 3 + ((y / 6) % 2) * 3; x < LW; x += 6) pset(b, x, y, rgb("#d4c9ef"));
+    // the control panel: a sloped claw-machine console. The far edge is narrower than the near edge (perspective),
+    // the cabinet sides show at the corners, the face darkens toward the player, and a dot grid opens up with depth.
+    const lipH = Math.max(4, Math.round(10 / PX));                 // the rounded front lip at the very bottom
+    const cTop = lip, cBot = LH - lipH, ch = cBot - cTop;
+    if (ch > 8) {
+      const ins = Math.round(Math.min(LW * 0.06, ch * 0.9));      // how far the far edge is pulled in on each side
+      const BAYc = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+      const far = [243, 238, 254], near = [214, 204, 242], side = rgb("#c9bde8"), sideHi = rgb("#d8cdf2");
+      const tone = (t) => rgb("#" + far.map((c, i) => Math.round(c + (near[i] - c) * t).toString(16).padStart(2, "0")).join(""));
+      const steps = 6, tones = Array.from({ length: steps + 1 }, (_, i) => tone(i / steps));
+      for (let y = cTop; y < cBot; y++) {
+        const t = (y - cTop) / ch, xl = Math.round(ins * (1 - t)), xr = LW - xl;
+        rect(b, 0, y, xl, 1, side); rect(b, xr, y, LW - xr, 1, side);                    // cabinet sides
+        const f = t * steps, k = Math.floor(f);
+        for (let x = xl; x < xr; x++) b.u[y * LW + x] = tones[Math.min(steps, k + ((f - k) * 16 > BAYc[y & 3][x & 3] ? 1 : 0))];
+        pset(b, xl, y, P.out); pset(b, xr - 1, y, P.out); pset(b, xl - 1, y, sideHi); pset(b, xr, y, sideHi);   // panel edges
+      }
+      rect(b, Math.round(ins), cTop, LW - 2 * Math.round(ins), 1, P.out);                          // far edge
+      rect(b, Math.round(ins), cTop + 1, LW - 2 * Math.round(ins), 1, rgb("#fbf9ff"));
+      // perspective dot grid: rows spread out and columns widen toward the player
+      const rows = Math.max(3, Math.round(ch / 7));
+      for (let k = 1; k < rows; k++) {
+        const t = Math.pow(k / rows, 1.25), y = Math.round(cTop + t * ch), xl = ins * (1 - t), w = LW - 2 * xl;
+        const gap = 6 + t * 3, n = Math.floor(w / gap);
+        for (let i = 1; i < n; i++) pset(b, Math.round(xl + i * (w / n)), y, rgb("#cdbfee"));
+      }
+      // front lip
+      rect(b, 0, cBot, LW, lipH, rgb("#b8a9e0"));
+      rect(b, 0, cBot, LW, 1, P.out);
+      rect(b, 0, cBot + 1, LW, 1, rgb("#d6ccf3"));
+      rect(b, 0, LH - 1, LW, 1, rgb("#9d8cd0"));
     }
+    // where the controls should sit: the vertical middle of the sloped face, measured from the bottom of the screen
+    document.documentElement.style.setProperty("--ctl-cy", `${Math.round(((LH - (cTop + cBot) / 2) * PX))}px`);
     // rail: rounded lilac beam with little bolts, two soft hangers per 160px
     const RL = Math.round(RAIL / PX);
     for (let x = 40; x < LW - 20; x += 120) { rect(b, x - 1, 0, 3, RL - 4, P.m1); rect(b, x - 1, 0, 1, RL - 4, P.m2); }
@@ -241,7 +269,7 @@
   }
 
   // ---------- layout ----------
-  let stickR = 22;
+  let stickR = 22, stickD = 68;
   // the golden rays: drawn once into a 1024px texture (wedges, then a soft radial fade), then only scaled and rotated
   function raysTexture(period, wedges, fade, offset = 0) {
     const n = 1024, c = document.createElement("canvas"); c.width = c.height = n;
@@ -267,7 +295,7 @@
   } catch (e) {}
   function layout(first) {
     W = innerWidth; H = innerHeight;
-    const se = document.querySelector("[data-stick]"); if (se) stickR = se.offsetWidth * 0.3;
+    const se = document.querySelector("[data-stick]"); if (se) { stickD = se.offsetWidth; stickR = stickD * 0.3; }
     document.documentElement.style.setProperty("--rs", ((1.7 * Math.max(W, H)) / 1024).toFixed(3));
     PX = W >= 1800 ? 3 : 2;
     const css = getComputedStyle(document.documentElement);
@@ -468,7 +496,7 @@
   stickEl.addEventListener("pointerdown", (e) => {
     e.preventDefault(); e.stopPropagation();
     const r = stickEl.getBoundingClientRect();
-    sc = { x: r.left + r.width / 2, y: r.top + r.height / 2, R: r.width * 0.3 };
+    sc = { x: r.left + r.width / 2, y: r.bottom - r.width * 0.25 - r.width * 0.47, R: r.width * 0.3 };   // centred on the knob at rest
     stickId = e.pointerId; stick.held = true;
     try { stickEl.setPointerCapture(e.pointerId); } catch (err) {}
     stickEl.classList.add("held"); moveStick(e);
@@ -659,7 +687,11 @@
 
   const lerp = (a, b, t) => (a === undefined ? b : a + (b - a) * t);
   const dpr = () => window.devicePixelRatio || 1;
-  let busyShown = null, knobShown = "";
+  let busyShown = null, knobShown = "", roRect = null, roGhost = null;
+  const roEl = document.querySelector(".readout");
+  const measureRO = () => { if (roEl) { const r = roEl.getBoundingClientRect(); roRect = { l: r.left - 8, r: r.right + 8, t: r.top - 8, b: r.bottom + 8 }; } };
+  addEventListener("resize", () => requestAnimationFrame(measureRO));
+  requestAnimationFrame(measureRO);
   function draw(t) {
     const rp = pts.map((p) => ({ x: lerp(p.ox, p.x, t), y: lerp(p.oy, p.y, t) }));
     drawRig(lerp(trolley.ox, trolley.x, t), rp);
@@ -674,8 +706,18 @@
       if (p.dyn) { const z = String(10 + Math.round(y / 4)); if (z !== p._z) { p.el.style.zIndex = z; p._z = z; } }      // lower in the pile = in front
       else p._z = "";
     }
+    // the info panel fades back while the claw or its chain is behind it, so the claw is never hidden
+    if (roRect) {
+      const inR = (x, y) => x > roRect.l && x < roRect.r && y > roRect.t && y < roRect.b;
+      const c = rp[N - 1], cw = 22 * U * PX;
+      let hit = c.x + cw > roRect.l && c.x - cw < roRect.r && c.y + 28 * U * PX > roRect.t && c.y - 8 * U * PX < roRect.b;
+      for (let i = 0; !hit && i < N; i += 2) hit = inR(rp[i].x, rp[i].y);
+      if (hit !== roGhost) { roGhost = hit; roEl.classList.toggle("ghost", hit); }
+    }
     // controls
-    const R = stickR, kx = knob.x * R, ky = knob.y * R;
+    // seen from the front and above: the base is an ellipse, the knob stands up on its stem, and forward/back
+    // movement is foreshortened, so the stem is always visible and leans the way the stick is pushed
+    const R = stickR, L0 = stickD * 0.47, kx = knob.x * R, ky = -L0 + knob.y * R * 0.55;
     const ks = `${kx.toFixed(2)},${ky.toFixed(2)}`;
     if (ks !== knobShown) {
       knobShown = ks;
