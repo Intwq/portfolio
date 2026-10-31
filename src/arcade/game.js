@@ -46,6 +46,10 @@
   let W = 0, H = 0, PX = 2, LW = 0, LH = 0, S = 104, RAIL = 64, FLOOR = 34, U = 1;
   let rig = null;
   const pointer = { x: 0, y: 0, seen: false };
+  // controls: virtual stick (drag) and arrow keys both steer the same aim point the mouse sets
+  const stick = { x: 0, y: 0, rx: 0, ry: 0, held: false };        // x/y: response after dead zone; rx/ry: raw knob position
+  const keys = new Set(), kv = { x: 0, y: 0 };                       // arrow keys, eased so they don't jump
+  const knob = { x: 0, y: 0, vx: 0, vy: 0 };                         // the knob's drawn position, on a spring
   const trolley = { x: 0, v: 0, tx: 0 };
   const N = 16;
   const pts = Array.from({ length: N }, () => ({ x: 0, y: 0, px: 0, py: 0 }));
@@ -136,6 +140,13 @@
     for (let x = 0; x < LW; x += 12) rect(b, x, floorTop + 3, 1, LH - floorTop, rgb("#e2d8f5"));
     rect(b, 0, floorTop, LW, 1, P.out);
     rect(b, 0, floorTop + 1, LW, 2, P.k2);
+    // console face below the ledge lip: a soft panel with a dot grid, where the controls live
+    const lip = floorTop + Math.max(8, Math.round(12 / PX));
+    if (LH - lip > 10) {
+      rect(b, 0, lip, LW, LH - lip, rgb("#e7e0f8"));
+      rect(b, 0, lip, LW, 1, P.out); rect(b, 0, lip + 1, LW, 1, rgb("#f7f3ff"));
+      for (let y = lip + 6; y < LH; y += 6) for (let x = 3 + ((y / 6) % 2) * 3; x < LW; x += 6) pset(b, x, y, rgb("#d4c9ef"));
+    }
     // rail: rounded lilac beam with little bolts, two soft hangers per 160px
     const RL = Math.round(RAIL / PX);
     for (let x = 40; x < LW - 20; x += 120) { rect(b, x - 1, 0, 3, RL - 4, P.m1); rect(b, x - 1, 0, 1, RL - 4, P.m2); }
@@ -150,15 +161,15 @@
   }
 
   // ---------- dynamic rig: trolley, chain, claw ----------
-  function drawRig() {
+  function drawRig(rtx, rp) {
     const b = rig; b.u.fill(0);
-    const RL = Math.round(RAIL / PX), tx = Math.round(trolley.x / PX);
+    const RL = Math.round(RAIL / PX), tx = Math.round(rtx / PX);
     let bx0 = tx - 18, bx1 = tx + 18, by0 = RL - 12, by1 = RL + 20;
 
     // chain: alternating round beads
     let carry = 0, n = 0;
     for (let i = 0; i < N - 1; i++) {
-      const ax = pts[i].x / PX, ay = pts[i].y / PX, cx = pts[i + 1].x / PX, cy = pts[i + 1].y / PX;
+      const ax = rp[i].x / PX, ay = rp[i].y / PX, cx = rp[i + 1].x / PX, cy = rp[i + 1].y / PX;
       const d = Math.hypot(cx - ax, cy - ay) || 0.001;
       let t = carry;
       while (t < d) {
@@ -172,7 +183,7 @@
     }
 
     // trolley: white shell, smoked window, one red dot
-    const spin = Math.round(trolley.x / PX) % 4;
+    const spin = ((Math.round(rtx / PX) % 4) + 4) % 4;
     for (const wx of [tx - 7, tx + 7]) {
       disc(b, wx, RL - 7, 2.6, P.n3); pset(b, wx, RL - 7, P.n1);
       pset(b, wx + [1, 0, -1, 0][spin], RL - 7 + [0, 1, 0, -1][spin], P.n0);
@@ -184,9 +195,7 @@
     disc(b, tx + 7, RL + 7, 1.3, P.nred);
 
     // claw: transparent white shell with the mechanism visible, a dot-matrix glyph strip, red dot
-    const last = pts[N - 1], prev = pts[N - 2];
-    const raw = Math.atan2(-(last.x - prev.x), last.y - prev.y);
-    clawAng += (Math.max(-0.4, Math.min(0.4, raw)) - clawAng) * 0.25;
+    const last = rp[N - 1];
     const ang = clawAng, cs = Math.cos(ang), sn = Math.sin(ang);
     const ox = last.x / PX, oy = last.y / PX;
     const T = (lx, ly) => [ox + (lx * U) * cs - (ly * U) * sn, oy + (lx * U) * sn + (ly * U) * cs];
@@ -232,8 +241,34 @@
   }
 
   // ---------- layout ----------
+  let stickR = 22;
+  // the golden rays: drawn once into a 1024px texture (wedges, then a soft radial fade), then only scaled and rotated
+  function raysTexture(period, wedges, fade, offset = 0) {
+    const n = 1024, c = document.createElement("canvas"); c.width = c.height = n;
+    const x = c.getContext("2d"); x.translate(n / 2, n / 2);
+    for (const [from, to, color] of wedges) {
+      x.fillStyle = color;
+      for (let a = 0; a < 360; a += period) {
+        x.beginPath(); x.moveTo(0, 0);
+        x.arc(0, 0, n / 2, ((a + from + offset - 90) * Math.PI) / 180, ((a + to + offset - 90) * Math.PI) / 180);
+        x.closePath(); x.fill();
+      }
+    }
+    x.globalCompositeOperation = "destination-in";
+    const gr = x.createRadialGradient(0, 0, 0, 0, 0, n / 2);
+    fade.forEach(([s, al]) => gr.addColorStop(Math.min(1, s), `rgba(0,0,0,${al})`));
+    x.fillStyle = gr; x.fillRect(-n / 2, -n / 2, n, n);
+    return `url(${c.toDataURL("image/png")})`;
+  }
+  try {
+    const root = document.documentElement.style;
+    root.setProperty("--rays1", raysTexture(15, [[0, 6, "rgba(255,214,40,1)"], [6, 8, "rgba(255,236,140,0.55)"]], [[0, 1], [0.085, 1], [0.255, 0.75], [0.735, 0]]));
+    root.setProperty("--rays2", raysTexture(11, [[0, 2, "rgba(255,248,200,0.9)"]], [[0, 1], [0.198, 0.6], [0.537, 0]], 4));
+  } catch (e) {}
   function layout(first) {
     W = innerWidth; H = innerHeight;
+    const se = document.querySelector("[data-stick]"); if (se) stickR = se.offsetWidth * 0.3;
+    document.documentElement.style.setProperty("--rs", ((1.7 * Math.max(W, H)) / 1024).toFixed(3));
     PX = W >= 1800 ? 3 : 2;
     const css = getComputedStyle(document.documentElement);
     RAIL = parseFloat(css.getPropertyValue("--rail")) || 64;
@@ -332,8 +367,8 @@
 
   // ---------- input ----------
   const machine = $("#machine");
-  // the claw keeps its aim while the pointer is on the big red button, so "nearest" means nearest to where you aimed
-  const setPointer = (e) => { pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true; };
+  // touching or clicking the controls doesn't move the aim; everything else does
+  const setPointer = (e) => { if (e.target && e.target.closest && e.target.closest(".ctl")) return; pointer.x = e.clientX; pointer.y = e.clientY; pointer.seen = true; };
   addEventListener("pointermove", setPointer, { passive: true });
   addEventListener("pointerdown", setPointer, { passive: true });
   const say = (t) => { hint.textContent = t; };
@@ -361,6 +396,7 @@
     return { x: a.x - Math.sin(clawAng) * gripOffset(), y: a.y + Math.cos(clawAng) * gripOffset() };
   }
 
+  const scrim = $("[data-scrim]");
   const cache = {};
   const load = (slug) => cache[slug] || (cache[slug] = fetch(`p/${slug}.html`).then((r) => r.text()).catch(() => `<p class="win-load">Couldn't load this project.</p>`));
   function openWindow(d, ox, oy) {
@@ -368,6 +404,7 @@
     win.style.setProperty("--ox", `${ox - (W - win.offsetWidth) / 2}px`);
     win.style.setProperty("--oy", `${oy - (H - win.offsetHeight) / 2}px`);
     win.classList.add("closed");
+    scrim.classList.add("on");
     winTitle.textContent = `${String(d.n).padStart(2, "0")} / ${d.title}`;
     winBody.innerHTML = `<p class="win-load">Loading…</p>`;
     winBody.scrollTop = 0; lastTop = 0;
@@ -386,6 +423,7 @@
   function closeWindow() {
     if (win.hidden || win.classList.contains("closed")) return;
     win.classList.add("closed");
+    scrim.classList.remove("on");
     fx.classList.remove("on");
     setTimeout(() => { win.hidden = true; winBody.innerHTML = ""; delete win.dataset.slug; }, 420);
     if (fromIndex) { fromIndex = false; say(DEFAULT_HINT); return; }
@@ -400,7 +438,7 @@
     const g = ax === undefined ? grip() : { x: ax, y: ay }; let best = null, bd = Infinity;
     for (const p of prizes) {
       if (!p.dyn) continue;
-      const d = Math.hypot((p.x - g.x) * 1, (p.y - g.y) * 0.6);     // favour what's straight below
+      const d = Math.hypot(p.x - g.x, (p.y - g.y) * (ax === undefined ? 0.35 : 0.6));     // favour what's straight below
       if (d < bd) { bd = d; best = p; }
     }
     if (best) grab(best);
@@ -410,10 +448,56 @@
   let drawerWasOpen = false;
   machine.addEventListener("pointerdown", () => { drawerWasOpen = $("#drawer").classList.contains("open"); });
   machine.addEventListener("click", (e) => {
-    if (drawerWasOpen || e.target.closest(".prize, a, button, .drawer, .readout, .win")) return;
+    if (drawerWasOpen || e.target.closest(".prize, a, button, .drawer, .readout, .win, .ctl")) return;
     grabNearest(e.clientX, e.clientY);
   });
-  addEventListener("keydown", (e) => { if ((e.key === " " || e.key === "Enter") && document.activeElement === document.body) { e.preventDefault(); grabNearest(); } });
+
+  // ---------- controls: stick, drop button, keyboard ----------
+  const stickEl = $("[data-stick]"), dropBtn = $("[data-drop]");
+  const knobEl = $(".stk-knob", stickEl), shaftEl = $(".stk-shaft", stickEl);
+  let stickId = null, sc = { x: 0, y: 0, R: 1 };
+  const DEAD = 0.14;
+  function moveStick(e) {
+    let dx = (e.clientX - sc.x) / sc.R, dy = (e.clientY - sc.y) / sc.R;
+    const m = Math.hypot(dx, dy);
+    if (m > 1) { dx /= m; dy /= m; }
+    const mm = Math.min(1, m), s = mm < DEAD ? 0 : (mm - DEAD) / (1 - DEAD);
+    stick.rx = dx; stick.ry = dy;
+    stick.x = mm ? (dx / mm) * s : 0; stick.y = mm ? (dy / mm) * s : 0;
+  }
+  stickEl.addEventListener("pointerdown", (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const r = stickEl.getBoundingClientRect();
+    sc = { x: r.left + r.width / 2, y: r.top + r.height / 2, R: r.width * 0.3 };
+    stickId = e.pointerId; stick.held = true;
+    try { stickEl.setPointerCapture(e.pointerId); } catch (err) {}
+    stickEl.classList.add("held"); moveStick(e);
+  });
+  stickEl.addEventListener("pointermove", (e) => { if (e.pointerId === stickId) moveStick(e); });
+  const endStick = (e) => {
+    if (e.pointerId !== stickId) return;
+    stickId = null; stick.held = false; stick.x = stick.y = stick.rx = stick.ry = 0;
+    stickEl.classList.remove("held");
+  };
+  ["pointerup", "pointercancel", "lostpointercapture"].forEach((t) => stickEl.addEventListener(t, endStick));
+
+  function drop() {
+    if (mode !== "follow" || !win.hidden) return;
+    dropBtn.classList.remove("hit"); void dropBtn.offsetWidth; dropBtn.classList.add("hit");   // replay the press
+    grabNearest();
+  }
+  dropBtn.addEventListener("pointerdown", (e) => e.stopPropagation());
+  dropBtn.addEventListener("click", (e) => { e.stopPropagation(); drop(); });
+
+  const ARROWS = new Set(["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"]);
+  addEventListener("keydown", (e) => {
+    if (!win.hidden || (e.target.closest && e.target.closest("input, textarea, [contenteditable]"))) return;   // let the window scroll
+    if (ARROWS.has(e.key)) { keys.add(e.key); e.preventDefault(); return; }
+    const free = document.activeElement === document.body || document.activeElement === dropBtn || document.activeElement === stickEl;
+    if ((e.key === " " || e.key === "Enter") && free) { e.preventDefault(); if (!e.repeat) drop(); }
+  });
+  addEventListener("keyup", (e) => keys.delete(e.key));
+  addEventListener("blur", () => keys.clear());
 
   // ---------- index drawer ----------
   const drawer = $("#drawer"), tab = $(".tab", drawer);
@@ -449,10 +533,34 @@
     trolley.v -= kx * 1.5;
   }
   function step(dt) {
+    // keep the previous state so draw() can interpolate between physics steps at any refresh rate
+    trolley.ox = trolley.x;
+    for (const p of pts) { p.ox = p.x; p.oy = p.y; }
+    for (const p of prizes) { p.ox = p.x; p.oy = p.y; p.orot = p.rot; p.osc = p.scale; }
     clock += dt;
     shake(dt);
     const ay = anchorY();
     const minL = 6 * PX, maxL = H - FLOOR - ay - gripOffset() - S * 0.2;
+
+    // arrow keys ease in and out; the stick has a dead zone and a curved response (fine aim near centre, fast at full tilt)
+    const kt = { x: (keys.has("ArrowRight") ? 1 : 0) - (keys.has("ArrowLeft") ? 1 : 0), y: (keys.has("ArrowDown") ? 1 : 0) - (keys.has("ArrowUp") ? 1 : 0) };
+    const ke = 1 - Math.exp(-dt * (kt.x || kt.y ? 9 : 14));
+    kv.x += (kt.x - kv.x) * ke; kv.y += (kt.y - kv.y) * ke;
+    if (Math.abs(kv.x) < 0.002) kv.x = 0; if (Math.abs(kv.y) < 0.002) kv.y = 0;
+    let ix = stick.x + kv.x, iy = stick.y + kv.y;
+    const im = Math.hypot(ix, iy);
+    if (im > 1) { ix /= im; iy /= im; }
+    if (mode === "follow" && (ix || iy)) {
+      const m = Math.min(1, im), k = Math.pow(m, 1.6) / (m || 1);
+      pointer.x = Math.max(20 * PX, Math.min(W - 20 * PX, pointer.x + ix * k * 1150 * dt));
+      pointer.y = Math.max(ay + gripOffset() + minL, Math.min(ay + gripOffset() + maxL, pointer.y + iy * k * 820 * dt));
+      pointer.seen = true;
+    }
+    // the knob follows the finger directly, or the keys, and springs home with a little overshoot when let go
+    const tx = stick.held ? stick.rx : kv.x, ty = stick.held ? stick.ry : kv.y;
+    if (stick.held) { knob.x = tx; knob.y = ty; knob.vx = knob.vy = 0; }
+    else { const K = 520, D = 26; knob.vx += ((tx - knob.x) * K - knob.vx * D) * dt; knob.vy += ((ty - knob.y) * K - knob.vy * D) * dt; knob.x += knob.vx * dt; knob.y += knob.vy * dt; }
+
     if (mode === "follow") {
       trolley.tx = Math.max(20 * PX, Math.min(W - 20 * PX, pointer.x));
       lenT = Math.max(minL, Math.min(maxL, pointer.y - ay - gripOffset()));
@@ -530,6 +638,8 @@
       pts[0].x = trolley.x; pts[0].y = ay;
     }
     claw.open += (claw.openT - claw.open) * Math.min(1, dt * 14);
+    { const a = pts[N - 1], b = pts[N - 2], raw = Math.atan2(-(a.x - b.x), a.y - b.y);     // claw tilt, eased per second, not per frame
+      clawAng += (Math.max(-0.4, Math.min(0.4, raw)) - clawAng) * (1 - Math.exp(-dt * 17)); }
 
     if (held && ["grab", "lift", "return", "release"].includes(mode)) {
       const g = grip(), nx = g.x, ny = g.y + S * 0.12;
@@ -547,13 +657,34 @@
     say(`★ Prize: ${current.d.title}`);
   }
 
-  function draw() {
-    drawRig();
+  const lerp = (a, b, t) => (a === undefined ? b : a + (b - a) * t);
+  const dpr = () => window.devicePixelRatio || 1;
+  let busyShown = null, knobShown = "";
+  function draw(t) {
+    const rp = pts.map((p) => ({ x: lerp(p.ox, p.x, t), y: lerp(p.oy, p.y, t) }));
+    drawRig(lerp(trolley.ox, trolley.x, t), rp);
+    const d = dpr();
     for (const p of prizes) {
-      const x = Math.round(p.x / PX) * PX - S / 2, y = Math.round(p.y / PX) * PX - S / 2;
-      p.el.style.transform = `translate(${x}px, ${y}px)${p.rot ? ` rotate(${Math.round(p.rot)}deg)` : ""} scale(${p.scale})`;
-      if (p.dyn) p.el.style.zIndex = String(10 + Math.round(p.y / 4));      // lower in the pile = in front
+      const x = lerp(p.ox, p.x, t), y = lerp(p.oy, p.y, t), rot = lerp(p.orot, p.rot, t), sc2 = lerp(p.osc, p.scale, t);
+      // at rest a prize sits on the pixel grid (crisp); in motion it moves on device pixels (smooth)
+      const still = p.dyn && p.sleep > 0.4;
+      const X = still ? Math.round(x / PX) * PX : Math.round(x * d) / d, Y = still ? Math.round(y / PX) * PX : Math.round(y * d) / d;
+      const tr = `translate3d(${X - S / 2}px, ${Y - S / 2}px, 0)${rot ? ` rotate(${still ? Math.round(rot) : rot.toFixed(2)}deg)` : ""}${sc2 !== 1 ? ` scale(${sc2.toFixed(4)})` : ""}`;
+      if (tr !== p._tr) { p.el.style.transform = tr; p._tr = tr; }
+      if (p.dyn) { const z = String(10 + Math.round(y / 4)); if (z !== p._z) { p.el.style.zIndex = z; p._z = z; } }      // lower in the pile = in front
+      else p._z = "";
     }
+    // controls
+    const R = stickR, kx = knob.x * R, ky = knob.y * R;
+    const ks = `${kx.toFixed(2)},${ky.toFixed(2)}`;
+    if (ks !== knobShown) {
+      knobShown = ks;
+      knobEl.style.transform = `translate3d(${kx.toFixed(2)}px, ${ky.toFixed(2)}px, 0)`;
+      const len = Math.hypot(kx, ky);
+      shaftEl.style.transform = `rotate(${Math.atan2(-kx, ky).toFixed(4)}rad) scaleY(${(len / 30).toFixed(4)})`;
+    }
+    const busy = mode !== "follow" || !win.hidden;
+    if (busy !== busyShown) { busyShown = busy; dropBtn.classList.toggle("busy", busy); dropBtn.setAttribute("aria-disabled", String(busy)); }
   }
 
   let last = performance.now(), acc = 0;
@@ -561,7 +692,7 @@
   function frame(t) {
     acc += Math.min(0.1, (t - last) / 1000); last = t;
     while (acc >= DT) { step(DT); acc -= DT; }
-    draw();
+    draw(acc / DT);
     requestAnimationFrame(frame);
   }
   addEventListener("resize", () => layout(false));

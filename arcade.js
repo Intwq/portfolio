@@ -123,6 +123,7 @@ function indexPage() {
   const groups = [];
   for (const d of data) { let g = groups.find((x) => x.name === d.section); if (!g) groups.push(g = { name: d.section, items: [] }); g.items.push(d); }
   groups.sort((a, b) => (b.name === "Product launches") - (a.name === "Product launches"));
+  { let k = 0; groups.forEach((g) => g.items.forEach((d) => { d.n = ++k; })); }   // number in the order they're listed
 
   const prize = (d) => `<button class="prize" type="button" data-slug="${d.slug}" aria-label="Grab ${esc(d.title)}"><img src="${d.icon}" alt="" width="52" height="52" draggable="false"></button>`;
   const row = (d) => `<li><button type="button" class="ix-row" data-open="${d.slug}"><img src="${d.icon}" alt="" width="52" height="52"><span class="ix-n">${pad(d.n)}</span><span class="ix-t">${esc(d.title)}</span><span class="ix-y">${esc(d.year)}</span></button></li>`;
@@ -162,6 +163,18 @@ function indexPage() {
   </dl>
 </aside>
 
+<div class="ctl" aria-label="Claw controls">
+  <div class="ctl-unit">
+    <div class="ctl-stick" data-stick tabindex="-1" aria-hidden="true">
+      <span class="stk-base"></span><span class="stk-shaft"></span><span class="stk-knob"></span>
+    </div>
+    <span class="ctl-lab">Move <i>&larr;&rarr;&uarr;&darr;</i></span>
+  </div>
+  <div class="ctl-unit">
+    <button class="ctl-drop" type="button" data-drop aria-label="Drop the claw on the nearest prize (Space)"><span class="drop-cap"></span></button>
+    <span class="ctl-lab">Drop <i>Space</i></span>
+  </div>
+</div>
 <p class="hint" id="hint" aria-live="polite"><span class="led"></span><span data-hint>Click a prize, or click anywhere to grab the nearest</span></p>
 
 <nav class="drawer" id="drawer" aria-label="All projects">
@@ -172,6 +185,7 @@ function indexPage() {
   </div>
 </nav>
 
+<div class="scrim" data-scrim aria-hidden="true"></div>
 <div class="win" id="win" role="dialog" aria-modal="true" aria-labelledby="win-title" hidden>
   <div class="win-bar">
     <span class="win-led"></span><span class="win-title" id="win-title">Loading</span>

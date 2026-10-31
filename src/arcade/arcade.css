@@ -18,7 +18,7 @@
   --gutter: clamp(14px, 2.6vw, 36px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --rail: 64px;
-  --floor: 34px;
+  --floor: 112px;                 /* the ledge the prizes rest on; the controls sit in the console below it */
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
@@ -71,23 +71,20 @@ button { font: inherit; color: inherit; }
 .fx { position: fixed; z-index: 25; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
 .fx.on { opacity: 1; }
 .rays, .glow { position: absolute; left: 0; top: 0; translate: -50% -50%; border-radius: 50%; }
-.rays {
-  width: 170vmax; height: 170vmax;
-  background: repeating-conic-gradient(from 0deg, rgba(255, 214, 40, 1) 0deg 6deg, rgba(255, 236, 140, 0.55) 6deg 8deg, rgba(255, 214, 40, 0) 8deg 15deg);
-  -webkit-mask: radial-gradient(circle, #000 0, #000 6%, rgba(0, 0, 0, 0.75) 18%, transparent 52%);
-          mask: radial-gradient(circle, #000 0, #000 6%, rgba(0, 0, 0, 0.75) 18%, transparent 52%);
+.rays {   /* a pre-rendered 1024px ray texture (drawn once in game.js), scaled up and spun on the GPU: no per-frame repaint */
+  width: 1024px; height: 1024px;
+  background: var(--rays1) center / 100% 100% no-repeat;
   animation: spin 9s linear infinite;
-  scale: 0.2; transition: scale 1.2s var(--ease);
+  scale: calc(var(--rs, 2.4) * 0.2); transition: scale 1.2s var(--ease);
 }
 .rays-2 {   /* a second, finer fan turning the other way so the light shimmers */
-  background: repeating-conic-gradient(from 4deg, rgba(255, 248, 200, 0.9) 0deg 2deg, rgba(255, 248, 200, 0) 2deg 11deg);
-  -webkit-mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 14%, transparent 38%);
-          mask: radial-gradient(circle, #000 0, rgba(0, 0, 0, 0.6) 14%, transparent 38%);
+  background-image: var(--rays2);
   animation: spin 14s linear infinite reverse;
 }
-.fx.on .rays { scale: 1; }
+.fx.on .rays { scale: var(--rs, 2.4); }
 .glow { width: 420px; height: 420px; background: radial-gradient(circle, rgba(255, 252, 225, 1), rgba(255, 216, 60, 0.85) 30%, rgba(255, 170, 0, 0.35) 52%, rgba(255, 140, 0, 0) 72%); }
 @keyframes spin { to { rotate: 360deg; } }
+.rays, .glow { will-change: rotate, scale; }
 
 /* ---------- readout, hint ---------- */
 
@@ -147,6 +144,8 @@ button { font: inherit; color: inherit; }
 .ix-row:hover .ix-t { color: var(--signal); }
 
 /* ---------- project window ---------- */
+.scrim { position: fixed; inset: 0; z-index: 39; background: rgba(40, 30, 80, 0.35); opacity: 0; pointer-events: none; transition: opacity 0.3s linear; }
+.scrim.on { opacity: 1; }
 .win {
   --bg: #0e0b1f; --panel: #151230; --panel-2: #1c1840; --text: #ece9ff; --ink: #ece9ff; --muted: #8f89b8;
   --line: rgba(190, 180, 255, 0.16); --line-strong: rgba(190, 180, 255, 0.4); --signal: #ff4f8b; --cyan: #5ff2d6;
@@ -156,12 +155,13 @@ button { font: inherit; color: inherit; }
   translate: -50% -50%;
   display: flex; flex-direction: column;
   background: var(--bg); border: 2px solid #000;
-  box-shadow: inset 0 0 0 2px #3a3470, 6px 6px 0 #1a1430, 0 0 0 9999px rgba(40, 30, 80, 0.35);
+  box-shadow: inset 0 0 0 2px #3a3470, 6px 6px 0 #1a1430;
   transform-origin: var(--ox, 50%) var(--oy, 50%);
-  transition: transform 0.45s var(--ease), opacity 0.35s var(--ease);
+  transition: transform 0.52s cubic-bezier(0.18, 1.25, 0.4, 1), opacity 0.22s linear;   /* opens with a little spring */
+  will-change: transform, opacity;
 }
 .win[hidden] { display: none; }
-.win.closed { transform: scale(0.04); opacity: 0; }
+.win.closed { transform: scale(0.04); opacity: 0; transition: transform 0.3s cubic-bezier(0.55, 0, 0.75, 0.2), opacity 0.26s 0.04s linear; }   /* closes quickly */
 .win-bar { flex: none; display: flex; align-items: center; gap: 12px; height: 50px; padding: 0 8px 0 16px; border-bottom: 2px solid #000; background: var(--panel-2); box-shadow: inset 0 -2px 0 #3a3470; }
 .win-led { flex: none; width: 8px; height: 8px; background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 .win-title { flex: 1; min-width: 0; font: 400 11px/1 var(--pixel); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -203,6 +203,81 @@ button { font: inherit; color: inherit; }
 .win .win-body .chart { background: var(--panel); border-color: var(--line-strong); }
 .win .win-body .chart-body { --g1: #ece9ff; --c1: #8f89b8; --c2: #5b5690; --c3: #3a3570; }
 
+/* ---------- controls: a little console with a stick and a drop button ---------- */
+.ctl {
+  position: fixed; z-index: 14; left: 50%; bottom: calc(10px + env(safe-area-inset-bottom)); translate: -50% 0;
+  display: flex; align-items: flex-end; gap: 26px; padding: 12px 20px 10px;
+  background: var(--panel); border: 2px solid #1a1430;
+  box-shadow: inset 0 0 0 2px #ffd6e6, 4px 4px 0 #1a1430;
+  clip-path: polygon(4px 0, calc(100% - 4px) 0, 100% 4px, 100% calc(100% - 4px), calc(100% - 4px) 100%, 4px 100%, 0 calc(100% - 4px), 0 4px);
+  user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+}
+.ctl-unit { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+.ctl-lab { font: 400 7px/1 var(--pixel); letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); white-space: nowrap; }
+.ctl-lab i { font-style: normal; color: var(--text); margin-left: 4px; }
+
+.ctl-stick { --d: 68px; position: relative; width: var(--d); height: var(--d); touch-action: none; cursor: grab; outline: none; }
+.ctl-stick.held { cursor: grabbing; }
+.stk-base {   /* a dot-grid well, Nothing style */
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle, rgba(26, 20, 48, 0.28) 0 1px, transparent 1.6px) 0 0 / 7px 7px, #f3efff;
+  border: 2px solid #1a1430; box-shadow: inset 0 4px 0 rgba(26, 20, 48, 0.1), inset 0 0 0 5px #fff;
+}
+.stk-shaft {   /* rotated and stretched toward the knob from the centre */
+  position: absolute; left: 50%; top: 50%; width: 8px; height: 30px; margin-left: -4px;
+  transform-origin: 50% 0; transform: scaleY(0); border-radius: 4px;
+  background: linear-gradient(90deg, #3a3060 0 30%, #1a1430 30% 100%);
+  will-change: transform;
+}
+.stk-knob {
+  --k: 34px; position: absolute; left: 50%; top: 50%; width: var(--k); height: var(--k); margin: calc(var(--k) / -2) 0 0 calc(var(--k) / -2);
+  border-radius: 50%; border: 2px solid #1a1430;
+  background: radial-gradient(circle at 34% 30%, #fff 0 9%, #ffb3cd 9% 20%, var(--signal) 20% 64%, #c81d63 64% 100%);   /* hard stops: reads as pixel art */
+  box-shadow: 0 4px 0 rgba(26, 20, 48, 0.22);
+  will-change: transform; transition: scale 0.12s var(--ease);
+}
+.ctl-stick:hover .stk-knob { scale: 1.04; }
+.ctl-stick.held .stk-knob { scale: 0.94; box-shadow: 0 2px 0 rgba(26, 20, 48, 0.22); }
+
+.ctl-drop {
+  --d: 62px; position: relative; width: var(--d); height: var(--d); padding: 0; border: 2px solid #1a1430; border-radius: 50%; cursor: pointer;
+  background: radial-gradient(circle, #2a2440 0 66%, #1a1430 66% 100%);   /* bezel */
+  box-shadow: 0 4px 0 rgba(26, 20, 48, 0.22); touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.drop-cap {
+  position: absolute; left: 50%; top: 50%; width: 74%; height: 74%; translate: -50% -58%; border-radius: 50%;
+  background: radial-gradient(circle at 34% 28%, #fff 0 8%, #ff9a8f 8% 18%, #ff3b30 18% 58%, #d7191f 58% 78%, #9c0c14 78% 100%);
+  box-shadow: 0 5px 0 #6d0710, 0 5px 0 2px #1a1430;
+  transition: translate 0.07s cubic-bezier(0.3, 0, 0.6, 1), box-shadow 0.07s cubic-bezier(0.3, 0, 0.6, 1);
+}
+.ctl-drop:hover .drop-cap { filter: brightness(1.06); }
+.ctl-drop:active .drop-cap { translate: -50% -42%; box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #1a1430; transition-duration: 0.04s; }
+.ctl-drop.hit .drop-cap { animation: press 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.4); }   /* plunge, then spring back */
+@keyframes press {
+  0% { translate: -50% -58%; box-shadow: 0 5px 0 #6d0710, 0 5px 0 2px #1a1430; }
+  22% { translate: -50% -42%; box-shadow: 0 1px 0 #6d0710, 0 1px 0 2px #1a1430; }
+  100% { translate: -50% -58%; box-shadow: 0 5px 0 #6d0710, 0 5px 0 2px #1a1430; }
+}
+.ctl-drop.busy { cursor: default; }
+.ctl-drop.busy .drop-cap { filter: saturate(0.4) brightness(0.92); }
+.ctl-drop:focus-visible { outline: 3px solid var(--signal); outline-offset: 4px; }
+
+/* phones and tablets: two-handed. Stick under the left thumb, drop button under the right */
+@media (pointer: coarse), (max-width: 700px) {
+  :root { --floor: 168px; }
+  .ctl {
+    left: 0; right: 0; translate: none; bottom: 0; padding: 0 max(18px, env(safe-area-inset-left)) calc(18px + env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+    justify-content: space-between; align-items: flex-end; background: none; border: 0; box-shadow: none; clip-path: none; pointer-events: none;
+  }
+  .ctl-unit { pointer-events: auto; }
+  .ctl-stick { --d: 116px; }
+  .stk-knob { --k: 54px; }
+  .stk-shaft { width: 12px; margin-left: -6px; }
+  .ctl-drop { --d: 96px; }
+  .ctl-lab i { display: none; }
+  .hint { display: none; }
+}
+
 /* ---------- small screens ---------- */
 @media (max-width: 700px) {
   :root { --rail: 52px; }
@@ -215,6 +290,8 @@ button { font: inherit; color: inherit; }
 }
 @media (prefers-reduced-motion: reduce) {
   .rays { animation: none; }
+  .ctl-drop.hit .drop-cap { animation: none; }
+  .win, .win.closed { transition-duration: 0.01s; }
   .prize.show.shake { animation: none; }
   .tab-arrow, .led { animation: none; }
 }

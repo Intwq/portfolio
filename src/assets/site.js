@@ -32,10 +32,16 @@
   const hud = $("[data-hud]");
   const bar = $("[data-progress]");
   const pct = $("[data-pct]");
-  let lastY = 0;
-  const onScroll = () => {
+  let lastY = 0, maxScroll = 1, ticking = false;
+  const measure = () => { maxScroll = Math.max(1, doc.scrollHeight - innerHeight); };
+  measure();
+  addEventListener("resize", measure, { passive: true });
+  addEventListener("load", measure);
+  if ("ResizeObserver" in window) new ResizeObserver(measure).observe(document.body);
+  const update = () => {
+    ticking = false;
     const y = window.scrollY;
-    const max = Math.max(1, doc.scrollHeight - innerHeight);
+    const max = maxScroll;
     const p = Math.min(1, y / max);
     if (bar) bar.style.transform = `scaleX(${p})`;
     if (pct) pct.textContent = String(Math.round(p * 100)).padStart(3, "0");
@@ -45,8 +51,10 @@
     }
     lastY = y;
   };
+  // one update per frame however many scroll events arrive, with the page height cached instead of re-read each time
+  const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
   addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
+  update();
 
   // Mark the current nav item
   if (document.body.classList.contains("page-about")) { const a = $('[data-nav="about"]'); a && a.setAttribute("aria-current", "page"); }
@@ -134,10 +142,16 @@
   if (par && !reduce) {
     let mx = 0, my = 0, cx = 0, cy = 0;
     if (finePointer) addEventListener("pointermove", (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; }, { passive: true });
-    const loop = () => {
-      cx += (mx - cx) * 0.05; cy += (my - cy) * 0.05;
-      const sy = Math.min(window.scrollY, innerHeight) * 0.18;
-      par.style.transform = `translate3d(${(-cx * 18).toFixed(2)}px, ${(-cy * 12 + sy).toFixed(2)}px, 0)`;
+    let lt = performance.now(), shown = "";
+    const loop = (t) => {
+      const dt = Math.min(0.05, (t - lt) / 1000); lt = t;
+      const k = 1 - Math.exp(-dt * 3.1);                 // same feel at 60, 120 or 144 Hz
+      cx += (mx - cx) * k; cy += (my - cy) * k;
+      const scY = window.scrollY;
+      if (scY < innerHeight * 1.2) {                     // skip work once the hero is off screen
+        const tr = `translate3d(${(-cx * 18).toFixed(2)}px, ${(-cy * 12 + Math.min(scY, innerHeight) * 0.18).toFixed(2)}px, 0)`;
+        if (tr !== shown) { par.style.transform = tr; shown = tr; }
+      }
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);
@@ -150,10 +164,14 @@
     const dot = $(".cursor-dot", cursor), ring = $(".cursor-ring", cursor);
     let x = innerWidth / 2, y = innerHeight / 2, rx = x, ry = y;
     addEventListener("pointermove", (e) => { x = e.clientX; y = e.clientY; }, { passive: true });
-    const loop = () => {
-      rx += (x - rx) * 0.16; ry += (y - ry) * 0.16;
-      dot.style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+    let lt = performance.now(), dShown = "", rShown = "";
+    const loop = (t) => {
+      const dt = Math.min(0.05, (t - lt) / 1000); lt = t;
+      const k = 1 - Math.exp(-dt * 10.5);                // time-based easing: identical at any refresh rate
+      rx += (x - rx) * k; ry += (y - ry) * k;
+      const d = `translate3d(${x}px, ${y}px, 0)`, rr = `translate3d(${rx.toFixed(2)}px, ${ry.toFixed(2)}px, 0)`;
+      if (d !== dShown) { dot.style.transform = d; dShown = d; }
+      if (rr !== rShown) { ring.style.transform = rr; rShown = rr; }
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);
