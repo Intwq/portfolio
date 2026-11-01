@@ -13,10 +13,25 @@
   /* ---------- smooth scroll ---------- */
   let lenis = null;
   if (!reduce && window.Lenis) {
-    lenis = new window.Lenis({ duration: 1.15, easing: (t) => 1 - Math.pow(1 - t, 4), smoothWheel: true });
+    // light smoothing only: the page follows the wheel closely and settles fast, instead of coasting
+    lenis = new window.Lenis({ lerp: 0.22, wheelMultiplier: 1, smoothWheel: true });
     const raf = (t) => { lenis.raf(t); requestAnimationFrame(raf); };
     requestAnimationFrame(raf);
   }
+
+  /* ---------- scroll speed: animations play faster when you scroll faster ---------- */
+  // speed is tracked in px/s and eased; rate() maps it to a time multiplier from 1 (reading pace) down to ~0.35 (flicking)
+  let speed = 0, lastSY = window.scrollY, lastST = performance.now();
+  const sampleSpeed = (t) => {
+    const dt = Math.max(1, t - lastST), y = window.scrollY;
+    const v = Math.abs(y - lastSY) / (dt / 1000);
+    const k = 1 - Math.exp(-dt / (v > speed ? 150 : 320));       // smoothed, so single wheel ticks don't read as a flick
+    speed += (v - speed) * k; lastSY = y; lastST = t;
+    requestAnimationFrame(sampleSpeed);
+  };
+  if (!reduce) requestAnimationFrame(sampleSpeed);
+  // below ~900 px/s (reading pace) animations keep their full length; they shorten smoothly up to ~4500 px/s
+  const rate = () => { const f = Math.max(0, Math.min(1, (speed - 900) / 3600)); return (1 - 0.65 * f * (2 - f)).toFixed(3); };
   const scrollToEl = (el) => (lenis ? lenis.scrollTo(el, { offset: 0 }) : el.scrollIntoView({ behavior: reduce ? "auto" : "smooth" }));
   $$('a[href^="#"]').forEach((a) => a.addEventListener("click", (e) => {
     const id = a.getAttribute("href").slice(1);
@@ -73,7 +88,10 @@
   /* ---------- reveal on scroll ---------- */
   if ("IntersectionObserver" in window && !reduce) {
     const io = new IntersectionObserver((entries) => entries.forEach((en) => {
-      if (en.isIntersecting) { en.target.classList.add("is-in"); io.unobserve(en.target); }
+      if (en.isIntersecting) {
+        en.target.style.setProperty("--rt", rate());               // this reveal's speed is set by how fast you arrived
+        en.target.classList.add("is-in"); io.unobserve(en.target);
+      }
     }), { rootMargin: "0px 0px -8% 0px", threshold: 0.05 });
     $$("[data-reveal]").forEach((el) => io.observe(el));
   } else {
