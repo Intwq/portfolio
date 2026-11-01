@@ -141,40 +141,50 @@
     for (let x = 0; x < LW; x += 12) rect(b, x, floorTop + 3, 1, lip - floorTop - 3, rgb("#e2d8f5"));
     rect(b, 0, floorTop, LW, 1, P.out);
     rect(b, 0, floorTop + 1, LW, 2, P.k2);
-    // the control panel: a sloped claw-machine console. The far edge is narrower than the near edge (perspective),
-    // the cabinet sides show at the corners, the face darkens toward the player, and a dot grid opens up with depth.
-    const lipH = Math.max(4, Math.round(10 / PX));                 // the rounded front lip at the very bottom
-    const cTop = lip, cBot = LH - lipH, ch = cBot - cTop;
-    if (ch > 8) {
-      const ins = Math.round(Math.min(LW * 0.06, ch * 0.9));      // how far the far edge is pulled in on each side
+    // the control panel, like a real claw machine: a face that slopes toward the player, a bevelled edge, then the
+    // cabinet front dropping straight down and running off the bottom of the screen
+    const cTop = lip, total = LH - cTop;
+    const cBreak = cTop + Math.round(total * 0.6);               // where the slope meets the vertical front
+    let ins = 0;
+    if (total > 12) {
+      const ch = cBreak - cTop;
+      ins = Math.round(Math.min(LW * 0.06, ch * 0.9));            // far edge pulled in on each side (perspective)
       const BAYc = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
-      const far = [243, 238, 254], near = [214, 204, 242], side = rgb("#c9bde8"), sideHi = rgb("#d8cdf2");
+      const far = [243, 238, 254], near = [216, 206, 243], side = rgb("#c9bde8"), sideHi = rgb("#d8cdf2");
       const tone = (t) => rgb("#" + far.map((c, i) => Math.round(c + (near[i] - c) * t).toString(16).padStart(2, "0")).join(""));
       const steps = 6, tones = Array.from({ length: steps + 1 }, (_, i) => tone(i / steps));
-      for (let y = cTop; y < cBot; y++) {
+      for (let y = cTop; y < cBreak; y++) {
         const t = (y - cTop) / ch, xl = Math.round(ins * (1 - t)), xr = LW - xl;
-        rect(b, 0, y, xl, 1, side); rect(b, xr, y, LW - xr, 1, side);                    // cabinet sides
+        rect(b, 0, y, xl, 1, side); rect(b, xr, y, LW - xr, 1, side);                     // cabinet sides
         const f = t * steps, k = Math.floor(f);
         for (let x = xl; x < xr; x++) b.u[y * LW + x] = tones[Math.min(steps, k + ((f - k) * 16 > BAYc[y & 3][x & 3] ? 1 : 0))];
-        pset(b, xl, y, P.out); pset(b, xr - 1, y, P.out); pset(b, xl - 1, y, sideHi); pset(b, xr, y, sideHi);   // panel edges
+        pset(b, xl, y, P.out); pset(b, xr - 1, y, P.out); pset(b, xl - 1, y, sideHi); pset(b, xr, y, sideHi);
       }
-      rect(b, Math.round(ins), cTop, LW - 2 * Math.round(ins), 1, P.out);                          // far edge
-      rect(b, Math.round(ins), cTop + 1, LW - 2 * Math.round(ins), 1, rgb("#fbf9ff"));
-      // perspective dot grid: rows spread out and columns widen toward the player
-      const rows = Math.max(3, Math.round(ch / 7));
+      rect(b, ins, cTop, LW - 2 * ins, 1, P.out);                                           // far edge
+      rect(b, ins, cTop + 1, LW - 2 * ins, 1, rgb("#fbf9ff"));
+      const rows = Math.max(3, Math.round(ch / 7));                                        // perspective dot grid
       for (let k = 1; k < rows; k++) {
         const t = Math.pow(k / rows, 1.25), y = Math.round(cTop + t * ch), xl = ins * (1 - t), w = LW - 2 * xl;
         const gap = 6 + t * 3, n = Math.floor(w / gap);
         for (let i = 1; i < n; i++) pset(b, Math.round(xl + i * (w / n)), y, rgb("#cdbfee"));
       }
-      // front lip
-      rect(b, 0, cBot, LW, lipH, rgb("#b8a9e0"));
-      rect(b, 0, cBot, LW, 1, P.out);
-      rect(b, 0, cBot + 1, LW, 1, rgb("#d6ccf3"));
-      rect(b, 0, LH - 1, LW, 1, rgb("#9d8cd0"));
+      // bevelled edge where the slope turns down: a bright highlight, then a dark crease
+      rect(b, 0, cBreak, LW, 1, P.out);
+      rect(b, 0, cBreak + 1, LW, 2, rgb("#fdfbff"));
+      rect(b, 0, cBreak + 3, LW, 1, rgb("#c5b8e9"));
+      // the vertical cabinet front, shaded slightly darker toward the floor, with no bottom edge: it keeps going
+      const fTop = cBreak + 4, fh = LH - fTop;
+      const ftones = [rgb("#cbbfec"), rgb("#c5b8e8"), rgb("#bfb1e4"), rgb("#b9aae0")];
+      for (let y = fTop; y < LH; y++) {
+        const f = ((y - fTop) / Math.max(1, fh)) * (ftones.length - 1), k = Math.floor(f);
+        for (let x = 0; x < LW; x++) b.u[y * LW + x] = ftones[Math.min(ftones.length - 1, k + ((f - k) * 16 > BAYc[y & 3][x & 3] ? 1 : 0))];
+      }
+      // panel seams and a row of fastener dots across the front
+      for (const sx of [Math.round(LW * 0.04), LW - 1 - Math.round(LW * 0.04)]) { rect(b, sx, fTop, 1, fh, rgb("#a998d6")); rect(b, sx + 1, fTop, 1, fh, rgb("#d6ccf3")); }
+      for (let x = Math.round(LW * 0.04) + 10; x < LW - Math.round(LW * 0.04) - 6; x += 24) { pset(b, x, fTop + 3, rgb("#9d8cd0")); pset(b, x, fTop + 2, rgb("#ddd4f6")); }
     }
-    // where the controls should sit: the vertical middle of the sloped face, measured from the bottom of the screen
-    document.documentElement.style.setProperty("--ctl-cy", `${Math.round(((LH - (cTop + cBot) / 2) * PX))}px`);
+    // the controls sit in the middle of the sloped part, measured from the bottom of the screen
+    document.documentElement.style.setProperty("--ctl-cy", `${Math.round((LH - (cTop + cBreak) / 2) * PX)}px`);
     // rail: rounded lilac beam with little bolts, two soft hangers per 160px
     const RL = Math.round(RAIL / PX);
     for (let x = 40; x < LW - 20; x += 120) { rect(b, x - 1, 0, 3, RL - 4, P.m1); rect(b, x - 1, 0, 1, RL - 4, P.m2); }
@@ -429,6 +439,7 @@
   const load = (slug) => cache[slug] || (cache[slug] = fetch(`p/${slug}.html`).then((r) => r.text()).catch(() => `<p class="win-load">Couldn't load this project.</p>`));
   function openWindow(d, ox, oy) {
     win.hidden = false;
+    fx.classList.remove("on");          // the rays and glow bow out once the project page is up, so they don't distract
     win.style.setProperty("--ox", `${ox - (W - win.offsetWidth) / 2}px`);
     win.style.setProperty("--oy", `${oy - (H - win.offsetHeight) / 2}px`);
     win.classList.add("closed");

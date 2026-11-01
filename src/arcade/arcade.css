@@ -18,7 +18,7 @@
   --gutter: clamp(14px, 2.6vw, 36px);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --rail: 64px;
-  --floor: 112px;                 /* the ledge the prizes rest on; the controls sit in the console below it */
+  --floor: 150px;                 /* the ledge the prizes rest on; the controls sit in the console below it */
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; }
@@ -68,7 +68,7 @@ button { font: inherit; color: inherit; }
 }
 
 /* golden reveal: lives inside the pit, one layer under the prize, so the rays pour out from behind it */
-.fx { position: fixed; z-index: 25; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.4s var(--ease); }
+.fx { position: fixed; z-index: 25; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.45s var(--ease); }
 .fx.on { opacity: 1; }
 .rays, .glow { position: absolute; left: 0; top: 0; translate: -50% -50%; border-radius: 50%; }
 .rays {   /* a pre-rendered 1024px ray texture (drawn once in game.js), scaled up and spun on the GPU: no per-frame repaint */
@@ -275,7 +275,7 @@ button { font: inherit; color: inherit; }
 
 /* phones and tablets: two-handed. Stick under the left thumb, drop button under the right */
 @media (pointer: coarse), (max-width: 700px) {
-  :root { --floor: 176px; }
+  :root { --floor: 210px; }
   .ctl { left: 0; right: 0; translate: 0 50%; padding: 0 max(22px, env(safe-area-inset-left)) 0 max(22px, env(safe-area-inset-right)); justify-content: space-between; pointer-events: none; }
   .ctl-unit { pointer-events: auto; }
   .ctl-stick { --d: 112px; }
