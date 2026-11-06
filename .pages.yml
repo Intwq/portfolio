@@ -66,7 +66,7 @@ content:
         type: text
       - name: section
         label: Homepage section
-        description: Projects are grouped on the homepage by this name, e.g. "Product launches" or "Design work". Leave empty for Design work.
+        description: Projects are grouped on the homepage by this name, e.g. "Product launches" or "Concepts". Leave empty for Concepts.
         type: string
       - name: company
         label: Company

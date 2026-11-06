@@ -203,10 +203,10 @@ function homePage() {
       <img${srcset(p.cover, u, "100vw")} alt=""${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}${p.fp ? ` style="${p.fp}"` : ""}>
     </figure>`).join("");
 
-  // Projects are grouped into sections (e.g. "Product launches", "Design work"), in order of first appearance.
+  // Projects are grouped into sections (e.g. "Product launches", "Concepts"), in order of first appearance.
   const groups = [];
   projects.forEach((p) => {
-    const name = p.section || "Design work";
+    const name = p.section || "Concepts";
     let g = groups.find((x) => x.name === name);
     if (!g) groups.push((g = { name, items: [] }));
     g.items.push(p);

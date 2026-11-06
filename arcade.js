@@ -117,7 +117,7 @@ function fragment(p, i) {
 
 function indexPage() {
   const data = projects.map((p, i) => ({
-    slug: p.slug, title: p.title, year: p.year || "", cat: p.category || "", section: p.section || "Design work",
+    slug: p.slug, title: p.title, year: p.year || "", cat: p.category || "", section: p.section || "Concepts",
     icon: iconFor(p), n: i + 1,
   }));
   const groups = [];
