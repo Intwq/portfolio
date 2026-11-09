@@ -77,15 +77,16 @@ def edge(path):
             w, h = im.size
             px = im.load()
             ring = [px[x, y] for x in range(w) for y in (0, 1, h - 2, h - 1)] + [px[x, y] for y in range(h) for x in (0, 1, w - 2, w - 1)]
+            size = Image.open(path).size
             # most common border colour (not the average, so a shadow or a product touching the edge doesn't tint it)
             bins = {}
             for c in ring:
                 k = tuple(v // 6 for v in c)
                 bins.setdefault(k, []).append(c)
             top = max(bins.values(), key=len)
-            return "#%02x%02x%02x" % tuple(round(sum(c[i] for c in top) / len(top)) for i in range(3))
+            return ("#%02x%02x%02x" % tuple(round(sum(c[i] for c in top) / len(top)) for i in range(3)), size)
     except Exception:
-        return None
+        return (None, None)
 
 
 if __name__ == "__main__":
@@ -98,10 +99,10 @@ if __name__ == "__main__":
         meta = json.load(open(meta_path))
     except Exception:
         meta = {}
-    todo = [f for f in files if meta.get(os.path.relpath(f, SRC).replace(os.sep, "/"), {}).get("mtime") != os.path.getmtime(f) or meta.get(os.path.relpath(f, SRC).replace(os.sep, "/"), {}).get("v") != 2]
+    todo = [f for f in files if meta.get(os.path.relpath(f, SRC).replace(os.sep, "/"), {}).get("mtime") != os.path.getmtime(f) or meta.get(os.path.relpath(f, SRC).replace(os.sep, "/"), {}).get("v") != 3]
     with ProcessPoolExecutor() as pool:
-        for f, e in zip(todo, pool.map(edge, todo, chunksize=4)):
-            meta[os.path.relpath(f, SRC).replace(os.sep, "/")] = {"mtime": os.path.getmtime(f), "edge": e, "v": 2}
+        for f, (e, size) in zip(todo, pool.map(edge, todo, chunksize=4)):
+            meta[os.path.relpath(f, SRC).replace(os.sep, "/")] = {"mtime": os.path.getmtime(f), "edge": e, "w": size and size[0], "h": size and size[1], "v": 3}
     os.makedirs(os.path.dirname(meta_path), exist_ok=True)
     json.dump(meta, open(meta_path, "w"))
     print(f"resize.py: {len(files)} images checked, {total} sizes made")

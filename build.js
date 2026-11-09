@@ -100,6 +100,14 @@ const wh = (p) => { const d = dims(p); return d ? ` width="${d.w}" height="${d.h
 // srcset: the browser downloads the smallest WebP copy that is still sharp on the visitor's
 // screen (up to 2560px wide). The full-resolution original is loaded when someone clicks to zoom.
 // If the copies are missing (e.g. Pillow unavailable), the original is used directly.
+let META = {};
+try { META = JSON.parse(fs.readFileSync(path.join(SIZES, "meta.json"), "utf8")); } catch (e) {}
+const metaOf = (p) => META[String(p || "").replace(/^\/?images\//, "")] || {};
+const edgeOf = (p) => metaOf(p).edge || "#0b0c0e";
+const ratioOf = (p) => { const m = metaOf(p); return m.w && m.h ? m.w / m.h : null; };
+// a cover is shown whole ("fit": letterboxed on its own edge colour) when its shape is far from the frame it sits in
+const fits = (p, frame) => { const r = ratioOf(p); return r ? Math.abs(Math.log(r / frame)) > 0.2 : false; };
+
 function srcset(p, u, sizes) {
   const d = dims(p);
   if (!d) return ` src="${u.asset(p)}"`;
@@ -226,9 +234,11 @@ function homePage() {
   };
   const tile = (p, i, arr) => {
     const span = spansFor(arr.length)[i];
+    const frame = { 7: 16 / 10, 5: 8 / 7, 4: 4 / 5, 6: 3 / 2, 12: 21 / 9 }[span] || 1.5;
+    const fit = !p.focus && fits(p.cover, frame);
     return `
     <a class="tile s${span}" href="${u.work(p.slug)}" data-reveal data-cursor>
-      <div class="tile-media"><img${srcset(p.cover, u, `(max-width: 900px) 100vw, ${Math.round((span / 12) * 100)}vw`)} alt="${esc(p.title)}" loading="lazy" decoding="async" style="${p.fp}view-transition-name:v-${p.slug}"></div>
+      <div class="tile-media${fit ? " fit" : ""}"${fit ? ` style="background:${edgeOf(p.cover)}"` : ""}><img${srcset(p.cover, u, `(max-width: 900px) 100vw, ${Math.round((span / 12) * 100)}vw`)} alt="${esc(p.title)}" loading="lazy" decoding="async" style="${p.fp}view-transition-name:v-${p.slug}"></div>
       <div class="tile-meta">
         <span class="tile-n">${pad(++n)}</span>
         <span class="tile-title">${esc(p.title)}</span>
@@ -313,7 +323,7 @@ function projectPage(p, i) {
 
   const body = `
 <article class="project">
-  <section class="p-hero">
+  <section class="p-hero" style="background:${edgeOf(p.cover)}">
     <div class="p-hero-media" data-parallax><img${srcset(p.cover, u, "100vw")} alt="" fetchpriority="high" style="${p.fp}view-transition-name:v-${p.slug}"></div>
     <div class="hero-shade"></div>
     <div class="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
